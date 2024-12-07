@@ -46,6 +46,9 @@ class LLMApiModule(ApiModule, ABC):
         """
         inputs = self.get_input_params(*args, **kwargs)
         full_response = kwargs.get("full_response", False)
+        for key, value in inputs.items():
+            if value is None or value == "":
+                raise ValueError(f"Invalid input: {key} is empty.")
         return self.get_response(inputs, full_response)
 
     @abstractmethod
