@@ -1,6 +1,6 @@
 from flytekit import task, workflow
 from typing import List
-from fluxion.modules.llm_integration import LLMIntegration
+from fluxion.modules.llm_query_module import LLMQueryModule
 from fluxion.modules.rag_module import RAGModule
 
 
@@ -13,7 +13,7 @@ def contextual_response_task(
     Task to generate a response using the RAGModule and LLMIntegration.
     """
 
-    llm_module = LLMIntegration(endpoint=llm_endpoint, model=llm_model, timeout=60)
+    llm_module = LLMQueryModule(endpoint=llm_endpoint, model=llm_model, timeout=60)
     print("Adding documents to the RAG index...")
     rag_module = RAGModule(endpoint=rag_endpoint, model=rag_model, embedding_size=embedding_size)
     for doc in documents:

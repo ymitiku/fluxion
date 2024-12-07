@@ -41,6 +41,14 @@ class RAGModule(ApiModule):
             print(f"Failed to add document: {document}. Expected 1 embedding, got {len(embedding)}")
         elif len(embedding[0]) != self.embedding_size:
             print(f"Failed to add document: {document}. Expected embedding size {self.embedding_size}, got {len(embedding[0])}")
+
+
+    def post_process(self, response, full_response = False):
+        if "embedding" in response:
+            return np.array([response["embedding"]], dtype=np.float32)
+        else:
+            print(f"Error encoding document: {response.get('error', 'Unknown error')}")
+            return None
     
 
     def encode_document(self, document: str):
@@ -58,11 +66,9 @@ class RAGModule(ApiModule):
             "prompt": document,
         }
         response = self.get_response(data)
-        if "embedding" in response:
-            return np.array([response["embedding"]], dtype=np.float32)
-        else:
-            print(f"Error encoding document: {response.get('error', 'Unknown error')}")
-            return None
+
+        return self.post_process(response)
+            
 
     def retrieve(self, query: str, top_k: int = 1):
         """

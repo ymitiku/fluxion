@@ -1,5 +1,5 @@
-from abc import ABC
-from typing import Dict
+from abc import ABC, abstractmethod
+from typing import Dict, Any
 import requests
 
 class ApiModule(ABC):
@@ -9,7 +9,7 @@ class ApiModule(ABC):
         self.timeout = timeout
         self.endpoint = endpoint
 
-    def get_response(self, data: Dict[str, str]):
+    def get_response(self, data: Dict[str, str], **kwargs) -> Dict[str, str]:
         """
         Sends a POST request to the LLM server.
 
@@ -24,3 +24,8 @@ class ApiModule(ABC):
         response.raise_for_status()  # Raise an HTTPError for bad responses (4xx or 5xx)
         return response.json()
     
+    
+    
+    @abstractmethod
+    def post_process(self, response: Dict[str, Any], full_response: bool = False):
+        pass

@@ -1,6 +1,6 @@
 from typing import List
 from fluxion.modules.rag_module import RAGModule
-from fluxion.modules.llm_integration import LLMIntegration
+from fluxion.modules.llm_query_module import LLMQueryModule
 
 
 
@@ -26,7 +26,7 @@ class ContextualResponse:
             embedding_size (int): Size of the embeddings (default: 384).
         """
         self.rag_module = RAGModule(endpoint=rag_endpoint, model=rag_model, embedding_size=embedding_size)
-        self.llm_module = LLMIntegration(endpoint=llm_endpoint, model=llm_model)
+        self.llm_module = LLMQueryModule(endpoint=llm_endpoint, model=llm_model)
 
     def add_documents(self, documents: List[str]) -> None:
         """
