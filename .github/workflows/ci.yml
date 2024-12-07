@@ -1,0 +1,37 @@
+name: CI Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Install and Test
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the code
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # Step 2: Set up Python
+    - name: Set Up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.8  # Specify the Python version you want
+
+    # Step 3: Install dependencies
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip setuptools
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+
+    # Step 4: Run Tests
+    - name: Run Unit Tests
+      run: |
+        pytest tests/ --disable-warnings --cov=src --cov-report=term-missing
