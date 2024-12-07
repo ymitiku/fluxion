@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from fluxion.core.agent_registry import AgentRegistry
-from fluxion.modules.llm_query_module import LLMQueryModule
+from fluxion.modules.llm_modules import LLMQueryModule
 
 class Agent(ABC):
     """
@@ -46,7 +46,7 @@ class LLMQueryAgent(Agent):
     """
     An agent that queries an LLM for a response.
     """
-    def __init__(self, name: str, llm_module: LLMQueryModule, system_instructions: str = "", tool_calling_support: bool = False):
+    def __init__(self, name: str, llm_module: LLMQueryModule, system_instructions: str = ""):
         """
         Initialize the LLMQueryAgent.
 
@@ -56,7 +56,6 @@ class LLMQueryAgent(Agent):
             system_instructions (str): System instructions for the agent (default: "").
         """
         self.llm_module = llm_module
-        self.tool_calling_support = tool_calling_support
         super().__init__(name, system_instructions)
 
     def execute(self, query: str) -> str:
