@@ -1,5 +1,8 @@
 # Fluxion
 
+![CI Workflow](https://github.com/ymitiku/fluxion/actions/workflows/ci.yml/badge.svg)
+
+
 **Fluxion** is a Python library for building flow-based agentic workflows powered by [Flyte](https://flyte.org). It enables seamless orchestration of tasks, integration with language models (LLMs), retrieval-augmented generation (RAG), and program execution, along with speech-to-text (STT) and text-to-speech (TTS) capabilities.
 
 ## Key Features
