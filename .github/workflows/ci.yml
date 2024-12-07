@@ -22,7 +22,7 @@ jobs:
     - name: Set Up Python
       uses: actions/setup-python@v4
       with:
-        python-version: 3.8  # Specify the Python version you want
+        python-version: 3.8
 
     # Step 3: Install dependencies
     - name: Install Dependencies
@@ -31,7 +31,22 @@ jobs:
         pip install -r requirements.txt
         pip install -r requirements-dev.txt
 
-    # Step 4: Run Tests
-    - name: Run Unit Tests
+    # Step 4: Run Unit Tests with Coverage
+    - name: Run Unit Tests with Coverage
+      id: test
       run: |
-        pytest tests/ --disable-warnings --cov=src --cov-report=term-missing
+        pytest tests/ --cov=src --cov-report=term --cov-report=term-missing > coverage_output.txt
+
+    # Step 5: Post Coverage to PR
+    - name: Post Coverage Comment
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const coverage = fs.readFileSync('coverage_output.txt', 'utf8');
+          github.rest.issues.createComment({
+            ...context.repo,
+            issue_number: context.payload.pull_request.number,
+            body: `### Coverage Report\n\`\`\`\n${coverage}\n\`\`\``
+          });
