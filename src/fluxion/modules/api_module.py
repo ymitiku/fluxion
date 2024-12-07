@@ -29,3 +29,8 @@ class ApiModule(ABC):
     @abstractmethod
     def post_process(self, response: Dict[str, Any], full_response: bool = False):
         pass
+
+
+    @abstractmethod
+    def execute(self, *args, **kwargs):
+        pass
