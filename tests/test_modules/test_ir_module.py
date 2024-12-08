@@ -28,3 +28,7 @@ class TestRetrievalModule(unittest.TestCase):
         
         results = module.execute(query="Test query", top_k=1)
         self.assertEqual(results, ["Test document"])
+
+
+if __name__ == "__main__":
+    unittest.main()

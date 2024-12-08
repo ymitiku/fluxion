@@ -29,7 +29,7 @@ class AgentRegistry:
             name (str): The name of the agent.
         """
         if name in cls._registry:
-            del cls._registry[name]
+            cls._registry.pop(name)
 
     @classmethod
     def get_agent(cls, name: str):
@@ -53,3 +53,10 @@ class AgentRegistry:
             List[str]: A list of all agent names.
         """
         return list(cls._registry.keys())
+    
+    @classmethod
+    def clear_registry(cls):
+        """
+        Clear the agent registry.
+        """
+        cls._registry.clear()

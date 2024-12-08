@@ -1,6 +1,6 @@
 from typing import List
 from fluxion.modules.rag_module import RAGModule
-from fluxion.modules.llm_query_module import LLMQueryModule
+from fluxion.modules.llm_modules import LLMQueryModule
 
 
 

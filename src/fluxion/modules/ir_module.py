@@ -4,9 +4,34 @@ import numpy as np
 from fluxion.modules.api_module import ApiModule
 import logging
 
+doc = """
+A module to handle embedding generation via a locally hosted embedding model via REST API. Currently supports encoding documents and retrieving embeddings.
+
+Example:
+    ```python
+    from fluxion.modules.embedding_module import EmbeddingApiModule
+
+    # Initialize the IndexingModule
+    indexing_module = IndexingModule(endpoint="http://localhost:11434/api/index", model="sentence-transformers/paraphrase-MiniLM-L6-v2")
+
+    # Index documents
+    documents = ["Capital of France is Paris", "USA got independence in 1776"]
+
+    index = indexing_module.execute(documents=documents)
+
+    # Initialize the RetrievalModule
+    retrieval_module = RetrievalModule(index=index, documents=documents, endpoint="http://localhost:11434/api/retrieve", model="sentence-transformers/paraphrase-MiniLM-L6-v2")
+
+    # Retrieve relevant context
+    response = retrieval_module.execute(query="What is the capital of France?", top_k=1)
+    print(response)
+    ```
+"""
+
+
 
 class EmbeddingApiModule(ApiModule):
-    def __init__(self, endpoint: str, model: str = None, headers: dict = None, timeout: int = 10, embedding_size: int = 768, batch_size: int = 4, documents_key: str = "documents"):
+    def __init__(self, endpoint: str, model: str = None, headers: dict = {}, timeout: int = 10, embedding_size: int = 768, batch_size: int = 4, documents_key: str = "documents"):
         super().__init__(endpoint, headers, timeout)
         self.model = model
         self.embedding_size = embedding_size
@@ -78,7 +103,7 @@ class EmbeddingApiModule(ApiModule):
     
 
 class IndexingModule(EmbeddingApiModule):
-    def __init__(self, endpoint: str, model: str = None, headers: dict = None, timeout: int = 10, embedding_size: int = 768, batch_size: int = 4):
+    def __init__(self, endpoint: str, model: str = None, headers: dict = {}, timeout: int = 10, embedding_size: int = 768, batch_size: int = 4):
         super().__init__(endpoint, model, headers, timeout, embedding_size, batch_size, documents_key="documents")
         self.index = faiss.IndexFlatIP(embedding_size)
         self.documents = []
@@ -93,7 +118,7 @@ class IndexingModule(EmbeddingApiModule):
         return self.index
 
 class RetrievalModule(EmbeddingApiModule):
-    def __init__(self, index: faiss.IndexFlatIP, documents: List[str], endpoint: str, model: str = None, headers: dict = None, timeout: int = 10, embedding_size: int = 768, batch_size: int = 4):
+    def __init__(self, index: faiss.IndexFlatIP, documents: List[str], endpoint: str, model: str = None, headers: dict = {}, timeout: int = 10, embedding_size: int = 768, batch_size: int = 4):
         super().__init__(endpoint, model, headers, timeout, embedding_size=embedding_size, batch_size=batch_size, documents_key="query")
         self.index = index
         self.documents = documents
