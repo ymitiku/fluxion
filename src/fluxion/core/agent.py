@@ -38,6 +38,9 @@ class Agent(ABC):
         """
         Unregister the agent when it is deleted.
         """
+        self.cleanup()
+
+    def cleanup(self):
         AgentRegistry.unregister_agent(self.name)
 
 
@@ -68,5 +71,8 @@ class LLMQueryAgent(Agent):
         Returns:
             str: The response from the LLM.
         """
-        return self.llm_module.query(prompt=query)
+        if query.strip() == "":
+            raise ValueError("Invalid query: Empty")
+        prompt = self.system_instructions + "\n\n" + query if self.system_instructions else query
+        return self.llm_module.execute(prompt=prompt)
     

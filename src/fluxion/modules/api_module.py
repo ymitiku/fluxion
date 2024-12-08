@@ -3,7 +3,7 @@ from typing import Dict, Any
 import requests
 
 class ApiModule(ABC):
-    def __init__(self, endpoint: str, headers: dict = None, timeout: int = 10):
+    def __init__(self, endpoint: str, headers: dict = {}, timeout: int = 10):
         """ Initialize the API module. """
         self.headers = headers or {}
         self.timeout = timeout

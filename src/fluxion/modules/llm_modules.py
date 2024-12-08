@@ -27,7 +27,16 @@ Example:
     llm_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2")
 
     # Chat with the LLM
-    response = llm_module.chat(messages=["Hello!", "How are you?"])
+    response = llm_module.chat(messages= [{
+        "role": "user",
+        "content": "Hello!"
+        },
+        {
+        "role": "assistant",
+        "content": "Hello, how can I help you?"
+        }]
+    )
+
     print(response)
     ```
 """
@@ -36,7 +45,7 @@ class LLMApiModule(ApiModule, ABC):
     """
     Provides an interface for interacting with a locally hosted LLM via REST API.
     """
-    def __init__(self, endpoint: str, model: str = None, headers: dict = None, timeout: int = 10, response_key: str = "response"):
+    def __init__(self, endpoint: str, model: str = None, headers: dict = {}, timeout: int = 10, response_key: str = "response"):
         super().__init__(endpoint, headers, timeout)
         self.model = model
         self.response_key = response_key
@@ -100,7 +109,7 @@ class LLMChatModule(LLMApiModule):
     A class to handle chatting with an LLM via REST API.
     """
 
-    def __init__(self, endpoint, model = None, headers = None, timeout = 10, response_key = "message"):
+    def __init__(self, endpoint, model = None, headers = {}, timeout = 10, response_key = "message"):
         super().__init__(endpoint, model, headers, timeout, response_key)
 
     def get_input_params(self, messages: List[str]) -> Dict[str, Any]:
