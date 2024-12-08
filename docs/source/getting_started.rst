@@ -6,6 +6,37 @@ Fluxion is a modular Python library for building agentic workflows. This guide w
 Installation
 ------------
 
+Prerequisites
+~~~~~~~~~~~~~
+
+- Python 3.8+
+- [Flyte](https://flyte.org) installed and configured
+- Anaconda or virtual environment setup
+
+Steps
+~~~~~
+
+1. Clone the repository:
+
+.. code-block:: bash
+
+   git clone
+   cd fluxion
+
+2. Set up an Anaconda environment:
+
+.. code-block:: bash
+
+   bash scripts/setup_env.sh
+
+3. Run unit tests:
+
+.. code-block:: bash
+
+   bash scripts/run_tests.sh
+
+Installation
+
 To install Fluxion, run:
 
 .. code-block:: bash

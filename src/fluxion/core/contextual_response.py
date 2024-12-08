@@ -1,5 +1,5 @@
 from typing import List
-from fluxion.modules.rag_module import RAGModule
+from fluxion.modules.rag_module import RagModule
 from fluxion.modules.llm_modules import LLMQueryModule
 
 
@@ -19,13 +19,13 @@ class ContextualResponse:
         Initialize the ContextualResponse handler.
 
         Args:
-            rag_endpoint (str): Endpoint for the RAGModule API.
-            rag_model (str): Model to use for the RAGModule.
+            rag_endpoint (str): Endpoint for the RagModule API.
+            rag_model (str): Model to use for the RagModule.
             llm_endpoint (str): Endpoint for the LLMIntegration API.
             llm_model (str): Model to use for the LLMIntegration.
             embedding_size (int): Size of the embeddings (default: 384).
         """
-        self.rag_module = RAGModule(endpoint=rag_endpoint, model=rag_model, embedding_size=embedding_size)
+        self.rag_module = RagModule(endpoint=rag_endpoint, model=rag_model, embedding_size=embedding_size)
         self.llm_module = LLMQueryModule(endpoint=llm_endpoint, model=llm_model)
 
     def add_documents(self, documents: List[str]) -> None:
