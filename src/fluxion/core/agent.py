@@ -83,7 +83,7 @@ class LLMChatAgent(Agent):
     """
     An agent that interacts with an LLM for chat and supports tool calls.
     """
-    def __init__(self, name: str, llm_module: LLMChatModule, system_instructions: str = ""):
+    def __init__(self, name: str, llm_module: LLMChatModule, system_instructions: str = "", max_tool_call_depth: int = 2):
         """
         Initialize the LLMChatAgent.
 
@@ -93,9 +93,10 @@ class LLMChatAgent(Agent):
             system_instructions (str): System instructions for the agent (default: "").
         """
         self.llm_module = llm_module
+        self.max_tool_call_depth = max_tool_call_depth
         super().__init__(name, system_instructions)
 
-    def execute(self, messages: List[Dict[str, str]]) -> List[Dict[str, str]]:
+    def execute(self, messages: List[Dict[str, str]], depth: int = 0) -> List[Dict[str, str]]:
         """
         Execute the LLM chat agent logic.
 
@@ -126,15 +127,16 @@ class LLMChatAgent(Agent):
         # Interact with the LLM
         response = self.llm_module.execute(messages=messages, tools=tools)
         messages.append(response)
-
+    
+        
         # Handle tool calls if present
         if "tool_calls" in response:
             for tool in response["tool_calls"]:
                 tool_result = self._handle_tool_call(tool)
                
                 messages.append({"role": "tool", "content": str(tool_result)})
-
-            return self.execute(messages)
+            if depth < self.max_tool_call_depth: # To avoid infinite recursion
+                return self.execute(messages, depth=depth + 1)
         return messages
 
     def _handle_tool_call(self, tool_call: Dict[str, Dict]):
@@ -151,8 +153,8 @@ class LLMChatAgent(Agent):
             return ToolRegistry.invoke_tool_call(tool_call)
         except ValueError as ve:
             return f"Tool invocation failed: {ve}"
-        # except Exception as e:
-        #     return f"Unexpected error during tool invocation: {e}"
+        except Exception as e:
+            return f"Unexpected error during tool invocation: {e}"
         
 
 

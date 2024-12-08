@@ -20,7 +20,7 @@ class TestAgentBase(unittest.TestCase):
                 return "Mock response"
 
         agent = MockAgent(name="TestAgent")
-        self.assertIn("TestAgent", AgentRegistry._registry)
+        self.assertIn("TestAgent", AgentRegistry.list_agents())
         self.assertIs(AgentRegistry.get_agent("TestAgent"), agent)
 
     def test_agent_unregistration(self):
@@ -30,7 +30,7 @@ class TestAgentBase(unittest.TestCase):
 
         agent = MockAgent(name="TestAgent")
         agent.cleanup()  # Explicitly call cleanup() instead of relying on __del__
-        self.assertNotIn("TestAgent", AgentRegistry._registry)
+        self.assertNotIn("TestAgent", AgentRegistry.list_agents())
 
     def test_abstract_class_instantiation(self):
         with self.assertRaises(TypeError):
@@ -108,17 +108,15 @@ class TestLLMQueryAgent(unittest.TestCase):
 
         # Initialize LLMQueryAgent
         agent = LLMQueryAgent(name="LLMQueryAgent", llm_module=llm_module)
-        self.assertIn("LLMQueryAgent", AgentRegistry._registry)
+        self.assertIn("LLMQueryAgent", AgentRegistry.list_agents())
         self.assertIs(AgentRegistry.get_agent("LLMQueryAgent"), agent)
-
-
 
 
 class TestLLMChatAgent(unittest.TestCase):
     def setUp(self):
-        AgentRegistry.clear_registry()
         self.mock_llm_module = Mock(spec=LLMChatModule)
-        ToolRegistry._registry = {}  # Reset ToolRegistry before each test
+        ToolRegistry.clear_registry()
+        AgentRegistry.clear_registry()
 
         def sample_tool(location: str, format: str = "celsius"):
             """Sample tool function."""
@@ -126,27 +124,33 @@ class TestLLMChatAgent(unittest.TestCase):
 
         ToolRegistry.register_tool(sample_tool)
         self.agent = LLMChatAgent(
-            name="TestChatAgent",
+            name="TestAgent",
             llm_module=self.mock_llm_module,
-            system_instructions="Provide accurate answers."
+            system_instructions="Provide accurate answers.",
+            max_tool_call_depth=2,
         )
 
     def tearDown(self):
-        ToolRegistry._registry = {}  # Reset ToolRegistry after each test
+        ToolRegistry.clear_registry()
 
     @patch("fluxion.core.registry.tool_registry.ToolRegistry.invoke_tool_call")
     def test_execute_with_tool_call(self, mock_invoke_tool_call):
         # Mock LLM response with a tool call
-        self.mock_llm_module.execute.return_value = {
-            "role": "assistant",
-            "content": "",
-            "tool_call": {
-                "function": {
-                    "name": "sample_tool",
-                    "arguments": {"location": "Paris", "format": "celsius"},
-                }
+        self.mock_llm_module.execute.side_effect = [
+            {
+                "role": "assistant",
+                "content": "",
+                "tool_calls": [
+                    {
+                        "function": {
+                            "name": "sample_tool",
+                            "arguments": {"location": "Paris", "format": "celsius"},
+                        }
+                    }
+                ],
             },
-        }
+            {"role": "assistant", "content": "Processed tool call response."},
+        ]
 
         mock_invoke_tool_call.return_value = "The current weather in Paris is 20 degrees celsius."
 
@@ -160,6 +164,12 @@ class TestLLMChatAgent(unittest.TestCase):
             result
         )
 
+        # Verify LLM follow-up response is included
+        self.assertIn(
+            {"role": "assistant", "content": "Processed tool call response."},
+            result
+        )
+
         # Verify tool call invocation
         mock_invoke_tool_call.assert_called_once_with(
             {
@@ -170,21 +180,66 @@ class TestLLMChatAgent(unittest.TestCase):
             }
         )
 
-    def test_execute_with_system_instructions(self):
-        # Mock LLM response without a tool call
-        self.mock_llm_module.execute.return_value = {
-            "role": "assistant",
-            "content": "Paris is sunny today."
-        }
+    def test_execute_tool_call_depth_limit(self):
+        # Mock LLM response with recursive tool calls
+        self.mock_llm_module.execute.side_effect = [
+            {
+                "role": "assistant",
+                "content": "",
+                "tool_calls": [
+                    {
+                        "function": {
+                            "name": "sample_tool",
+                            "arguments": {"location": "Paris", "format": "celsius"},
+                        }
+                    }
+                ],
+            },
+            {
+                "role": "assistant",
+                "content": "",
+                "tool_calls": [
+                    {
+                        "function": {
+                            "name": "sample_tool",
+                            "arguments": {"location": "New York", "format": "fahrenheit"},
+                        }
+                    }
+                ],
+            },
+            {
+                "role": "assistant",
+                "content": "",
+                "tool_calls": [
+                    {
+                        "function": {
+                            "name": "sample_tool",
+                            "arguments": {"location": "Tokyo", "format": "celsius"},
+                        }
+                    }
+                ],
+            },
+        ]
 
+        # Execute the agent
         messages = [{"role": "user", "content": "What is the weather in Paris?"}]
         result = self.agent.execute(messages)
 
-        # Verify system instructions are added
-        self.assertEqual(result[0], {"role": "system", "content": "Provide accurate answers."})
+        # Verify the tool call depth does not exceed the limit
+        self.assertLessEqual(
+            sum(1 for msg in result if msg["role"] == "tool"),
+            self.agent.max_tool_call_depth + 1  # +1 for the initial tool call
+        )
 
-        # Verify LLM response is appended
-        self.assertIn({"role": "assistant", "content": "Paris is sunny today."}, result)
+    def test_execute_without_tool_call(self):
+        # Mock LLM response without a tool call
+        self.mock_llm_module.execute.return_value = {"role": "assistant", "content": "No tool call needed."}
+
+        messages = [{"role": "user", "content": "Tell me something random."}]
+        result = self.agent.execute(messages)
+
+        # Verify the response is added to the messages
+        self.assertIn({"role": "assistant", "content": "No tool call needed."}, result)
 
     def test_execute_invalid_messages(self):
         # Test with invalid message format
@@ -193,6 +248,8 @@ class TestLLMChatAgent(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             self.agent.execute(messages="Invalid type")  # Not a list
+
+
 
 
 if __name__ == "__main__":

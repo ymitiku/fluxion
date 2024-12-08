@@ -140,7 +140,9 @@ class ToolRegistry:
             if expected_type != "unknown" and not isinstance(arguments[arg], eval(expected_type)):
                 raise TypeError(f"Argument '{arg}' must be of type {expected_type}.")
 
-
+    @classmethod
+    def clear_registry(cls):
+        cls._registry.clear()
     
 
 

@@ -112,7 +112,7 @@ class LLMChatModule(LLMApiModule):
     def __init__(self, endpoint, model = None, headers = {}, timeout = 10, response_key = "message"):
         super().__init__(endpoint, model, headers, timeout, response_key)
 
-    def get_input_params(self, messages: List[str], tools: List[Dict[str, str]]) -> Dict[str, Any]:
+    def get_input_params(self, messages: List[str], tools: List[Dict[str, str]] = {}) -> Dict[str, Any]:
         """
         Get the input parameters for the LLM chat.
 
