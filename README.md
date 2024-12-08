@@ -5,17 +5,10 @@
 
 **Fluxion** is a Python library for building flow-based agentic workflows powered by [Flyte](https://flyte.org). It enables seamless orchestration of tasks, integration with language models (LLMs), retrieval-augmented generation (RAG), and program execution, along with speech-to-text (STT) and text-to-speech (TTS) capabilities.
 
-## Key Features
 
-- **Flow Orchestration:** Build scalable workflows using Flyte.
-- **Agent Management:** Manage agents for tasks like LLM interactions, RAG, and program execution.
-- **LLM Integration:** Connect to local and cloud-based LLMs (e.g., OpenAI, Hugging Face).
-- **RAG Support:** Enable contextual workflows with document retrieval and embeddings.
-- **STT/TTS:** Convert speech to text and text to speech for interactive workflows.
-- **Error Recovery:** Built-in mechanisms for handling errors and retries.
-- **Extensible:** Modular architecture allows customization and scalability.
 
 ---
+
 
 ## Installation
 
@@ -47,74 +40,81 @@ bash scripts/run_tests.sh
 ```
 
 
-### Quick Start
+## Usage
 
-1. Register and execute workflows
+### Calling locally hosted LLMs
+
+To call locally hosted LLMs, you can use the following code snippet:
 
 ```python
-from fluxion.core.flow_orchestrator import FlowOrchestrator
+    llm_module = LLMQueryModule(endpoint="http://localhost:11434/api/generate", model="llama3.2")
+    response = llm_module.execute(prompt="What is the capital of France?")
+    print("Query: What is the capital of France?")
+    print("Response:", response)
+    llm_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2")
+    response = llm_module.execute(messages=[
+        {
+            "role": "user",
+            "content": "Hello!"
+        }
 
-# Create an orchestrator instance
-orchestrator = FlowOrchestrator()
+    ])
+    print("Chat:")
+    print("User: Hello!")
+    print("Response:", response["content"])
+```
 
-# Register the workflow
-orchestrator.register_flow("add_workflow", add_workflow)
+Currently, the `LLMQueryModule` and `LLMChatModule` classes support calling locally hosted LLMs. The `execute` method sends a request to the specified endpoint with the provided prompt or messages and returns the response.
 
-# Execute the workflow
-result = orchestrator.execute_flow("add_workflow", a=5, b=3)
-print(f"Workflow Result: {result}")  # Output: 8
+### Using agents for chat interactions and tool calls
+
+Fluxion provides an `LLMChatAgent` class for managing chat interactions and tool calls. You can use the following code snippet to create an agent and execute a chat interaction with tool calls:
+
+```python
+    def get_current_whether(city_name):
+        return {"temperature": 6.85, "description": "overcast clouds", "humidity": 91}
+    # Initialize the LLMChatModule
+    llm_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2", timeout=60)
+
+    # Initialize the LLMChatAgent
+    llm_agent = LLMChatAgent(name="llm_chat_agent", llm_module=llm_module, system_instructions="Provide accurate answers.")
+    
+
+    ToolRegistry.register_tool(get_current_whether)
+    # Execute
+
+    messages = [
+        {
+            "role": "user",
+            "content": "What is the weather in Paris?"
+        }
+    ]
+
+    result = llm_agent.execute(messages)
+    print(result)
+    """
+    [
+        {'role': 'system', 'content': 'Provide accurate answers.'}, 
+        {'role': 'system', 'content': 'Provide accurate answers.'}, 
+        {'role': 'user', 'content': 'What is the weather in Paris?'}, 
+        {'role': 'assistant', 'content': '', 'tool_calls': [{'function': {'name': 'get_current_whether', 'arguments': {'city_name': 'Paris'}}}]}, 
+        {'role': 'tool', 'content': "{'temperature': 6.850000000000023, 'description': 'overcast clouds', 'humidity': 91}"}, 
+        {'role': 'assistant', 'content': 'The current weather in Paris is overcast with a temperature of 6.85°C (40.37°F) and high humidity at 91%.'}
+    ]
+
+    """
 
 ```
 
 
-3. Register and use agents
-
-```python
-from fluxion.core.agent_manager import Agent
-
-# Define a custom agent
-class MultiplyAgent(Agent):
-    def execute(self, input_data):
-        return input_data * 2
-
-# Register the agent
-from fluxion.core.agent_manager import AgentManager
-manager = AgentManager()
-multiply_agent = MultiplyAgent(name="MultiplyAgent")
-manager.register_agent("multiply_agent", multiply_agent)
-
-# Execute the agent
-result = manager.execute_agent("multiply_agent", 10)
-print(f"Agent Result: {result}")  # Output: 20
-
-```
 
 
-### Contributing
-Contributions are welcome! To get started:
+## Key Features | TODOS
 
-- Fork the repository.
-- Create a new branch (git checkout -b feature/my-feature).
-- Commit your changes (git commit -m 'Add some feature').
-- Push to the branch (git push origin feature/my-feature).
-- Open a pull request.
-
-
-
-### Roadmap
-* Expand agent capabilities to support chaining and stateful workflows.
-* Enhance error recovery with advanced fallback mechanisms.
-* Add IoT and cloud service integration.
-* Support for multi-language workflows.
-* Interactive debugging and visualization tools.
-
-
-
-### Acknowledgements
-- Flyte for workflow orchestration.
-- OpenAI and Hugging Face for LLM APIs.
-- SpeechRecognition and pyttsx3 for STT and TTS.
-
-
-Contact
-For questions or support, feel free to open an issue or contact the maintainers.
+- **Flow Orchestration:** Build scalable workflows using Flyte.
+- **Agent Management:** Manage agents for tasks like LLM interactions, RAG, and program execution.
+- **LLM Integration:** Connect to local and cloud-based LLMs (e.g., OpenAI, Hugging Face).
+- **RAG Support:** Enable contextual workflows with document retrieval and embeddings.
+- **STT/TTS:** Convert speech to text and text to speech for interactive workflows.
+- **Error Recovery:** Built-in mechanisms for handling errors and retries.
+- **Extensible:** Modular architecture allows customization and scalability.

@@ -1,8 +1,10 @@
 import unittest
 from unittest.mock import Mock, patch
-from fluxion.core.agent import Agent, LLMQueryAgent
-from fluxion.core.agent_registry import AgentRegistry
-from fluxion.modules.llm_modules import LLMQueryModule
+from fluxion.core.agent import Agent, LLMQueryAgent, LLMChatAgent
+from fluxion.core.registry.agent_registry import AgentRegistry
+from fluxion.modules.llm_modules import LLMQueryModule, LLMChatModule
+from fluxion.core.registry.tool_registry import ToolRegistry
+
 
 
 class TestAgentBase(unittest.TestCase):
@@ -18,7 +20,7 @@ class TestAgentBase(unittest.TestCase):
                 return "Mock response"
 
         agent = MockAgent(name="TestAgent")
-        self.assertIn("TestAgent", AgentRegistry._registry)
+        self.assertIn("TestAgent", AgentRegistry.list_agents())
         self.assertIs(AgentRegistry.get_agent("TestAgent"), agent)
 
     def test_agent_unregistration(self):
@@ -28,7 +30,7 @@ class TestAgentBase(unittest.TestCase):
 
         agent = MockAgent(name="TestAgent")
         agent.cleanup()  # Explicitly call cleanup() instead of relying on __del__
-        self.assertNotIn("TestAgent", AgentRegistry._registry)
+        self.assertNotIn("TestAgent", AgentRegistry.list_agents())
 
     def test_abstract_class_instantiation(self):
         with self.assertRaises(TypeError):
@@ -106,8 +108,148 @@ class TestLLMQueryAgent(unittest.TestCase):
 
         # Initialize LLMQueryAgent
         agent = LLMQueryAgent(name="LLMQueryAgent", llm_module=llm_module)
-        self.assertIn("LLMQueryAgent", AgentRegistry._registry)
+        self.assertIn("LLMQueryAgent", AgentRegistry.list_agents())
         self.assertIs(AgentRegistry.get_agent("LLMQueryAgent"), agent)
+
+
+class TestLLMChatAgent(unittest.TestCase):
+    def setUp(self):
+        self.mock_llm_module = Mock(spec=LLMChatModule)
+        ToolRegistry.clear_registry()
+        AgentRegistry.clear_registry()
+
+        def sample_tool(location: str, format: str = "celsius"):
+            """Sample tool function."""
+            return f"The current weather in {location} is 20 degrees {format}."
+
+        ToolRegistry.register_tool(sample_tool)
+        self.agent = LLMChatAgent(
+            name="TestAgent",
+            llm_module=self.mock_llm_module,
+            system_instructions="Provide accurate answers.",
+            max_tool_call_depth=2,
+        )
+
+    def tearDown(self):
+        ToolRegistry.clear_registry()
+
+    @patch("fluxion.core.registry.tool_registry.ToolRegistry.invoke_tool_call")
+    def test_execute_with_tool_call(self, mock_invoke_tool_call):
+        # Mock LLM response with a tool call
+        self.mock_llm_module.execute.side_effect = [
+            {
+                "role": "assistant",
+                "content": "",
+                "tool_calls": [
+                    {
+                        "function": {
+                            "name": "sample_tool",
+                            "arguments": {"location": "Paris", "format": "celsius"},
+                        }
+                    }
+                ],
+            },
+            {"role": "assistant", "content": "Processed tool call response."},
+        ]
+
+        mock_invoke_tool_call.return_value = "The current weather in Paris is 20 degrees celsius."
+
+        # Execute the agent
+        messages = [{"role": "user", "content": "What is the weather in Paris?"}]
+        result = self.agent.execute(messages)
+
+        # Verify the result contains the tool response
+        self.assertIn(
+            {"role": "tool", "content": "The current weather in Paris is 20 degrees celsius."},
+            result
+        )
+
+        # Verify LLM follow-up response is included
+        self.assertIn(
+            {"role": "assistant", "content": "Processed tool call response."},
+            result
+        )
+
+        # Verify tool call invocation
+        mock_invoke_tool_call.assert_called_once_with(
+            {
+                "function": {
+                    "name": "sample_tool",
+                    "arguments": {"location": "Paris", "format": "celsius"},
+                }
+            }
+        )
+
+    def test_execute_tool_call_depth_limit(self):
+        # Mock LLM response with recursive tool calls
+        self.mock_llm_module.execute.side_effect = [
+            {
+                "role": "assistant",
+                "content": "",
+                "tool_calls": [
+                    {
+                        "function": {
+                            "name": "sample_tool",
+                            "arguments": {"location": "Paris", "format": "celsius"},
+                        }
+                    }
+                ],
+            },
+            {
+                "role": "assistant",
+                "content": "",
+                "tool_calls": [
+                    {
+                        "function": {
+                            "name": "sample_tool",
+                            "arguments": {"location": "New York", "format": "fahrenheit"},
+                        }
+                    }
+                ],
+            },
+            {
+                "role": "assistant",
+                "content": "",
+                "tool_calls": [
+                    {
+                        "function": {
+                            "name": "sample_tool",
+                            "arguments": {"location": "Tokyo", "format": "celsius"},
+                        }
+                    }
+                ],
+            },
+        ]
+
+        # Execute the agent
+        messages = [{"role": "user", "content": "What is the weather in Paris?"}]
+        result = self.agent.execute(messages)
+
+        # Verify the tool call depth does not exceed the limit
+        self.assertLessEqual(
+            sum(1 for msg in result if msg["role"] == "tool"),
+            self.agent.max_tool_call_depth + 1  # +1 for the initial tool call
+        )
+
+    def test_execute_without_tool_call(self):
+        # Mock LLM response without a tool call
+        self.mock_llm_module.execute.return_value = {"role": "assistant", "content": "No tool call needed."}
+
+        messages = [{"role": "user", "content": "Tell me something random."}]
+        result = self.agent.execute(messages)
+
+        # Verify the response is added to the messages
+        self.assertIn({"role": "assistant", "content": "No tool call needed."}, result)
+
+    def test_execute_invalid_messages(self):
+        # Test with invalid message format
+        with self.assertRaises(ValueError):
+            self.agent.execute(messages=[{"role": "user"}])  # Missing 'content' key
+
+        with self.assertRaises(ValueError):
+            self.agent.execute(messages="Invalid type")  # Not a list
+
+
 
 
 if __name__ == "__main__":
