@@ -1,6 +1,6 @@
 from flytekit import task, workflow
 from typing import List
-from fluxion.modules.llm_query_module import LLMQueryModule
+from fluxion.modules.llm_modules import LLMQueryModule
 from fluxion.modules.rag_module import RAGModule
 
 
