@@ -1,8 +1,10 @@
 import unittest
 from unittest.mock import Mock, patch
-from fluxion.core.agent import Agent, LLMQueryAgent
-from fluxion.core.agent_registry import AgentRegistry
-from fluxion.modules.llm_modules import LLMQueryModule
+from fluxion.core.agent import Agent, LLMQueryAgent, LLMChatAgent
+from fluxion.core.registry.agent_registry import AgentRegistry
+from fluxion.modules.llm_modules import LLMQueryModule, LLMChatModule
+from fluxion.core.registry.tool_registry import ToolRegistry
+
 
 
 class TestAgentBase(unittest.TestCase):
@@ -108,6 +110,89 @@ class TestLLMQueryAgent(unittest.TestCase):
         agent = LLMQueryAgent(name="LLMQueryAgent", llm_module=llm_module)
         self.assertIn("LLMQueryAgent", AgentRegistry._registry)
         self.assertIs(AgentRegistry.get_agent("LLMQueryAgent"), agent)
+
+
+
+
+class TestLLMChatAgent(unittest.TestCase):
+    def setUp(self):
+        AgentRegistry.clear_registry()
+        self.mock_llm_module = Mock(spec=LLMChatModule)
+        ToolRegistry._registry = {}  # Reset ToolRegistry before each test
+
+        def sample_tool(location: str, format: str = "celsius"):
+            """Sample tool function."""
+            return f"The current weather in {location} is 20 degrees {format}."
+
+        ToolRegistry.register_tool(sample_tool)
+        self.agent = LLMChatAgent(
+            name="TestChatAgent",
+            llm_module=self.mock_llm_module,
+            system_instructions="Provide accurate answers."
+        )
+
+    def tearDown(self):
+        ToolRegistry._registry = {}  # Reset ToolRegistry after each test
+
+    @patch("fluxion.core.registry.tool_registry.ToolRegistry.invoke_tool_call")
+    def test_execute_with_tool_call(self, mock_invoke_tool_call):
+        # Mock LLM response with a tool call
+        self.mock_llm_module.execute.return_value = {
+            "role": "assistant",
+            "content": "",
+            "tool_call": {
+                "function": {
+                    "name": "sample_tool",
+                    "arguments": {"location": "Paris", "format": "celsius"},
+                }
+            },
+        }
+
+        mock_invoke_tool_call.return_value = "The current weather in Paris is 20 degrees celsius."
+
+        # Execute the agent
+        messages = [{"role": "user", "content": "What is the weather in Paris?"}]
+        result = self.agent.execute(messages)
+
+        # Verify the result contains the tool response
+        self.assertIn(
+            {"role": "tool", "content": "The current weather in Paris is 20 degrees celsius."},
+            result
+        )
+
+        # Verify tool call invocation
+        mock_invoke_tool_call.assert_called_once_with(
+            {
+                "function": {
+                    "name": "sample_tool",
+                    "arguments": {"location": "Paris", "format": "celsius"},
+                }
+            }
+        )
+
+    def test_execute_with_system_instructions(self):
+        # Mock LLM response without a tool call
+        self.mock_llm_module.execute.return_value = {
+            "role": "assistant",
+            "content": "Paris is sunny today."
+        }
+
+        messages = [{"role": "user", "content": "What is the weather in Paris?"}]
+        result = self.agent.execute(messages)
+
+        # Verify system instructions are added
+        self.assertEqual(result[0], {"role": "system", "content": "Provide accurate answers."})
+
+        # Verify LLM response is appended
+        self.assertIn({"role": "assistant", "content": "Paris is sunny today."}, result)
+
+    def test_execute_invalid_messages(self):
+        # Test with invalid message format
+        with self.assertRaises(ValueError):
+            self.agent.execute(messages=[{"role": "user"}])  # Missing 'content' key
+
+        with self.assertRaises(ValueError):
+            self.agent.execute(messages="Invalid type")  # Not a list
 
 
 if __name__ == "__main__":

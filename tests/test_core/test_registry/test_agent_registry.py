@@ -1,5 +1,5 @@
 import unittest
-from fluxion.core.agent_registry import AgentRegistry
+from fluxion.core.registry.agent_registry import AgentRegistry
 
 class TestAgentRegistry(unittest.TestCase):
     def setUp(self):
