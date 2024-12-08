@@ -32,3 +32,8 @@ extensions = [
     "sphinx.ext.viewcode",  # Add links to source code
     "sphinx.ext.todo",      # Support for TODOs
 ]
+
+
+import os
+import sys
+sys.path.insert(0, os.path.abspath('../../src'))
