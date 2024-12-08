@@ -9,50 +9,36 @@
 
 ---
 
-## Enhancements
-
-### LLM Capabilities
-- **LLMChatAgent**: Supports chat interactions with tools, including methods for executing chat logic and handling tool calls.
-- **LLMChatModule**: Includes tools in the input parameters for chat interactions.
-
-### Registry System
-- **ToolRegistry**: Methods for registering tools, invoking tool calls, and extracting function metadata.
-- **AgentRegistry**: Improved agent registration and retrieval methods.
-
-### Query Execution
-- Enhanced query handling to manage empty queries and concatenate system instructions with the query.
-
-## New Modules
-- **EmbeddingApiModule**: Handles document embedding.
-- **IndexingModule**: Manages the indexing process.
-- **RetrievalModule**: Facilitates document retrieval.
-- **RagModule**: Implements retrieval-augmented generation using the new retrieval and LLM modules.
-
-## Example Scripts
-- Example script demonstrating LLM with tool call integration.
-- Example script for querying and generating responses using the RAG module.
-
-## Tests
-- Comprehensive unit tests for `LLMChatAgent` and `ToolRegistry`.
-- Unit tests for agent registration, unregistration, and query execution.
-- Unit tests for `IndexingModule`, `RetrievalModule`, and `RagModule`.
-
-These enhancements collectively improve the functionality and robustness of the `fluxion` project, enabling more sophisticated interactions with LLMs and better management of tools and agents.
 
 ## Installation
-To install and use Fluxion, please follow the instructions below:
 
-```sh
-# Clone the repository
-git clone https://github.com/ymitiku/fluxion.git
+### Prerequisites
 
-# Navigate to the project directory
-cd fluxion
+- Python 3.8+
+- [Flyte](https://flyte.org) installed and configured
+- Anaconda or virtual environment setup
 
-# Install dependencies
-pip install -r requirements.txt
+### Steps
 
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/fluxion.git
+   cd fluxion
+   ```
+
+2. Set up an Anaconda environment:
+
+```bash
+bash scripts/setup_env.sh
 ```
+
+3. Run unit tests:
+
+```bash
+
+bash scripts/run_tests.sh
+```
+
 
 ## Usage
 
