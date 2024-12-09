@@ -18,7 +18,8 @@
       <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="src" href="api/modules.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -40,15 +41,28 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">Getting Started</a><ul>
-<li><a class="reference internal" href="#installation">Installation</a></li>
-<li><a class="reference internal" href="#quickstart">Quickstart</a></li>
+              <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/fluxion.core.registry.html">fluxion.core.registry package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/fluxion.core.html">fluxion.core package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/fluxion.modules.html">fluxion.modules package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/fluxion.html">fluxion package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/fluxion.utils.html">fluxion.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">src</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Getting Started:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#steps">Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#quickstart">Quickstart</a></li>
 </ul>
 </li>
 </ul>
-</div>
+
         </div>
       </div>
     </nav>
@@ -78,10 +92,41 @@
 <p>Fluxion is a modular Python library for building agentic workflows. This guide will help you get started.</p>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>Python 3.8+</p></li>
+<li><p>[Flyte](<a class="reference external" href="https://flyte.org">https://flyte.org</a>) installed and configured</p></li>
+<li><p>Anaconda or virtual environment setup</p></li>
+</ul>
+</section>
+<section id="steps">
+<h3>Steps<a class="headerlink" href="#steps" title="Permalink to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Clone the repository:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone
+<span class="nb">cd</span><span class="w"> </span>fluxion
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Set up an Anaconda environment:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bash<span class="w"> </span>scripts/setup_env.sh
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Run unit tests:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bash<span class="w"> </span>scripts/run_tests.sh
+</pre></div>
+</div>
+<p>Installation</p>
 <p>To install Fluxion, run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>fluxion
 </pre></div>
 </div>
+</section>
 </section>
 <section id="quickstart">
 <h2>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this heading"></a></h2>
@@ -101,7 +146,9 @@
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="api/modules.html" class="btn btn-neutral float-left" title="src" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
 
   <hr/>
 
