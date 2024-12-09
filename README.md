@@ -1,4 +1,4 @@
-# Fluxion
+# [Fluxion](https://ymitiku.github.io/fluxion/)
 
 ![CI Workflow](https://github.com/ymitiku/fluxion/actions/workflows/ci.yml/badge.svg)
 
