@@ -15,6 +15,20 @@ Welcome to Fluxion's documentation!
 Indices and tables
 ==================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. toctree::
+   :maxdepth: 3
+   :caption: API Reference:
+
+   api/fluxion.core.registry
+   api/fluxion.core
+   api/fluxion.modules
+   api/fluxion
+   api/fluxion.utils
+   api/modules
+
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Getting Started:
+
+   getting_started
