@@ -5,7 +5,7 @@ from fluxion.core.registry.tool_registry import ToolRegistry
 
 
 
-api_key = "" # Enter your API key here
+api_key = "5d6ec24598b18640b52f5351029d9dde" # Enter your API key here
 base_url = "http://api.openweathermap.org/data/2.5/weather?"
 
 def get_current_whether(city_name: str) -> str:
@@ -44,7 +44,7 @@ if __name__ == "__main__":
     llm_agent = LLMChatAgent(name="llm_chat_agent", llm_module=llm_module, system_instructions="Provide accurate answers.")
     
 
-    ToolRegistry.register_tool(get_current_whether)
+    llm_agent.register_tool(get_current_whether)
     # Execute
 
     messages = [

@@ -21,8 +21,10 @@ class ApiModule(ABC):
             dict: The response from the server.
         """
         response = requests.post(self.endpoint, json=data, headers=self.headers, timeout=self.timeout)
-        response.raise_for_status()  # Raise an HTTPError for bad responses (4xx or 5xx)
-        return response.json()
+        output = response.json()
+        if "error" in output:
+            raise RuntimeError("API request failed: {}".format(output["error"]))
+        return output
     
     
     

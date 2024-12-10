@@ -132,38 +132,6 @@ response = llm_agent.execute(messages=messages)
 print("Chat with Tool Call Response:", response)
 ```
 
----
-
-## **Examples**
-
-### **Tool Calling**
-Use agents to interact with tools dynamically:
-
-```python
-from fluxion.core.agent import LLMChatAgent
-from fluxion.core.registry.tool_registry import ToolRegistry
-from fluxion.modules.llm_modules import LLMChatModule
-
-# Define a tool
-def get_current_time() -> str:
-    """Returns the current time."""
-    from datetime import datetime
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-# Register the tool
-ToolRegistry.register_tool(get_current_time)
-
-# Initialize the LLMChatAgent
-llm_chat = LLMChatAgent(
-    name="TimeAgent",
-    llm_module=LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2"),
-)
-
-# Execute a tool-based interaction
-messages = [{"role": "user", "content": "What time is it?"}]
-response = llm_chat.execute(messages=messages)
-print(response)
-```
 
 ---
 
