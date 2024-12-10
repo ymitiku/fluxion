@@ -125,26 +125,3 @@ class ToolRegistry:
             expected_type = properties[arg]["type"]
             if expected_type != "unknown" and not isinstance(arguments[arg], eval(expected_type)):
                 raise TypeError(f"Argument '{arg}' must be of type {expected_type}.")
-
-
-if __name__ == "__main__":
-    
-    # Example function
-    def get_current_weather(location: str, format: str = "celsius"):
-        """Get the current weather for a location.
-        
-        :param location: The location to get the weather for.
-        :param format: The temperature format (default: celsius).
-        :return: The current weather
-        """
-        return "The current weather is 25 degrees celsius in Paris."
-
-    registry = ToolRegistry()
-    registry.register_tool(get_current_weather)
-    print(registry.list_tools())
-
-    tool_call = {"function":{"name":"get_current_weather","arguments":{"format":"celsius","location":"Paris"}}}
-    
-
-    result = registry.invoke_tool_call(tool_call)
-    print(result)

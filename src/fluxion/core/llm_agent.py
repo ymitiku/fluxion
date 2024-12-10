@@ -56,24 +56,6 @@ class LLMChatAgent(Agent):
         super().__init__(name, system_instructions)
 
 
-    def set_tool_registry(self, tool_registry: ToolRegistry):
-        """
-        Set the tool registry for the agent.
-
-        Args:
-            tool_registry (ToolRegistry): The tool registry to set.
-        """
-        self.tool_registry = tool_registry
-
-    def get_tool_registry(self) -> ToolRegistry:
-        """
-        Get the tool registry for the agent.
-
-        Returns:
-            ToolRegistry: The tool registry.
-        """
-        return self.tool_registry
-
     def register_tool(self, func: Callable):
         """
         Register a tool function with the agent's ToolRegistry.
@@ -138,5 +120,8 @@ class LLMChatAgent(Agent):
             return self.tool_registry.invoke_tool_call(tool_call)
         except ValueError as ve:
             return f"Tool invocation failed: {ve}"
+        except TypeError as te:
+            return f"Tool invocation failed: {te}"
         except Exception as e:
             return f"Unexpected error during tool invocation: {e}"
+        
