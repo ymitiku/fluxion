@@ -2,119 +2,178 @@
 
 ![CI Workflow](https://github.com/ymitiku/fluxion/actions/workflows/ci.yml/badge.svg)
 
-
-**Fluxion** is a Python library for building flow-based agentic workflows powered by [Flyte](https://flyte.org). It enables seamless orchestration of tasks, integration with language models (LLMs), retrieval-augmented generation (RAG), and program execution, along with speech-to-text (STT) and text-to-speech (TTS) capabilities.
-
-
+**Fluxion** is a Python library for building flow-based agentic workflows. Designed with extensibility and modularity in mind, it integrates seamlessly with locally hosted language models (LLMs) powered by [Ollama](https://ollama.com). Fluxion enables the creation of intelligent agents that perform tasks such as conversational interactions, tool calling, and contextual reasoning.
 
 ---
 
+## **Table of Contents**
 
-## Installation
+- [Features](#features)
+- [Installation](#installation)
+- [Setting Up Ollama](#setting-up-ollama)
+- [Usage](#usage)
+  - [Calling Locally Hosted LLMs](#calling-locally-hosted-llms)
+  - [Using Agents for Chat and Tool Calls](#using-agents-for-chat-and-tool-calls)
+- [Examples](#examples)
+- [Contributing](#contributing)
+- [License](#license)
 
-### Prerequisites
+---
+
+## **Features**
+
+- **Agent Management:** Design and execute agents for tasks like LLM interactions, tool calling, and contextual reasoning.
+- **LLM Integration:** Connect to local LLMs hosted using [Ollama](https://ollama.com).
+- **Tool Calling Support:** Agents can dynamically call functions with generated arguments.
+- **Extensible Architecture:** Modular design allows for seamless customization and scalability.
+
+---
+
+## **Installation**
+
+### **Prerequisites**
 
 - Python 3.8+
-- [Flyte](https://flyte.org) installed and configured
 - Anaconda or virtual environment setup
+- [Ollama](https://ollama.com/docs) installed for hosting LLMs
 
-### Steps
+### **Steps**
 
-1. Clone the repository:
+1. **Clone the Repository:**
    ```bash
    git clone https://github.com/your-username/fluxion.git
    cd fluxion
    ```
 
-2. Set up an Anaconda environment:
+2. **Set Up the Environment:**
+   ```bash
+   bash scripts/setup_env.sh
+   ```
 
-```bash
-bash scripts/setup_env.sh
-```
+3. **Run Unit Tests:**
+   ```bash
+   bash scripts/run_tests.sh
+   ```
 
-3. Run unit tests:
+---
 
-```bash
+## **Setting Up Ollama**
 
-bash scripts/run_tests.sh
-```
+Fluxion is optimized for locally hosted LLMs using [Ollama](https://ollama.com). Follow these steps to set up your Ollama environment:
 
+1. **Install Ollama:**
+   - Visit the [Ollama Installation Guide](https://ollama.com/docs/installation) for detailed instructions.
 
-## Usage
+2. **Download a Model:**
+   - After installing Ollama, download a model (e.g., `llama3.2`):
+     ```bash
+     ollama pull llama3.2
+     ```
 
-### Calling locally hosted LLMs
+3. **Start the Ollama Server:**
+   - Run the Ollama server locally to host your model:
+     ```bash
+     ollama serve
+     ```
 
-To call locally hosted LLMs, you can use the following code snippet:
+4. **Verify the Server:**
+   - Ensure the server is running and accessible at `http://localhost:11434`.
 
-```python
-    llm_module = LLMQueryModule(endpoint="http://localhost:11434/api/generate", model="llama3.2")
-    response = llm_module.execute(prompt="What is the capital of France?")
-    print("Query: What is the capital of France?")
-    print("Response:", response)
-    llm_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2")
-    response = llm_module.execute(messages=[
-        {
-            "role": "user",
-            "content": "Hello!"
-        }
+---
 
-    ])
-    print("Chat:")
-    print("User: Hello!")
-    print("Response:", response["content"])
-```
+## **Usage**
 
-Currently, the `LLMQueryModule` and `LLMChatModule` classes support calling locally hosted LLMs. The `execute` method sends a request to the specified endpoint with the provided prompt or messages and returns the response.
+### **Calling Locally Hosted LLMs**
 
-### Using agents for chat interactions and tool calls
-
-Fluxion provides an `LLMChatAgent` class for managing chat interactions and tool calls. You can use the following code snippet to create an agent and execute a chat interaction with tool calls:
+You can use Fluxion to interact with locally hosted LLMs. Here's a basic example:
 
 ```python
-    def get_current_whether(city_name):
-        return {"temperature": 6.85, "description": "overcast clouds", "humidity": 91}
-    # Initialize the LLMChatModule
-    llm_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2", timeout=60)
+from fluxion.modules.llm_modules import LLMQueryModule, LLMChatModule
 
-    # Initialize the LLMChatAgent
-    llm_agent = LLMChatAgent(name="llm_chat_agent", llm_module=llm_module, system_instructions="Provide accurate answers.")
-    
+# Initialize the LLMQueryModule
+llm_query = LLMQueryModule(endpoint="http://localhost:11434/api/generate", model="llama3.2")
+response = llm_query.execute(prompt="What is the capital of France?")
+print("Query Response:", response)
 
-    ToolRegistry.register_tool(get_current_whether)
-    # Execute
-
-    messages = [
-        {
-            "role": "user",
-            "content": "What is the weather in Paris?"
-        }
-    ]
-
-    result = llm_agent.execute(messages)
-    print(result)
-    """
-    [
-        {'role': 'system', 'content': 'Provide accurate answers.'}, 
-        {'role': 'system', 'content': 'Provide accurate answers.'}, 
-        {'role': 'user', 'content': 'What is the weather in Paris?'}, 
-        {'role': 'assistant', 'content': '', 'tool_calls': [{'function': {'name': 'get_current_whether', 'arguments': {'city_name': 'Paris'}}}]}, 
-        {'role': 'tool', 'content': "{'temperature': 6.850000000000023, 'description': 'overcast clouds', 'humidity': 91}"}, 
-        {'role': 'assistant', 'content': 'The current weather in Paris is overcast with a temperature of 6.85°C (40.37°F) and high humidity at 91%.'}
-    ]
-
-    """
-
+# Initialize the LLMChatModule
+llm_chat = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2")
+response = llm_chat.execute(messages=[
+    {"role": "user", "content": "Hello!"}
+])
+print("Chat Response:", response)
 ```
 
+### **Using Agents for Chat and Tool Calls**
 
+Fluxion provides the `LLMChatAgent` class to manage conversations and tool calls:
 
+```python
+from fluxion.core.agent import LLMChatAgent
+from fluxion.core.registry.tool_registry import ToolRegistry
+from fluxion.modules.llm_modules import LLMChatModule
 
-## Key Features | TODOS
+# Define a tool function
+def get_weather(city_name: str) -> dict:
+    """Returns dummy weather data."""
+    return {"temperature": 20, "description": "sunny"}
 
-- **Flow Orchestration:** Build scalable workflows using Flyte.
-- **Agent Management:** Manage agents for tasks like LLM interactions, RAG, and program execution.
-- **LLM Integration:** Connect to local and cloud-based LLMs (e.g., OpenAI, Hugging Face).
-- **RAG Support:** Enable contextual workflows with document retrieval and embeddings.
-- **STT/TTS:** Convert speech to text and text to speech for interactive workflows.
-- **Error Recovery:** Built-in mechanisms for handling errors and retries.
-- **Extensible:** Modular architecture allows customization and scalability.
+# Register the tool
+ToolRegistry.register_tool(get_weather)
+
+# Initialize the LLMChatModule
+llm_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2")
+
+# Initialize the agent
+llm_agent = LLMChatAgent(name="WeatherAgent", llm_module=llm_module)
+
+# Execute a conversation
+messages = [{"role": "user", "content": "What's the weather in Paris?"}]
+response = llm_agent.execute(messages=messages)
+print("Chat with Tool Call Response:", response)
+```
+
+---
+
+## **Examples**
+
+### **Tool Calling**
+Use agents to interact with tools dynamically:
+
+```python
+from fluxion.core.agent import LLMChatAgent
+from fluxion.core.registry.tool_registry import ToolRegistry
+from fluxion.modules.llm_modules import LLMChatModule
+
+# Define a tool
+def get_current_time() -> str:
+    """Returns the current time."""
+    from datetime import datetime
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+# Register the tool
+ToolRegistry.register_tool(get_current_time)
+
+# Initialize the LLMChatAgent
+llm_chat = LLMChatAgent(
+    name="TimeAgent",
+    llm_module=LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2"),
+)
+
+# Execute a tool-based interaction
+messages = [{"role": "user", "content": "What time is it?"}]
+response = llm_chat.execute(messages=messages)
+print(response)
+```
+
+---
+
+## **Contributing**
+
+We welcome contributions to Fluxion! See the [CONTRIBUTING.md](CONTRIBUTING.md) file for guidelines on how to contribute.
+
+---
+
+## **License**
+
+This project is licensed under the [Apache License 2.0](LICENSE). You may use, modify, and distribute this software in accordance with the terms specified in the license.
+
