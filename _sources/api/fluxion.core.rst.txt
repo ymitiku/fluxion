@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   fluxion.core.perception
    fluxion.core.registry
 
 Submodules
@@ -32,6 +33,14 @@ fluxion.core.error\_recovery module
 -----------------------------------
 
 .. automodule:: fluxion.core.error_recovery
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+fluxion.core.llm\_agent module
+------------------------------
+
+.. automodule:: fluxion.core.llm_agent
    :members:
    :undoc-members:
    :show-inheritance:
