@@ -4,7 +4,8 @@ from fluxion.core.registry.tool_registry import ToolRegistry, extract_function_m
 
 class TestToolRegistry(unittest.TestCase):
     def setUp(self):
-        ToolRegistry._registry = {}  # Reset registry before each test
+        self.tool_registry = ToolRegistry()
+        
 
         def example_tool(param1: int, param2: str = "default"):
             """
@@ -17,10 +18,10 @@ class TestToolRegistry(unittest.TestCase):
             return f"Received {param1} and {param2}"
 
         self.example_tool = example_tool
-        ToolRegistry.register_tool(example_tool)
+        self.tool_registry.register_tool(example_tool)
 
     def tearDown(self):
-        ToolRegistry._registry = {}  # Reset registry after each test
+        self.tool_registry.clear_registry()
 
     def test_metadata_extraction(self):
         metadata = extract_function_metadata(self.example_tool)
@@ -39,7 +40,7 @@ class TestToolRegistry(unittest.TestCase):
         self.assertEqual(metadata, expected_metadata)
 
     def test_register_tool(self):
-        tools = ToolRegistry.list_tools()
+        tools = self.tool_registry.list_tools()
         self.assertIn("example_tool", tools)
         self.assertEqual(tools["example_tool"]["name"], "example_tool")
 
@@ -53,7 +54,7 @@ class TestToolRegistry(unittest.TestCase):
                 },
             }
         }
-        result = ToolRegistry.invoke_tool_call(tool_call)
+        result = self.tool_registry.invoke_tool_call(tool_call)
         self.assertEqual(result, "Received 42 and hello")
 
     def test_invoke_tool_call_missing_argument(self):
@@ -66,7 +67,7 @@ class TestToolRegistry(unittest.TestCase):
             }
         }
         with self.assertRaises(ValueError) as context:
-            ToolRegistry.invoke_tool_call(tool_call)
+            self.tool_registry.invoke_tool_call(tool_call)
         self.assertIn("Missing required argument: param1", str(context.exception))
 
     def test_invoke_tool_call_invalid_tool(self):
@@ -79,7 +80,7 @@ class TestToolRegistry(unittest.TestCase):
             }
         }
         with self.assertRaises(ValueError) as context:
-            ToolRegistry.invoke_tool_call(tool_call)
+            self.tool_registry.invoke_tool_call(tool_call)
         self.assertIn("Tool 'non_existent_tool' is not registered.", str(context.exception))
 
     def test_invoke_tool_call_type_error(self):
@@ -93,7 +94,7 @@ class TestToolRegistry(unittest.TestCase):
             }
         }
         with self.assertRaises(TypeError) as context:
-            ToolRegistry.invoke_tool_call(tool_call)
+            self.tool_registry.invoke_tool_call(tool_call)
         self.assertIn("Argument 'param1' must be of type int.", str(context.exception))
 
 

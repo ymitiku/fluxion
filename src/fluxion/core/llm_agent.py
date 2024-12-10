@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Callable
 from fluxion.core.agent import Agent
 from fluxion.core.registry.agent_registry import AgentRegistry
 from fluxion.modules.llm_modules import LLMQueryModule, LLMChatModule
@@ -35,7 +35,7 @@ class LLMQueryAgent(Agent):
             raise ValueError("Invalid query: Empty")
         prompt = self.system_instructions + "\n\n" + query if self.system_instructions else query
         return self.llm_module.execute(prompt=prompt)
-    
+
 
 class LLMChatAgent(Agent):
     """
@@ -52,7 +52,36 @@ class LLMChatAgent(Agent):
         """
         self.llm_module = llm_module
         self.max_tool_call_depth = max_tool_call_depth
+        self.tool_registry = ToolRegistry()
         super().__init__(name, system_instructions)
+
+
+    def set_tool_registry(self, tool_registry: ToolRegistry):
+        """
+        Set the tool registry for the agent.
+
+        Args:
+            tool_registry (ToolRegistry): The tool registry to set.
+        """
+        self.tool_registry = tool_registry
+
+    def get_tool_registry(self) -> ToolRegistry:
+        """
+        Get the tool registry for the agent.
+
+        Returns:
+            ToolRegistry: The tool registry.
+        """
+        return self.tool_registry
+
+    def register_tool(self, func: Callable):
+        """
+        Register a tool function with the agent's ToolRegistry.
+
+        Args:
+            func (callable): The tool function to register.
+        """
+        self.tool_registry.register_tool(func)
 
     def execute(self, messages: List[Dict[str, str]], depth: int = 0) -> List[Dict[str, str]]:
         """
@@ -77,23 +106,21 @@ class LLMChatAgent(Agent):
         if system_message:
             messages.insert(0, system_message)
 
-        # Get registered tools
+        # Get tools from the agent's ToolRegistry
+        tools = [{"type": "function", "function": tool} for _, tool in self.tool_registry.list_tools().items()]
 
-        tool_names = ToolRegistry.get_tool_names()
-        tools = [ToolRegistry.get_tool(tool_name) for tool_name in tool_names]
 
         # Interact with the LLM
         response = self.llm_module.execute(messages=messages, tools=tools)
         messages.append(response)
-    
-        
+
         # Handle tool calls if present
         if "tool_calls" in response:
-            for tool in response["tool_calls"]:
-                tool_result = self._handle_tool_call(tool)
-               
+            for tool_call in response["tool_calls"]:
+                tool_result = self._handle_tool_call(tool_call)
                 messages.append({"role": "tool", "content": str(tool_result)})
-            if depth < self.max_tool_call_depth: # To avoid infinite recursion
+
+            if depth < self.max_tool_call_depth:  # Prevent infinite recursion
                 return self.execute(messages, depth=depth + 1)
         return messages
 
@@ -108,10 +135,8 @@ class LLMChatAgent(Agent):
             str: The result of the tool invocation.
         """
         try:
-            return ToolRegistry.invoke_tool_call(tool_call)
+            return self.tool_registry.invoke_tool_call(tool_call)
         except ValueError as ve:
             return f"Tool invocation failed: {ve}"
         except Exception as e:
             return f"Unexpected error during tool invocation: {e}"
-        
-

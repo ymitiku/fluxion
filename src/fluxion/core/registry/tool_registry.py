@@ -1,5 +1,5 @@
 import inspect
-from typing import List
+from typing import List, Dict, Any, Callable
 import docstring_parser
 from typing import Dict, Any
 
@@ -40,96 +40,82 @@ def extract_function_metadata(func):
     return metadata
 
 
-
-def invoke_tool_call(tool_call: Dict[str, Any]):
-    """
-    Invoke a tool call dynamically using the tool registry.
-
-    Args:
-        tool_call (dict): The tool call data, including function name and arguments.
-
-    Returns:
-        Any: The result of the function call.
-    """
-    func_name = tool_call["function"]["name"]
-    arguments = tool_call["function"]["arguments"]
-
-    tool = ToolRegistry.get_tool(func_name)
-    if not tool:
-        raise ValueError(f"Function '{func_name}' is not registered.")
-
-    func = tool["func"]
-    return func(**arguments)
-
-
-
-
-
-
 class ToolRegistry:
-    _registry = {}
+    """
+    Instance-based registry for managing tools within an agent.
+    """
+    def __init__(self):
+        self._registry: Dict[str, Callable] = {}
 
-    @classmethod
-    def register_tool(cls, func):
-        metadata = extract_function_metadata(func)
-        cls._registry[metadata["name"]] = {"func": func, "metadata": metadata}
-
-    @classmethod
-    def get_tool(cls, name):
-        if name not in cls._registry:
-            raise ValueError(f"Tool '{name}' is not registered.")
-        tool = cls._registry.get(name)
-        return {
-            "type": "function",
-            "function": tool["metadata"],
-        }
-
-    @classmethod
-    def get_tool_func(self, name):
-        if name not in self._registry:
-            raise ValueError(f"Tool '{name}' is not registered.")
-        return self._registry.get(name)["func"]
-    
-    @classmethod
-    def get_tool_names(cls):
-        return list(cls._registry.keys())
-    
-    
-    
-
-    @classmethod
-    def list_tools(cls):
-        return {name: tool["metadata"] for name, tool in cls._registry.items()}
-    
-    @classmethod
-    def invoke_tool_call(cls, tool_call: Dict[str, Any]):
+    def register_tool(self, func: Callable):
         """
-        Invoke a tool call dynamically using the tool registry.
+        Register a tool function.
 
         Args:
-            tool_call (dict): The tool call data, including function name and arguments.
+            func (Callable): The tool function to register.
+        """
+        metadata = extract_function_metadata(func)
+        tool_name = metadata["name"]
+        if tool_name in self._registry:
+            raise ValueError(f"Tool '{tool_name}' is already registered.")
+        self._registry[tool_name] = {"func": func, "metadata": metadata}
+
+    def get_tool(self, name: str) -> Dict[str, Any]:
+        """
+        Get a registered tool by name.
+
+        Args:
+            name (str): The name of the tool.
 
         Returns:
-            Any: The result of the function call.
+            Dict[str, Any]: The tool metadata.
+        """
+        if name not in self._registry:
+            raise ValueError(f"Tool '{name}' is not registered.")
+        return {
+            "type": "function",
+            "function": self._registry[name]["metadata"],
+        }
+
+    def list_tools(self) -> Dict[str, Any]:
+        """
+        List all registered tools.
+
+        Returns:
+            Dict[str, Any]: A dictionary of tool metadata.
+        """
+        return {name: tool["metadata"] for name, tool in self._registry.items()}
+
+    def invoke_tool_call(self, tool_call: Dict[str, Any]) -> Any:
+        """
+        Invoke a registered tool dynamically.
+
+        Args:
+            tool_call (Dict[str, Any]): Tool call details including function name and arguments.
+
+        Returns:
+            Any: The result of the tool function.
         """
         func_name = tool_call["function"]["name"]
         arguments = tool_call["function"]["arguments"]
 
-        metadata = ToolRegistry.get_tool(func_name)["function"]
+        metadata = self.get_tool(func_name)["function"]
 
-        cls.validate_arguments(metadata, arguments)
+        self.validate_arguments(metadata, arguments)
 
-        tool = ToolRegistry.get_tool(func_name)
+        tool = self._registry.get(func_name)
         if not tool:
-            raise ValueError(f"Function '{func_name}' is not registered.")
+            raise ValueError(f"Tool '{func_name}' is not registered.")
 
-        func = cls.get_tool_func(func_name)
-        try :
-            return func(**arguments)
-        except Exception as e:
-            raise RuntimeError(f"Error invoking function '{func_name}': {e}")
+        func = tool["func"]
+        return func(**arguments)
     
-    @classmethod
+    def clear_registry(self):
+        """
+        Clear the tool registry.
+        """
+        self._registry.clear()
+
     def validate_arguments(cls, metadata, arguments):
         properties = metadata["parameters"]["properties"]
         required = metadata["parameters"]["required"]
@@ -139,14 +125,6 @@ class ToolRegistry:
             expected_type = properties[arg]["type"]
             if expected_type != "unknown" and not isinstance(arguments[arg], eval(expected_type)):
                 raise TypeError(f"Argument '{arg}' must be of type {expected_type}.")
-
-    @classmethod
-    def clear_registry(cls):
-        cls._registry.clear()
-    
-
-
-
 
 
 if __name__ == "__main__":
