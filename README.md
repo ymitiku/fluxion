@@ -36,6 +36,10 @@
 - Python 3.8+
 - Anaconda or virtual environment setup
 - [Ollama](https://ollama.com/docs) installed for hosting LLMs
+- PyAudio
+    ```bash
+    sudo apt install portaudio19-dev
+    ```
 
 ### **Steps**
 
@@ -117,15 +121,15 @@ def get_weather(city_name: str) -> dict:
     """Returns dummy weather data."""
     return {"temperature": 20, "description": "sunny"}
 
-# Register the tool
-ToolRegistry.register_tool(get_weather)
+
 
 # Initialize the LLMChatModule
 llm_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2")
 
 # Initialize the agent
 llm_agent = LLMChatAgent(name="WeatherAgent", llm_module=llm_module)
-
+# Register the tool
+llm_agent.register_tool(get_weather)
 # Execute a conversation
 messages = [{"role": "user", "content": "What's the weather in Paris?"}]
 response = llm_agent.execute(messages=messages)
