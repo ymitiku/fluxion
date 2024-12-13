@@ -20,7 +20,7 @@ class TextToSpeechError(AudioUtilsError):
     pass
 
 
-def save_audio(text: str, filepath: str, lang: str = "en"):
+def google_text_to_speech(text: str, filepath: str, lang: str = "en"):
     """
     Converts text to speech and saves it as an audio file.
 
@@ -114,7 +114,7 @@ class AudioUtils:
         """
         try:
             with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmp_file:
-                save_audio(text, tmp_file.name)
+                google_text_to_speech(text, tmp_file.name)
                 play_audio(tmp_file.name)
             os.unlink(tmp_file.name)
         except Exception as e:

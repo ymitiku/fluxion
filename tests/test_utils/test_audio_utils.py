@@ -10,7 +10,7 @@ class TestAudioUtils(unittest.TestCase):
         self.audio_utils = AudioUtils(recognizer=self.mock_recognizer, lang="en")
 
     @patch("fluxion.utils.audio_utils.play_audio")
-    @patch("fluxion.utils.audio_utils.save_audio")
+    @patch("fluxion.utils.audio_utils.google_text_to_speech")
     @patch("tempfile.NamedTemporaryFile")
     @patch("os.unlink")
     def test_text_to_speech_success(self, mock_unlink, mock_tempfile, mock_save_audio, mock_play_audio):
@@ -32,7 +32,7 @@ class TestAudioUtils(unittest.TestCase):
 
     @patch("fluxion.utils.audio_utils.load_audio")
     @patch("fluxion.utils.audio_utils.play_audio")
-    @patch("fluxion.utils.audio_utils.save_audio")
+    @patch("fluxion.utils.audio_utils.google_text_to_speech")
     @patch("tempfile.NamedTemporaryFile")
     def test_text_to_speech_failure(self, mock_tempfile, mock_save_audio, mock_play_audio, mock_load_audio):
         mock_load_audio.side_effect = Exception("Mock TTS error")
