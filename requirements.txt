@@ -1,7 +1,6 @@
 chromadb==0.3.25
 docstring_parser==0.16
 faiss-cpu==1.8.0
-flytekit==1.13.15
 openai==0.27.8
 pyttsx3==2.90
 Pillow==10.4.0

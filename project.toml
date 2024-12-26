@@ -2,9 +2,3 @@
 pythonpath = [
   "src"
 ]
-
-[project]
-name = "fluxion"
-version = "0.1.0"  # Make sure to include this line
-dynamic = ["version"]
-description = "A simple, fast, and flexible agentic flow creation library."
