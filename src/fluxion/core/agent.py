@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Any, Dict
 from fluxion.core.registry.agent_registry import AgentRegistry
 
 class Agent(ABC):
@@ -21,7 +22,7 @@ class Agent(ABC):
         AgentRegistry.register_agent(name, self)
 
     @abstractmethod
-    def execute(self, query: str) -> str:
+    def execute(self, **kwargs: Dict[str, Any]) -> str:
         """
         Execute the agent logic.
 
