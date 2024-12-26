@@ -2,3 +2,8 @@
 pythonpath = [
   "src"
 ]
+
+[project]
+name = "fluxion"
+dynamic = ["version"]
+description = "A simple, fast, and flexible agentic flow creation library."
