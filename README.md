@@ -33,7 +33,7 @@
 
 ### **Prerequisites**
 
-- Python 3.8+
+- Python 3.10+
 - Anaconda or virtual environment setup
 - [Ollama](https://ollama.com/docs) installed for hosting LLMs
 - PyAudio

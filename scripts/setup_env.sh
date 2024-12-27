@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-conda create -n fluxion-env python=3.8 -y
+conda create -n fluxion-env python=3.10 -y
 conda init
 source activate fluxion-env
 which python
