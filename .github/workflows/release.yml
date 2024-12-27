@@ -50,13 +50,6 @@ jobs:
         run: |
           python setup.py sdist bdist_wheel
 
-      - name: Publish to PyPI
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: |
-          twine upload dist/*
-
       - name: Push Changes and Create Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
