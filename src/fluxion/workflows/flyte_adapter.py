@@ -3,8 +3,10 @@ from fluxion.workflows.abstract_workflow import AbstractWorkflow
 from fluxion.workflows.agent_node import AgentNode
 from typing import Any, Dict
 
+import logging
+
 class FlyteWorkflowAdapter:
-    """
+    """initial_inputs
     Adapter to convert an AbstractWorkflow into a Flyte workflow.
     """
 
@@ -32,10 +34,14 @@ class FlyteWorkflowAdapter:
         Returns:
             Dict[str, Any]: The results from executing the workflow.
         """
-        flyte_workflow = self.generate_flyte_workflow()
-        output =  flyte_workflow(inputs)
-        print("output", output)
-        return output
+        try:
+            logging.info(f"Executing Flyte workflow: {self.workflow.name}")
+            flyte_workflow = self.generate_flyte_workflow()
+            output =  flyte_workflow(inputs)
+            return output
+        except Exception as e:
+            logging.error(f"Error executing Flyte workflow: {e}")
+            return {"error": f"Error executing Flyte workflow: {e}"}
 
 
 # Task to execute a single AgentNode
@@ -70,13 +76,12 @@ def flyte_dynamic_workflow(workflow: AbstractWorkflow) -> Dict[str, Any]:
         Dict[str, Any]: The results from executing the workflow.
     """
     results = {}
-    inputs = workflow.initial_inputs
+    inputs = getattr(workflow, "initial_inputs", {})
 
     # Determine execution order and run nodes
     execution_order = workflow.determine_execution_order()
     for node_name in execution_order:
         node = workflow.get_node_by_name(node_name)
-        all_inputs = {**inputs, **results}  # Combine inputs and previous results
 
         # Execute the node as a Flyte task
         node_result = flyte_task(results, inputs, node_name=node_name, workflow=workflow)
