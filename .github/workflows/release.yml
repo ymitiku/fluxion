@@ -1,0 +1,68 @@
+name: Automated Versioning and Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  release:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install bump2version twine setuptools wheel
+
+      - name: Determine Version Bump
+        id: version_bump
+        run: |
+          git fetch --all
+          LAST_TAG=$(git describe --tags --abbrev=0 || echo "0.0.0")
+          echo "LAST_TAG=$LAST_TAG" >> $GITHUB_ENV
+
+          if git log --pretty=format:%s "$LAST_TAG"...HEAD | grep -q '^feat'; then
+            echo "VERSION_BUMP=minor" >> $GITHUB_ENV
+          elif git log --pretty=format:%s "$LAST_TAG"...HEAD | grep -q '^fix'; then
+            echo "VERSION_BUMP=patch" >> $GITHUB_ENV
+          else
+            echo "VERSION_BUMP=patch" >> $GITHUB_ENV
+          fi
+
+      - name: Bump Version
+        run: |
+          bump2version --current-version $LAST_TAG $VERSION_BUMP --allow-dirty
+        env:
+          VERSION_BUMP: ${{ env.VERSION_BUMP }}
+
+      - name: Build Package
+        run: |
+          python setup.py sdist bdist_wheel
+
+      - name: Publish to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          twine upload dist/*
+
+      - name: Push Changes and Create Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git push origin main
+          VERSION=$(python setup.py --version)
+          gh release create "v$VERSION" dist/* --title "Release v$VERSION" --notes "Automated release."
