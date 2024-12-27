@@ -1,7 +1,6 @@
-from typing import Dict, Any
+from typing import Dict, List, Any
 from abc import ABC, abstractmethod
-
-from abc import ABC, abstractmethod
+from fluxion.workflows.agent_node import AgentNode
 
 
 class AbstractWorkflow(ABC):
@@ -20,7 +19,15 @@ class AbstractWorkflow(ABC):
             name (str): The name of the workflow.
         """
         self.name = name
-        self.nodes = {}
+        self._nodes = {}
+
+    @property
+    def nodes(self):
+        return self._nodes
+    
+    @nodes.setter
+    def nodes(self, nodes):
+        raise ValueError("Cannot set nodes directly. Use add_node method instead.")
 
     @abstractmethod
     def define_workflow(self):
@@ -30,7 +37,7 @@ class AbstractWorkflow(ABC):
         """
         pass
 
-    def get_node_by_name(self, name):
+    def get_node_by_name(self, name: str):
         """
         Get a node by name.
 
@@ -62,6 +69,9 @@ class AbstractWorkflow(ABC):
         Raises:
             ValueError: If a node has an invalid dependency or a circular dependency is detected.
         """
+        if not self.nodes:
+            raise ValueError("Workflow has no nodes to validate.")
+
         visited = set()
         stack = set()
 
@@ -75,14 +85,19 @@ class AbstractWorkflow(ABC):
             visited.add(node_name)
 
             node = self.nodes.get(node_name)
-            node_names = [node.name for node in self.nodes.values()]
-            
+            node_names = [n.name for n in self.nodes.values()]
+
             if not node:
                 raise ValueError(f"Node '{node_name}' does not exist in the workflow.")
-            
             for dependency in node.dependencies:
                 if dependency.name not in node_names:
-                    raise ValueError(f"Dependency '{dependency}' for node '{node_name}' does not exist in the workflow.")
+                    raise ValueError(
+                        f"Dependency '{dependency.name}' for node '{node_name}' does not exist. "
+                        f"Available nodes: {node_names}"
+                    )
+                if not isinstance(dependency, AgentNode):
+                    raise ValueError(f"Dependency '{dependency}' is not a valid AgentNode.")
+
                 visit(dependency.name)
 
             stack.remove(node_name)
@@ -90,13 +105,16 @@ class AbstractWorkflow(ABC):
         for node_name in self.nodes:
             visit(node_name)
 
-    def determine_execution_order(self):
+    def determine_execution_order(self) -> List[str]:
         """
         Determine the execution order of nodes based on dependencies.
 
         Returns:
             List[str]: A list of node names in the order they should be executed.
         """
+        if not self.nodes:
+            raise ValueError("Workflow has no nodes to determine execution order.")
+
         order = []
         visited = set()
 
@@ -113,23 +131,22 @@ class AbstractWorkflow(ABC):
 
         return order
 
-    def execute(self, inputs=None):
+    def execute(self, inputs: Dict[str, Any] = None) -> Dict[str, Any]:
         """
         Execute the workflow.
 
         Args:
-            inputs (dict, optional): A dictionary of inputs for the workflow.
+            inputs (Dict[str, Any], optional): Inputs for the workflow.
 
         Returns:
-            dict: The results of the workflow execution.
+            Dict[str, Any]: Results of the workflow execution.
         """
         self._validate_dependencies()
         execution_order = self.determine_execution_order()
-        results = {}
 
+        results = {}
         for node_name in execution_order:
             node = self.nodes[node_name]
-            
             results[node_name] = node.execute(results=results, inputs=inputs)
 
         return results
