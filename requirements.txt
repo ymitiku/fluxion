@@ -8,3 +8,4 @@ speechrecognition==3.8.1
 gtts
 playsound
 PyAudio
+numpy==1.26.0
