@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,9 +12,9 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=f6245a2f"></script>
-      <script src="../../../_static/doctools.js?v=888ff710"></script>
-      <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -121,7 +121,9 @@
 <span class="s2">    ```</span>
 <span class="s2">&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="LLMApiModule"><a class="viewcode-back" href="../../../api/fluxion.modules.html#fluxion.modules.llm_modules.LLMApiModule">[docs]</a><span class="k">class</span> <span class="nc">LLMApiModule</span><span class="p">(</span><span class="n">ApiModule</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="LLMApiModule">
+<a class="viewcode-back" href="../../../api/fluxion.modules.html#fluxion.modules.llm_modules.LLMApiModule">[docs]</a>
+<span class="k">class</span> <span class="nc">LLMApiModule</span><span class="p">(</span><span class="n">ApiModule</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Provides an interface for interacting with a locally hosted LLM via REST API.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -130,7 +132,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">response_key</span> <span class="o">=</span> <span class="n">response_key</span>
     
-<div class="viewcode-block" id="LLMApiModule.execute"><a class="viewcode-back" href="../../../api/fluxion.modules.html#fluxion.modules.llm_modules.LLMApiModule.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="LLMApiModule.execute">
+<a class="viewcode-back" href="../../../api/fluxion.modules.html#fluxion.modules.llm_modules.LLMApiModule.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Execute the LLM module. The implementation should be provided by subclasses.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_input_params</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -140,33 +144,48 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid input: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> is empty.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">full_response</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LLMApiModule.get_input_params"><a class="viewcode-back" href="../../../api/fluxion.modules.html#fluxion.modules.llm_modules.LLMApiModule.get_input_params">[docs]</a>    <span class="nd">@abstractmethod</span>
+
+<div class="viewcode-block" id="LLMApiModule.get_input_params">
+<a class="viewcode-back" href="../../../api/fluxion.modules.html#fluxion.modules.llm_modules.LLMApiModule.get_input_params">[docs]</a>
+    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">get_input_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="LLMApiModule.get_response"><a class="viewcode-back" href="../../../api/fluxion.modules.html#fluxion.modules.llm_modules.LLMApiModule.get_response">[docs]</a>    <span class="k">def</span> <span class="nf">get_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">full_response</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="LLMApiModule.get_response">
+<a class="viewcode-back" href="../../../api/fluxion.modules.html#fluxion.modules.llm_modules.LLMApiModule.get_response">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">full_response</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">response</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_process</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">full_response</span><span class="p">)</span>
 
         <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RequestException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;API request failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span></div>
+
         
-<div class="viewcode-block" id="LLMApiModule.post_process"><a class="viewcode-back" href="../../../api/fluxion.modules.html#fluxion.modules.llm_modules.LLMApiModule.post_process">[docs]</a>    <span class="k">def</span> <span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">full_response</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="LLMApiModule.post_process">
+<a class="viewcode-back" href="../../../api/fluxion.modules.html#fluxion.modules.llm_modules.LLMApiModule.post_process">[docs]</a>
+    <span class="k">def</span> <span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">full_response</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">full_response</span> <span class="ow">and</span> <span class="s2">&quot;error&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
             <span class="n">response</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">response_key</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">response</span></div></div>
+        <span class="k">return</span> <span class="n">response</span></div>
+</div>
 
 
 
 
-<div class="viewcode-block" id="LLMQueryModule"><a class="viewcode-back" href="../../../api/fluxion.modules.html#fluxion.modules.llm_modules.LLMQueryModule">[docs]</a><span class="k">class</span> <span class="nc">LLMQueryModule</span><span class="p">(</span><span class="n">LLMApiModule</span><span class="p">):</span>
+
+<div class="viewcode-block" id="LLMQueryModule">
+<a class="viewcode-back" href="../../../api/fluxion.modules.html#fluxion.modules.llm_modules.LLMQueryModule">[docs]</a>
+<span class="k">class</span> <span class="nc">LLMQueryModule</span><span class="p">(</span><span class="n">LLMApiModule</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class to handle querying an LLM via REST API.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 
-<div class="viewcode-block" id="LLMQueryModule.get_input_params"><a class="viewcode-back" href="../../../api/fluxion.modules.html#fluxion.modules.llm_modules.LLMQueryModule.get_input_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_input_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="LLMQueryModule.get_input_params">
+<a class="viewcode-back" href="../../../api/fluxion.modules.html#fluxion.modules.llm_modules.LLMQueryModule.get_input_params">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_input_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the input parameters for the LLM query.</span>
 
@@ -181,10 +200,14 @@
             <span class="s2">&quot;prompt&quot;</span><span class="p">:</span> <span class="n">prompt</span><span class="p">,</span>
             <span class="s2">&quot;stream&quot;</span><span class="p">:</span> <span class="kc">False</span>
         <span class="p">}</span>
-        <span class="k">return</span> <span class="n">data</span></div></div>
+        <span class="k">return</span> <span class="n">data</span></div>
+</div>
+
     
 
-<div class="viewcode-block" id="LLMChatModule"><a class="viewcode-back" href="../../../api/fluxion.modules.html#fluxion.modules.llm_modules.LLMChatModule">[docs]</a><span class="k">class</span> <span class="nc">LLMChatModule</span><span class="p">(</span><span class="n">LLMApiModule</span><span class="p">):</span>
+<div class="viewcode-block" id="LLMChatModule">
+<a class="viewcode-back" href="../../../api/fluxion.modules.html#fluxion.modules.llm_modules.LLMChatModule">[docs]</a>
+<span class="k">class</span> <span class="nc">LLMChatModule</span><span class="p">(</span><span class="n">LLMApiModule</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class to handle chatting with an LLM via REST API.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -192,7 +215,9 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">,</span> <span class="n">model</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">headers</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">response_key</span> <span class="o">=</span> <span class="s2">&quot;message&quot;</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">response_key</span><span class="p">)</span>
 
-<div class="viewcode-block" id="LLMChatModule.get_input_params"><a class="viewcode-back" href="../../../api/fluxion.modules.html#fluxion.modules.llm_modules.LLMChatModule.get_input_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_input_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">tools</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<div class="viewcode-block" id="LLMChatModule.get_input_params">
+<a class="viewcode-back" href="../../../api/fluxion.modules.html#fluxion.modules.llm_modules.LLMChatModule.get_input_params">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_input_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">tools</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the input parameters for the LLM chat.</span>
 
@@ -208,7 +233,9 @@
             <span class="s2">&quot;stream&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
             <span class="s2">&quot;tools&quot;</span><span class="p">:</span> <span class="n">tools</span> <span class="ow">or</span> <span class="p">[]</span>
         <span class="p">}</span>
-        <span class="k">return</span> <span class="n">data</span></div></div>
+        <span class="k">return</span> <span class="n">data</span></div>
+</div>
+
     
 
 

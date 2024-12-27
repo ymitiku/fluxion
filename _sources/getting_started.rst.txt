@@ -9,7 +9,7 @@ Installation
 Prerequisites
 ~~~~~~~~~~~~~
 
-- Python 3.8+
+- Python 3.10+
 - [Flyte](https://flyte.org) installed and configured
 - Anaconda or virtual environment setup
 
