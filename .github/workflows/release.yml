@@ -23,22 +23,23 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install bump2version twine setuptools wheel
+          pip install bump2version setuptools wheel
 
       - name: Determine Version Bump
         id: version_bump
         run: |
-          git fetch --all
+          git fetch --all --tags
           LAST_TAG=$(git describe --tags --abbrev=0 || echo "0.0.0")
           echo "LAST_TAG=$LAST_TAG" >> $GITHUB_ENV
 
           if git log --pretty=format:%s "$LAST_TAG"...HEAD | grep -q '^feat'; then
-            echo "VERSION_BUMP=minor" >> $GITHUB_ENV
+            VERSION_BUMP=minor
           elif git log --pretty=format:%s "$LAST_TAG"...HEAD | grep -q '^fix'; then
-            echo "VERSION_BUMP=patch" >> $GITHUB_ENV
+            VERSION_BUMP=patch
           else
-            echo "VERSION_BUMP=patch" >> $GITHUB_ENV
+            VERSION_BUMP=patch
           fi
+          echo "VERSION_BUMP=$VERSION_BUMP" >> $GITHUB_ENV
 
       - name: Bump Version
         run: |
@@ -46,16 +47,17 @@ jobs:
         env:
           VERSION_BUMP: ${{ env.VERSION_BUMP }}
 
-      - name: Build Package
-        run: |
-          python setup.py sdist bdist_wheel
-
-      - name: Push Changes and Create Release
+      - name: Push Changes and Create Tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git push origin main
-          VERSION=$(python setup.py --version)
-          gh release create "v$VERSION" dist/* --title "Release v$VERSION" --notes "Automated release."
+          git push origin main --tags
+
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=$(git describe --tags --abbrev=0)
+          gh release create "$VERSION" --notes "Automated release for version $VERSION."
