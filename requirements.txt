@@ -10,3 +10,4 @@ gtts
 playsound
 PyAudio
 numpy==1.26.0
+graphviz==0.20.3
