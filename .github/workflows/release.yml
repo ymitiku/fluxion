@@ -33,7 +33,7 @@ jobs:
       - name: Get Last Tag
         id: last_tag
         run: |
-          LAST_TAG=$(git describe --tags --abbrev=0 || echo "0.0.0")
+          LAST_TAG=$(git describe --tags --abbrev=0 || echo "v0.0.0")
           # Remove the "v" prefix if it exists
           CLEAN_TAG=${LAST_TAG#v}
           echo "CLEAN_TAG=$CLEAN_TAG" >> $GITHUB_ENV
@@ -43,34 +43,40 @@ jobs:
       - name: Determine Version Bump
         id: version_bump
         run: |
+          VERSION_BUMP=""
           if git log --pretty=format:%s "${{ env.LAST_TAG }}"...HEAD | grep -q '^feat'; then
-            echo "VERSION_BUMP=minor" >> $GITHUB_ENV
+            VERSION_BUMP="minor"
           elif git log --pretty=format:%s "${{ env.LAST_TAG }}"...HEAD | grep -q '^fix'; then
-            echo "VERSION_BUMP=patch" >> $GITHUB_ENV
+            VERSION_BUMP="patch"
           elif git log --pretty=format:%s "${{ env.LAST_TAG }}"...HEAD | grep -q '^bug'; then
-            echo "VERSION_BUMP=major" >> $GITHUB_ENV
+            VERSION_BUMP="major"
+          fi
+
+          if [ -z "$VERSION_BUMP" ]; then
+            echo "NO_VERSION_BUMP=true" >> $GITHUB_ENV
           else
-            echo "NO_VERSION_BUMP" >> $GITHUB_ENV
+            echo "VERSION_BUMP=$VERSION_BUMP" >> $GITHUB_ENV
+          fi
 
       - name: Skip if No Version Bump
-        if: ${{ env.NO_VERSION_BUMP }}
+        if: env.NO_VERSION_BUMP == 'true'
         run: echo "No version bump required for this merge."
 
       - name: Setup Git Credentials
-        if: ${{ env.VERSION_BUMP }}
+        if: env.VERSION_BUMP
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Bump Version
-        if: ${{ env.VERSION_BUMP }}
+        if: env.VERSION_BUMP
         run: |
           bump2version --current-version ${{ env.CLEAN_TAG }} ${{ env.VERSION_BUMP }} --allow-dirty setup.py
         env:
           VERSION_BUMP: ${{ env.VERSION_BUMP }}
 
       - name: Push Changes and Create PR
-        if: ${{ env.VERSION_BUMP }}
+        if: env.VERSION_BUMP
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
