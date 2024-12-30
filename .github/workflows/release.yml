@@ -74,10 +74,29 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git checkout -b version-bump-${{ env.VERSION_BUMP }}
-          git push origin version-bump-${{ env.VERSION_BUMP }}
+          TIMESTAMP=$(date +%s)
+          BRANCH_NAME=version-bump-${{ env.VERSION_BUMP }}-$TIMESTAMP
+          git checkout -b $BRANCH_NAME
+          git push origin $BRANCH_NAME
 
           VERSION=$(python setup.py --version)
-          gh pr create --base main --head version-bump-${{ env.VERSION_BUMP }} \
+          gh pr create --base main --head $BRANCH_NAME \
             --title "Version Bump: $VERSION" \
             --body "Automated PR to bump version to $VERSION."
+
+  cleanup:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Delete Version Bump Branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH_NAME=$(echo ${{ github.event.pull_request.head.ref }})
+          if [[ $BRANCH_NAME == version-bump-* ]]; then
+            echo "Deleting branch $BRANCH_NAME"
+            git push origin --delete $BRANCH_NAME
+          else
+            echo "Branch $BRANCH_NAME is not a version bump branch, skipping deletion."
+          fi
