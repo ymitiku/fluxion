@@ -40,6 +40,10 @@
     ```bash
     sudo apt install portaudio19-dev
     ```
+- Graphviz
+    ```bash
+    sudo apt install graphviz
+    ```
 
 ### **Steps**
 

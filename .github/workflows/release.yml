@@ -43,15 +43,16 @@ jobs:
       - name: Determine Version Bump
         id: version_bump
         run: |
+
         VERSION_BUMP=""
         if git log --pretty=format:%s "${{ env.LAST_TAG }}"...HEAD | grep -q '^feat'; then
-          VERSION_BUMP=minor
+          VERSION_BUMP="minor"
         elif git log --pretty=format:%s "${{ env.LAST_TAG }}"...HEAD | grep -q '^fix'; then
-          VERSION_BUMP=patch
+          VERSION_BUMP="patch"
         elif git log --pretty=format:%s "${{ env.LAST_TAG }}"...HEAD | grep -q '^bug'; then
-          VERSION_BUMP=major
+          VERSION_BUMP="major"
         fi
-        
+
         if [ -z "$VERSION_BUMP" ]; then
           echo "NO_VERSION_BUMP=true" >> $GITHUB_ENV
         else

@@ -1,6 +1,8 @@
 from typing import Dict, List, Any
 from abc import ABC, abstractmethod
 from fluxion.workflows.agent_node import AgentNode
+from graphviz import Digraph
+
 
 
 class AbstractWorkflow(ABC):
@@ -186,3 +188,32 @@ class AbstractWorkflow(ABC):
             results[node_name] = node.execute(results=results, inputs=inputs)
 
         return results
+
+
+    def visualize(self, output_path: str = "workflow_graph", format: str = "png"):
+        """
+        Visualizes the workflow as a directed graph.
+
+        Args:
+            output_path (str): The output path for the generated graph (without extension).
+            format (str): The format of the output file (e.g., 'png', 'pdf').
+
+        Returns:
+            str: Path to the generated visualization file.
+        """
+        dot = Digraph(name=self.name, format=format)
+        dot.attr(rankdir='LR')
+
+        # Add nodes to the graph
+        for node in self.nodes.values():
+            dot.node(node.name, label=node.name)
+
+        # Add edges to represent dependencies
+        for node in self.nodes.values():
+            for dependency in node.dependencies:
+                dot.edge(dependency.name, node.name)
+
+        # Render the graph
+        output_file = dot.render(filename=output_path, cleanup=True)
+        print(f"Workflow visualization saved to: {output_file}")
+        return output_file
