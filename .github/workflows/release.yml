@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch the full history, including tags
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -28,24 +30,28 @@ jobs:
       - name: Fetch All Tags
         run: git fetch --all --tags
 
-      - name: Determine Version Bump
-        id: version_bump
+      - name: Get Last Tag
+        id: last_tag
         run: |
           LAST_TAG=$(git describe --tags --abbrev=0 || echo "0.0.0")
           echo "LAST_TAG=$LAST_TAG" >> $GITHUB_ENV
+          echo "Last tag is $LAST_TAG"
 
-          if git log --pretty=format:%s "$LAST_TAG"...HEAD | grep -q '^feat'; then
-            VERSION_BUMP=minor
-          elif git log --pretty=format:%s "$LAST_TAG"...HEAD | grep -q '^fix'; then
-            VERSION_BUMP=patch
+      - name: Determine Version Bump
+        id: version_bump
+        run: |
+          if git log --pretty=format:%s ${{ env.LAST_TAG }}...HEAD | grep -q '^feat'; then
+            echo "VERSION_BUMP=minor" >> $GITHUB_ENV
+          elif git log --pretty=format:%s ${{ env.LAST_TAG }}...HEAD | grep -q '^fix'; then
+            echo "VERSION_BUMP=patch" >> $GITHUB_ENV
           else
-            VERSION_BUMP=patch
+            echo "VERSION_BUMP=patch" >> $GITHUB_ENV
           fi
-          echo "VERSION_BUMP=$VERSION_BUMP" >> $GITHUB_ENV
+          echo "Version bump determined: ${{ env.VERSION_BUMP }}"
 
       - name: Bump Version
         run: |
-          bump2version --current-version $LAST_TAG $VERSION_BUMP --allow-dirty
+          bump2version --current-version ${{ env.LAST_TAG }} ${{ env.VERSION_BUMP }} --allow-dirty
         env:
           VERSION_BUMP: ${{ env.VERSION_BUMP }}
 
@@ -58,10 +64,11 @@ jobs:
           git push origin main --tags
 
       - name: Get New Version
-        id: get_version
+        id: new_version
         run: |
           VERSION=$(git describe --tags --abbrev=0)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "New version is $VERSION"
 
       - name: Create GitHub Release
         env:
