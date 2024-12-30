@@ -15,7 +15,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Fetch the full history, including tags
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -34,7 +34,6 @@ jobs:
         id: last_tag
         run: |
           LAST_TAG=$(git describe --tags --abbrev=0 || echo "0.0.0")
-          # Remove the "v" prefix if it exists
           CLEAN_TAG=${LAST_TAG#v}
           echo "CLEAN_TAG=$CLEAN_TAG" >> $GITHUB_ENV
           echo "LAST_TAG=$LAST_TAG" >> $GITHUB_ENV
@@ -43,41 +42,40 @@ jobs:
       - name: Determine Version Bump
         id: version_bump
         run: |
+          VERSION_BUMP=""
+          if git log --pretty=format:%s "${{ env.LAST_TAG }}"...HEAD | grep -q '^feat'; then
+            VERSION_BUMP="minor"
+          elif git log --pretty=format:%s "${{ env.LAST_TAG }}"...HEAD | grep -q '^fix'; then
+            VERSION_BUMP="patch"
+          elif git log --pretty=format:%s "${{ env.LAST_TAG }}"...HEAD | grep -q '^bug'; then
+            VERSION_BUMP="major"
+          fi
 
-        VERSION_BUMP=""
-        if git log --pretty=format:%s "${{ env.LAST_TAG }}"...HEAD | grep -q '^feat'; then
-          VERSION_BUMP="minor"
-        elif git log --pretty=format:%s "${{ env.LAST_TAG }}"...HEAD | grep -q '^fix'; then
-          VERSION_BUMP="patch"
-        elif git log --pretty=format:%s "${{ env.LAST_TAG }}"...HEAD | grep -q '^bug'; then
-          VERSION_BUMP="major"
-        fi
-
-        if [ -z "$VERSION_BUMP" ]; then
-          echo "NO_VERSION_BUMP=true" >> $GITHUB_ENV
-        else
-          echo "VERSION_BUMP=$VERSION_BUMP" >> $GITHUB_ENV
-        fi
+          if [ -z "$VERSION_BUMP" ]; then
+            echo "NO_VERSION_BUMP=true" >> $GITHUB_ENV
+          else
+            echo "VERSION_BUMP=$VERSION_BUMP" >> $GITHUB_ENV
+          fi
 
       - name: Skip if No Version Bump
-        if: env.NO_VERSION_BUMP == 'true'
+        if: ${{ env.NO_VERSION_BUMP == 'true' }}
         run: echo "No version bump required for this merge."
 
       - name: Setup Git Credentials
-        if: ${{ env.VERSION_BUMP }}
+        if: ${{ env.VERSION_BUMP != '' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Bump Version
-        if: ${{ env.VERSION_BUMP }}
+        if: ${{ env.VERSION_BUMP != '' }}
         run: |
           bump2version --current-version ${{ env.CLEAN_TAG }} ${{ env.VERSION_BUMP }} --allow-dirty setup.py
         env:
           VERSION_BUMP: ${{ env.VERSION_BUMP }}
 
       - name: Push Changes and Create PR
-        if: ${{ env.VERSION_BUMP }}
+        if: ${{ env.VERSION_BUMP != '' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -96,6 +94,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Fetch Branches
+        run: git fetch --all
+
       - name: Delete Version Bump Branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

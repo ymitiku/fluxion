@@ -1,10 +1,10 @@
 from typing import Dict, Any
 import unittest
+import os
 from fluxion.workflows.abstract_workflow import AbstractWorkflow
 from fluxion.workflows.agent_node import AgentNode
 from fluxion.core.agent import Agent
 from fluxion.core.registry.agent_registry import AgentRegistry
-
 
 class MockAgent(Agent):
     def __init__(self, output_key: str, *args, **kwargs):
@@ -97,6 +97,12 @@ class TestAbstractWorkflow(unittest.TestCase):
         inputs = {"Node1.output1": "value_from_inputs", "optional_param": "conflict_value"}
         results = self.workflow.execute(inputs)
         self.assertEqual(results["Node2"]["result"], "Processed {'optional_param': \"Processed {'optional_param': 'conflict_value'}\"}")
+
+
+    def test_visualize(self):
+        output_file = self.workflow.visualize(output_path="test_workflow_graph", format="png")
+        self.assertTrue(os.path.exists(output_file))
+        os.remove(output_file)  # Clean up after test
 
 
 if __name__ == "__main__":
