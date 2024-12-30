@@ -34,8 +34,11 @@ jobs:
         id: last_tag
         run: |
           LAST_TAG=$(git describe --tags --abbrev=0 || echo "0.0.0")
+          # Remove the "v" prefix if it exists
+          CLEAN_TAG=${LAST_TAG#v}
+          echo "CLEAN_TAG=$CLEAN_TAG" >> $GITHUB_ENV
           echo "LAST_TAG=$LAST_TAG" >> $GITHUB_ENV
-          echo "Last tag is $LAST_TAG"
+          echo "Last tag is $CLEAN_TAG"
 
       - name: Determine Version Bump
         id: version_bump
@@ -51,7 +54,7 @@ jobs:
 
       - name: Bump Version
         run: |
-          bump2version --current-version ${{ env.LAST_TAG }} ${{ env.VERSION_BUMP }} --allow-dirty
+          bump2version --current-version ${{ env.CLEAN_TAG }} ${{ env.VERSION_BUMP }} --allow-dirty
         env:
           VERSION_BUMP: ${{ env.VERSION_BUMP }}
 
@@ -70,8 +73,15 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "New version is $VERSION"
 
+      - name: Validate New Tag
+        run: |
+          if git tag | grep -q "^${{ env.VERSION }}$"; then
+            echo "Tag ${{ env.VERSION }} already exists. Exiting."
+            exit 1
+          fi
+
       - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "$VERSION" --notes "Automated release for version $VERSION."
+          gh release create "${{ env.VERSION }}" --notes "Automated release for version ${{ env.VERSION }}."
