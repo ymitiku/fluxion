@@ -43,18 +43,23 @@ jobs:
       - name: Determine Version Bump
         id: version_bump
         run: |
-          VERSION_BUMP=""
-          if git log --pretty=format:%s "${{ env.LAST_TAG }}"...HEAD | grep -q '^feat'; then
-            echo "VERSION_BUMP=minor" >> $GITHUB_ENV
-          elif git log --pretty=format:%s "${{ env.LAST_TAG }}"...HEAD | grep -q '^fix'; then
-            echo "VERSION_BUMP=patch" >> $GITHUB_ENV
-          elif git log --pretty=format:%s "${{ env.LAST_TAG }}"...HEAD | grep -q '^bug'; then
-            echo "VERSION_BUMP=major" >> $GITHUB_ENV
-          else
-            echo "NO_VERSION_BUMP" >> $GITHUB_ENV
+        VERSION_BUMP=""
+        if git log --pretty=format:%s "${{ env.LAST_TAG }}"...HEAD | grep -q '^feat'; then
+          VERSION_BUMP=minor
+        elif git log --pretty=format:%s "${{ env.LAST_TAG }}"...HEAD | grep -q '^fix'; then
+          VERSION_BUMP=patch
+        elif git log --pretty=format:%s "${{ env.LAST_TAG }}"...HEAD | grep -q '^bug'; then
+          VERSION_BUMP=major
+        fi
+        
+        if [ -z "$VERSION_BUMP" ]; then
+          echo "NO_VERSION_BUMP=true" >> $GITHUB_ENV
+        else
+          echo "VERSION_BUMP=$VERSION_BUMP" >> $GITHUB_ENV
+        fi
 
       - name: Skip if No Version Bump
-        if: ${{ env.NO_VERSION_BUMP }}
+        if: env.NO_VERSION_BUMP == 'true'
         run: echo "No version bump required for this merge."
 
       - name: Setup Git Credentials
