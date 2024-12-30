@@ -28,7 +28,7 @@ jobs:
           pip install bump2version setuptools wheel
 
       - name: Fetch All Tags
-        run: git fetch --all --tags
+        run: git fetch --tags
 
       - name: Get Last Tag
         id: last_tag
