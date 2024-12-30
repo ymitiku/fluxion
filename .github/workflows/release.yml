@@ -25,10 +25,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install bump2version setuptools wheel
 
+      - name: Fetch All Tags
+        run: git fetch --all --tags
+
       - name: Determine Version Bump
         id: version_bump
         run: |
-          git fetch --all --tags
           LAST_TAG=$(git describe --tags --abbrev=0 || echo "0.0.0")
           echo "LAST_TAG=$LAST_TAG" >> $GITHUB_ENV
 
@@ -47,7 +49,7 @@ jobs:
         env:
           VERSION_BUMP: ${{ env.VERSION_BUMP }}
 
-      - name: Push Changes and Create Tag
+      - name: Push Changes and Tags
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -55,9 +57,14 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git push origin main --tags
 
+      - name: Get New Version
+        id: get_version
+        run: |
+          VERSION=$(git describe --tags --abbrev=0)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
       - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VERSION=$(git describe --tags --abbrev=0)
           gh release create "$VERSION" --notes "Automated release for version $VERSION."
