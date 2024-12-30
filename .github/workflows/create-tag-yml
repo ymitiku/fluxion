@@ -1,0 +1,47 @@
+name: Create Tag After PR Merge
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  create_tag:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch the full history, including tags
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Fetch All Tags
+        run: git fetch --tags
+
+      - name: Determine Version
+        id: version
+        run: |
+          # Extract version from PR title (assuming it starts with "Version Bump: vX.Y.Z")
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          if [[ "$PR_TITLE" =~ Version\ Bump:\ v([0-9]+\.[0-9]+\.[0-9]+) ]]; then
+            VERSION="v${BASH_REMATCH[1]}"
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
+          else
+            echo "Unable to determine version from PR title: $PR_TITLE"
+            exit 1
+          fi
+
+      - name: Create Tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Creating tag $VERSION"
+          git tag $VERSION
+          git push origin $VERSION
