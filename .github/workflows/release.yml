@@ -1,4 +1,4 @@
-name: Automated Versioning and Release
+name: Automated Versioning with PR
 
 on:
   pull_request:
@@ -20,7 +20,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.8
+          python-version: 3.11
 
       - name: Install Dependencies
         run: |
@@ -47,42 +47,36 @@ jobs:
             echo "VERSION_BUMP=minor" >> $GITHUB_ENV
           elif git log --pretty=format:%s ${{ env.LAST_TAG }}...HEAD | grep -q '^fix'; then
             echo "VERSION_BUMP=patch" >> $GITHUB_ENV
+          elif git log --pretty=format:%s ${{ env.LAST_TAG }}...HEAD | grep -q '^bug'; then
+            echo "VERSION_BUMP=major" >> $GITHUB_ENV
           else
-            echo "VERSION_BUMP=patch" >> $GITHUB_ENV
-          fi
-          echo "Version bump determined: ${{ env.VERSION_BUMP }}"
+            echo "NO_VERSION_BUMP" >> $GITHUB_ENV
+
+      - name: Skip if No Version Bump
+        if: env.NO_VERSION_BUMP
+        run: echo "No version bump required for this merge."
       - name: Setup git credentials
+        if: env.VERSION_BUMP
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
       - name: Bump Version
+        if: env.VERSION_BUMP
         run: |
           bump2version --current-version ${{ env.CLEAN_TAG }} ${{ env.VERSION_BUMP }} --allow-dirty setup.py
         env:
           VERSION_BUMP: ${{ env.VERSION_BUMP }}
-
-      - name: Push Changes and Tags
+      - name: Push Changes and Create PR
+        if: env.VERSION_BUMP
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git push origin main --tags
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b version-bump-${{ env.VERSION_BUMP }}
+          git push origin version-bump-${{ env.VERSION_BUMP }}
 
-      - name: Get New Version
-        id: new_version
-        run: |
-          VERSION=$(git describe --tags --abbrev=0)
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "New version is $VERSION"
-
-      - name: Validate New Tag
-        run: |
-          if git tag | grep -q "^${{ env.VERSION }}$"; then
-            echo "Tag ${{ env.VERSION }} already exists. Exiting."
-            exit 1
-          fi
-
-      - name: Create GitHub Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh release create "${{ env.VERSION }}" --notes "Automated release for version ${{ env.VERSION }}."
+          VERSION=$(python setup.py --version)
+          gh pr create --base main --head version-bump-${{ env.VERSION_BUMP }} \
+            --title "Version Bump: $VERSION" \
+            --body "Automated PR to bump version to $VERSION"
