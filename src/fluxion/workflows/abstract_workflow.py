@@ -19,7 +19,8 @@ class AbstractWorkflow(ABC):
             name (str): The name of the workflow.
         """
         self.name = name
-        self._nodes = {}
+        self._nodes: Dict[str, AgentNode] = {}
+        self.initial_inputs = {}
 
     @property
     def nodes(self):
@@ -60,6 +61,9 @@ class AbstractWorkflow(ABC):
         """
         if node.name in self.nodes:
             raise ValueError(f"Node '{node.name}' already exists in the workflow.")
+        for dependency in node.dependencies:
+            if dependency.name not in self.nodes:
+                raise ValueError(f"Dependency '{dependency.name}' for node '{node.name}' does not exist.")
         self.nodes[node.name] = node
 
     def _validate_dependencies(self):
@@ -105,6 +109,37 @@ class AbstractWorkflow(ABC):
         for node_name in self.nodes:
             visit(node_name)
 
+        for node in self.nodes.values():
+            for input_key, source in node.inputs.items():
+                node_name, output_name = source.split(".")
+                if node_name not in self.nodes:
+                    raise ValueError(f"Input '{input_key}' references non-existent node '{node_name}'.")
+                if output_name not in self.nodes[node_name].outputs:
+                    raise ValueError(f"Input '{input_key}' references non-existent output '{output_name}' in node '{node_name}'.")
+    
+    def _validate_inputs_and_outputs(self):
+        """
+        Validate that all inputs and outputs in the workflow are consistent.
+
+        Raises:
+            ValueError: If inputs reference non-existent outputs or there are missing inputs.
+        """
+        available_outputs = set(self.initial_inputs.keys())
+
+        for node in self.nodes.values():
+            # Check if inputs are resolved
+            for input_key, source in node.inputs.items():
+                node_name, output_name = source.split(".")
+                if node_name not in self.nodes and node_name != "workflow_input":
+                    raise ValueError(f"Input '{input_key}' references non-existent node '{node_name}'.")
+                if node_name != "workflow_input" and output_name not in self.nodes[node_name].outputs:
+                    raise ValueError(f"Input '{input_key}' references non-existent output '{output_name}' in node '{node_name}'.")
+            
+            # Add this node's outputs to available outputs
+            available_outputs.update(f"{node.name}.{output}" for output in node.outputs)
+
+
+
     def determine_execution_order(self) -> List[str]:
         """
         Determine the execution order of nodes based on dependencies.
@@ -142,6 +177,7 @@ class AbstractWorkflow(ABC):
             Dict[str, Any]: Results of the workflow execution.
         """
         self._validate_dependencies()
+        self._validate_inputs_and_outputs()
         execution_order = self.determine_execution_order()
 
         results = {}

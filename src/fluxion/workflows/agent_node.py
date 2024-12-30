@@ -1,21 +1,21 @@
 from typing import Dict, Any, List
 from fluxion.core.agent import Agent
 import inspect
-import logging
 
-logger = logging.getLogger(__name__)
 
 class AgentNode:
     """
-    Represents a node in the workflow graph.
+    Represents a node in the workflow graph with explicit input and output definitions.
 
     Attributes:
         name (str): The unique name of the agent node.
         agent (Agent): The agent to be executed at this node.
         dependencies (List[AgentNode]): The list of dependencies for this node.
+        inputs (Dict[str, str]): Mapping of input keys to their source outputs (e.g., {"key1": "NodeA.output1"}).
+        outputs (List[str]): List of output keys provided by this node.
     """
 
-    def __init__(self, name: str, agent: Agent, dependencies: List['AgentNode'] = None):
+    def __init__(self, name: str, agent: Agent, dependencies: List["AgentNode"] = None, inputs: Dict[str, str] = None, outputs: List[str] = None):
         """
         Initialize the AgentNode.
 
@@ -23,19 +23,41 @@ class AgentNode:
             name (str): The unique name of the agent node.
             agent (Agent): The agent to be executed at this node.
             dependencies (list): List of dependencies for this node (default: None).
+            inputs (dict): Mapping of input keys to their source outputs (default: None).
+            outputs (list): List of output keys provided by this node (default: None).
         """
         if not isinstance(agent, Agent):
             raise ValueError(f"The 'agent' attribute must be an instance of Agent. Got {type(agent)} instead.")
-        if dependencies and not all(isinstance(dep, AgentNode) for dep in dependencies):
-            raise ValueError("All dependencies must be instances of AgentNode.")
-        if dependencies and self in dependencies:
-            raise ValueError(f"Node '{name}' cannot depend on itself.")
 
         self.name = name
         self.agent = agent
         self.dependencies = dependencies or []
+        self.inputs = inputs or {}
+        self.outputs = outputs or []
 
-    def execute(self, results: Dict[str, Any], inputs: Dict[str, Any] = None) -> Any:
+    def _resolve_inputs(self, results: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Resolve the inputs for this node based on its input mappings.
+
+        Args:
+            results (Dict[str, Any]): A dictionary containing the outputs of executed nodes.
+
+        Returns:
+            Dict[str, Any]: Resolved inputs for the agent.
+        """
+        resolved = {}
+        for key, source in self.inputs.items():
+            if source.count('.') != 1:
+                raise ValueError(f"Invalid source '{source}' for input '{key}'. Must be in the format 'NodeName.output'.")
+            
+            try:
+                node_name, output_name = source.split('.')
+                resolved[key] = results[node_name][output_name]
+            except KeyError:
+                raise KeyError(f"Input '{key}' from source '{source}' cannot be resolved. Check dependencies and outputs.")
+        return resolved
+
+    def execute(self, results: Dict[str, Any], inputs: Dict[str, Any] = None) -> Dict[str, Any]:
         """
         Execute the agent of this node by collecting the required arguments
         from the workflow's `results` and `inputs`.
@@ -45,29 +67,36 @@ class AgentNode:
             inputs (Dict[str, Any]): A dictionary containing the inputs for the workflow.
 
         Returns:
-            Any: The result of executing the agent.
+            Dict[str, Any]: The result of executing the agent.
         """
         inputs = inputs or {}
-
-        # Collect all arguments from results and inputs
-
-        combined_args = inputs.copy()
-        for dep in self.dependencies:
-            if dep.name not in results:
-                raise KeyError(f"Dependency '{dep.name}' has not been executed yet.")
-            combined_args.update(results[dep.name])
-
+        resolved_inputs = self._resolve_inputs(results)
 
         # Inspect the agent's `execute` method to find supported parameters
         agent_execute_signature = inspect.signature(self.agent.execute)
         supported_params = agent_execute_signature.parameters.keys()
-        # Filter arguments to include only those supported by the agent
-        filtered_args = {key: value for key, value in combined_args.items() if key in supported_params}
+        required_params = [param for param, param_info in agent_execute_signature.parameters.items() if param_info.default == inspect.Parameter.empty]
 
-        logger.info(f"Executing node '{self.name}' with arguments: {filtered_args}")
+        # Filter inputs to include only those supported by the agent
+        combined_inputs = {**inputs, **resolved_inputs}
+        filtered_inputs = {key: value for key, value in combined_inputs.items() if key in supported_params}
 
+        for required_param in required_params:
+            if required_param not in filtered_inputs:
+                raise KeyError(f"Required parameter '{required_param}' is missing from the agent inputs.")
         # Call the agent's `execute` method with filtered arguments
-        return self.agent.execute(**filtered_args)
+        agent_result = self.agent.execute(**filtered_inputs)
+        
+        # Validate the outputs if declared
+        if self.outputs:
+            for output in self.outputs:
+                if output not in agent_result:
+                    raise ValueError(f"Output '{output}' is not provided by the agent execution.")
+        for result_key in agent_result:
+            if result_key not in self.outputs:
+                raise ValueError(f"Output '{result_key}' is not declared by the agent node.")
+
+        return agent_result
 
     def __repr__(self):
         return f"AgentNode(name={self.name}, agent={self.agent.__class__.__name__}, dependencies={self.dependencies})"

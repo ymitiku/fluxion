@@ -15,8 +15,8 @@ class MockAgent(Agent):
 
 class MockWorkflow(AbstractWorkflow):
     def define_workflow(self):
-        node1 = AgentNode(name="Node1", agent=MockAgent("Agent1"))
-        node2 = AgentNode(name="Node2", agent=MockAgent("Agent2"), dependencies=[node1])
+        node1 = AgentNode(name="Node1", agent=MockAgent("Agent1"), outputs=["result"])
+        node2 = AgentNode(name="Node2", agent=MockAgent("Agent2"), dependencies=[node1], outputs=["result"])
         self.add_node(node1)
         self.add_node(node2)
         self.initial_inputs = {"key1": "value1"}
