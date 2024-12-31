@@ -1,3 +1,12 @@
+""" 
+fluxion.perception.sources.perception_source
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This module provides the base class for perception sources.
+
+Classes:
+    - PerceptionSource: Abstract base class for perception sources.
+"""
+
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 

@@ -22,11 +22,11 @@ Indices and tables
    api/fluxion.core.registry
    api/fluxion.core
    api/fluxion.modules
-   api/fluxion
-   api/fluxion.utils
-   api/modules
-   api/fluxion.workflows
    api/fluxion.perception
+   api/fluxion.utils
+   api/fluxion.workflows
+   api/fluxion
+   api/modules
 
 
 .. toctree::

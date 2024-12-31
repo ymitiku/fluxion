@@ -44,4 +44,5 @@ jobs:
         run: |
           echo "Creating tag $VERSION"
           git tag $VERSION
-          git push origin $VERSION
+          gh 
+          

@@ -1,3 +1,17 @@
+""" 
+fluxion.workflows.flyte_adapter
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This module provides an adapter to convert an AbstractWorkflow into a Flyte workflow.
+
+Classes:
+    - FlyteWorkflowAdapter: Adapter to convert an AbstractWorkflow into a Flyte workflow.
+
+Functions:
+    - flyte_task: Task to execute a single AgentNode.
+    - flyte_dynamic_workflow: Dynamic workflow to orchestrate execution.
+
+"""
+
 from flytekit import task, workflow, dynamic
 from fluxion.workflows.abstract_workflow import AbstractWorkflow
 from fluxion.workflows.agent_node import AgentNode

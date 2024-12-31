@@ -1,3 +1,13 @@
+"""
+fluxion.core.abstract_workflow
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Defines the AbstractWorkflow class, which serves as the base class for defining and executing workflows.
+
+This module is part of the Fluxion framework and provides core functionality for constructing workflows
+with nodes and managing their execution order.
+"""
+
 from typing import Dict, List, Any
 from abc import ABC, abstractmethod
 from fluxion.workflows.agent_node import AgentNode
