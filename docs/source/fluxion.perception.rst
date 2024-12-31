@@ -4,13 +4,10 @@ fluxion.perception package
 Submodules
 ----------
 
-fluxion.perception.perception module
-------------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: fluxion.perception.perception
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   fluxion.perception.perception
 
 Module contents
 ---------------
