@@ -28,7 +28,11 @@ jobs:
           pip install bump2version setuptools wheel
 
       - name: Fetch All Tags
-        run: git fetch --all --tags
+        run: |
+          git fetch --all --tags
+          git checkout main
+          git pull
+
 
       - name: Get Last Tag
         id: last_tag
@@ -81,7 +85,6 @@ jobs:
         run: |
           TIMESTAMP=$(date +%s)
           BRANCH_NAME=version-bump-${{ env.VERSION_BUMP }}-$TIMESTAMP
-          git checkout main
           git checkout -b $BRANCH_NAME
           git push origin $BRANCH_NAME
 
@@ -97,9 +100,6 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-
-      - name: Fetch Branches
-        run: git fetch --all
 
       - name: Delete Version Bump Branch
         env:
