@@ -4,21 +4,11 @@ fluxion.utils package
 Submodules
 ----------
 
-fluxion.utils.audio\_utils module
----------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: fluxion.utils.audio_utils
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-fluxion.utils.retry module
---------------------------
-
-.. automodule:: fluxion.utils.retry
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   fluxion.utils.audio_utils
+   fluxion.utils.retry
 
 Module contents
 ---------------

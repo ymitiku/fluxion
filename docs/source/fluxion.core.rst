@@ -12,29 +12,12 @@ Subpackages
 Submodules
 ----------
 
-fluxion.core.agent module
--------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: fluxion.core.agent
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-fluxion.core.contextual\_response module
-----------------------------------------
-
-.. automodule:: fluxion.core.contextual_response
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-fluxion.core.llm\_agent module
-------------------------------
-
-.. automodule:: fluxion.core.llm_agent
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   fluxion.core.agent
+   fluxion.core.contextual_response
+   fluxion.core.llm_agent
 
 Module contents
 ---------------

@@ -34,8 +34,8 @@ jobs:
             VERSION="v${BASH_REMATCH[1]}"
             echo "VERSION=$VERSION" >> $GITHUB_ENV
           else
-            echo "Unable to determine version from PR title: $PR_TITLE"
-            exit 1
+            echo "The PR is not a version bump. No tag will be created."
+            exit 0
           fi
 
       - name: Create Tag
