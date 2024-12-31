@@ -18,7 +18,9 @@
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="fluxion package" href="fluxion.html" />
+    <link rel="prev" title="fluxion.utils package" href="fluxion.utils.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -40,7 +42,47 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Getting Started:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.registry.html">fluxion.core.registry package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.html">fluxion.core package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.modules.html">fluxion.modules package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.perception.html">fluxion.perception package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.utils.html">fluxion.utils package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">fluxion.workflows package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fluxion-workflows-abstract-workflow-module">fluxion.workflows.abstract_workflow module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-fluxion.workflows.agent_node">fluxion.workflows.agent_node module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fluxion-workflows-agent-node">fluxion.workflows.agent_node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fluxion.workflows.agent_node.AgentNode"><code class="docutils literal notranslate"><span class="pre">AgentNode</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fluxion.workflows.agent_node.AgentNode.name"><code class="docutils literal notranslate"><span class="pre">AgentNode.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fluxion.workflows.agent_node.AgentNode.agent"><code class="docutils literal notranslate"><span class="pre">AgentNode.agent</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fluxion.workflows.agent_node.AgentNode.dependencies"><code class="docutils literal notranslate"><span class="pre">AgentNode.dependencies</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fluxion.workflows.agent_node.AgentNode.inputs"><code class="docutils literal notranslate"><span class="pre">AgentNode.inputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fluxion.workflows.agent_node.AgentNode.outputs"><code class="docutils literal notranslate"><span class="pre">AgentNode.outputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fluxion.workflows.agent_node.AgentNode.execute"><code class="docutils literal notranslate"><span class="pre">AgentNode.execute()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#fluxion-workflows-flyte-adapter-module">fluxion.workflows.flyte_adapter module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-fluxion.workflows.workflow_progress_tracker">fluxion.workflows.workflow_progress_tracker module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fluxion-workflows-workflow-progress-tracker">fluxion.workflows.workflow_progress_tracker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fluxion.workflows.workflow_progress_tracker.WorkflowProgressTracker"><code class="docutils literal notranslate"><span class="pre">WorkflowProgressTracker</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fluxion.workflows.workflow_progress_tracker.WorkflowProgressTracker.get_progress"><code class="docutils literal notranslate"><span class="pre">WorkflowProgressTracker.get_progress()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fluxion.workflows.workflow_progress_tracker.WorkflowProgressTracker.mark_node_completed"><code class="docutils literal notranslate"><span class="pre">WorkflowProgressTracker.mark_node_completed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fluxion.workflows.workflow_progress_tracker.WorkflowProgressTracker.mark_node_running"><code class="docutils literal notranslate"><span class="pre">WorkflowProgressTracker.mark_node_running()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fluxion.workflows.workflow_progress_tracker.WorkflowProgressTracker.start_workflow"><code class="docutils literal notranslate"><span class="pre">WorkflowProgressTracker.start_workflow()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-fluxion.workflows">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.html">fluxion package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Getting Started:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
 </ul>
@@ -251,7 +293,10 @@ from the workflow’s <cite>results</cite> and <cite>inputs</cite>.</p>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="fluxion.utils.html" class="btn btn-neutral float-left" title="fluxion.utils package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="fluxion.html" class="btn btn-neutral float-right" title="fluxion package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
