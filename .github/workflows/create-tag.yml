@@ -23,7 +23,6 @@ jobs:
           python-version: 3.11
 
       - name: Setup Git Credentials
-        if: ${{ env.VERSION_BUMP != '' }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
