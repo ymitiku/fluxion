@@ -49,8 +49,8 @@
 <li class="toctree-l2 current"><a class="reference internal" href="fluxion.core.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">fluxion.core.perception package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-fluxion.core.perception.perception">fluxion.core.perception.perception module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-fluxion.core.perception">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fluxion-core-perception-perception-module">fluxion.core.perception.perception module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-contents">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="fluxion.core.registry.html">fluxion.core.registry package</a></li>
@@ -104,72 +104,11 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 </section>
-<section id="module-fluxion.core.perception.perception">
-<span id="fluxion-core-perception-perception-module"></span><h2>fluxion.core.perception.perception module<a class="headerlink" href="#module-fluxion.core.perception.perception" title="Link to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="fluxion.core.perception.perception.Perception">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fluxion.core.perception.perception.</span></span><span class="sig-name descname"><span class="pre">Perception</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perception_source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PerceptionSource</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fluxion/core/perception/perception.html#Perception"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion.core.perception.perception.Perception" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="fluxion.core.perception.perception.Perception.perceive">
-<span class="sig-name descname"><span class="pre">perceive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/fluxion/core/perception/perception.html#Perception.perceive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion.core.perception.perception.Perception.perceive" title="Link to this definition"></a></dt>
-<dd><p>Perceive the data from the source.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>**kwargs</strong> – Additional keyword arguments for the perception.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="fluxion.core.perception.perception.Perception.process_data">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">process_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/fluxion/core/perception/perception.html#Perception.process_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion.core.perception.perception.Perception.process_data" title="Link to this definition"></a></dt>
-<dd><p>Process the data from the source.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – The data from the source.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The processed data.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[str, Any]</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="fluxion.core.perception.perception.RawPerception">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fluxion.core.perception.perception.</span></span><span class="sig-name descname"><span class="pre">RawPerception</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perception_source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PerceptionSource</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/fluxion/core/perception/perception.html#RawPerception"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion.core.perception.perception.RawPerception" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#fluxion.core.perception.perception.Perception" title="fluxion.core.perception.perception.Perception"><code class="xref py py-class docutils literal notranslate"><span class="pre">Perception</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="fluxion.core.perception.perception.RawPerception.process_data">
-<span class="sig-name descname"><span class="pre">process_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/fluxion/core/perception/perception.html#RawPerception.process_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion.core.perception.perception.RawPerception.process_data" title="Link to this definition"></a></dt>
-<dd><p>Process the raw data from the source.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – The data from the source.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The processed data.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[str, Any]</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+<section id="fluxion-core-perception-perception-module">
+<h2>fluxion.core.perception.perception module<a class="headerlink" href="#fluxion-core-perception-perception-module" title="Link to this heading"></a></h2>
 </section>
-<section id="module-fluxion.core.perception">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-fluxion.core.perception" title="Link to this heading"></a></h2>
-<p>Perception module of the Fluxion core package. It implements the perception logic for the agents. The perception module is responsible for processing
-the input data and converting it into a format that the agent can understand and act upon.  It defines the abstraction around inputs to the agent,
-such as input modes, input acquisition, and input processing. The perception module also provides the necessary tools for the agent to interact with
-the environment and other agents.</p>
+<section id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
 </section>
 </section>
 
