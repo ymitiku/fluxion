@@ -25,6 +25,8 @@ Indices and tables
    api/fluxion
    api/fluxion.utils
    api/modules
+   api/fluxion.workflows
+   api/fluxion.perception
 
 
 .. toctree::
