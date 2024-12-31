@@ -30,7 +30,7 @@ jobs:
         run: |
           # Extract version from PR title (assuming it starts with "Version Bump: vX.Y.Z")
           PR_TITLE="${{ github.event.pull_request.title }}"
-          if [[ "$PR_TITLE" =~ Version\ Bump:\ v([0-9]+\.[0-9]+\.[0-9]+) ]]; then
+          if [[ "$PR_TITLE" =~ Version\ Bump:\ ([0-9]+\.[0-9]+\.[0-9]+) ]]; then
             VERSION="v${BASH_REMATCH[1]}"
             echo "VERSION=$VERSION" >> $GITHUB_ENV
           else
