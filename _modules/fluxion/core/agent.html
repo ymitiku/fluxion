@@ -94,7 +94,7 @@
 
 
 <div class="viewcode-block" id="Agent">
-<a class="viewcode-back" href="../../../fluxion.core.html#fluxion.core.agent.Agent">[docs]</a>
+<a class="viewcode-back" href="../../../fluxion.core.agent.html#fluxion.core.agent.Agent">[docs]</a>
 <span class="k">class</span> <span class="nc">Agent</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Abstract base class for all agents with unique name enforcement.</span>
@@ -120,7 +120,7 @@
         <span class="n">AgentRegistry</span><span class="o">.</span><span class="n">register_agent</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Agent.execute">
-<a class="viewcode-back" href="../../../fluxion.core.html#fluxion.core.agent.Agent.execute">[docs]</a>
+<a class="viewcode-back" href="../../../fluxion.core.agent.html#fluxion.core.agent.Agent.execute">[docs]</a>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -147,7 +147,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Agent.cleanup">
-<a class="viewcode-back" href="../../../fluxion.core.html#fluxion.core.agent.Agent.cleanup">[docs]</a>
+<a class="viewcode-back" href="../../../fluxion.core.agent.html#fluxion.core.agent.Agent.cleanup">[docs]</a>
     <span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Unregister the agent from the registry.</span>

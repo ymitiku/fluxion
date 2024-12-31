@@ -95,7 +95,7 @@
 
 
 <div class="viewcode-block" id="ApiModule">
-<a class="viewcode-back" href="../../../fluxion.modules.html#fluxion.modules.api_module.ApiModule">[docs]</a>
+<a class="viewcode-back" href="../../../fluxion.modules.api_module.html#fluxion.modules.api_module.ApiModule">[docs]</a>
 <span class="k">class</span> <span class="nc">ApiModule</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Abstract base class for interacting with APIs.</span>
@@ -118,7 +118,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span> <span class="o">=</span> <span class="n">endpoint</span>
 
 <div class="viewcode-block" id="ApiModule.get_response">
-<a class="viewcode-back" href="../../../fluxion.modules.html#fluxion.modules.api_module.ApiModule.get_response">[docs]</a>
+<a class="viewcode-back" href="../../../fluxion.modules.api_module.html#fluxion.modules.api_module.ApiModule.get_response">[docs]</a>
     <span class="k">def</span> <span class="nf">get_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sends a POST request to the API endpoint and returns the response.</span>
@@ -141,7 +141,7 @@
 
 
 <div class="viewcode-block" id="ApiModule.post_process">
-<a class="viewcode-back" href="../../../fluxion.modules.html#fluxion.modules.api_module.ApiModule.post_process">[docs]</a>
+<a class="viewcode-back" href="../../../fluxion.modules.api_module.html#fluxion.modules.api_module.ApiModule.post_process">[docs]</a>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">full_response</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -161,7 +161,7 @@
 
 
 <div class="viewcode-block" id="ApiModule.execute">
-<a class="viewcode-back" href="../../../fluxion.modules.html#fluxion.modules.api_module.ApiModule.execute">[docs]</a>
+<a class="viewcode-back" href="../../../fluxion.modules.api_module.html#fluxion.modules.api_module.ApiModule.execute">[docs]</a>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>

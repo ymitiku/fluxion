@@ -19,7 +19,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="fluxion.core package" href="fluxion.core.html" />
+    <link rel="next" title="fluxion.core.registry.agent_registry module" href="fluxion.core.registry.agent_registry.html" />
     <link rel="prev" title="Welcome to Fluxion’s documentation!" href="index.html" /> 
 </head>
 
@@ -45,19 +45,11 @@
               <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">fluxion.core.registry package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-fluxion.core.registry.agent_registry">fluxion.core.registry.agent_registry module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#fluxion.core.registry.agent_registry.AgentRegistry"><code class="docutils literal notranslate"><span class="pre">AgentRegistry</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#fluxion.core.registry.agent_registry.AgentRegistry.clear_registry"><code class="docutils literal notranslate"><span class="pre">AgentRegistry.clear_registry()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fluxion.core.registry.agent_registry.AgentRegistry.get_agent"><code class="docutils literal notranslate"><span class="pre">AgentRegistry.get_agent()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fluxion.core.registry.agent_registry.AgentRegistry.list_agents"><code class="docutils literal notranslate"><span class="pre">AgentRegistry.list_agents()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fluxion.core.registry.agent_registry.AgentRegistry.register_agent"><code class="docutils literal notranslate"><span class="pre">AgentRegistry.register_agent()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fluxion.core.registry.agent_registry.AgentRegistry.unregister_agent"><code class="docutils literal notranslate"><span class="pre">AgentRegistry.unregister_agent()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="fluxion.core.registry.agent_registry.html">fluxion.core.registry.agent_registry module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fluxion.core.registry.tool_registry.html">fluxion.core.registry.tool_registry module</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#fluxion-core-registry-tool-registry-module">fluxion.core.registry.tool_registry module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-fluxion.core.registry">Module contents</a></li>
 </ul>
 </li>
@@ -101,84 +93,22 @@
 <h1>fluxion.core.registry package<a class="headerlink" href="#fluxion-core-registry-package" title="Link to this heading"></a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
-</section>
-<section id="module-fluxion.core.registry.agent_registry">
-<span id="fluxion-core-registry-agent-registry-module"></span><h2>fluxion.core.registry.agent_registry module<a class="headerlink" href="#module-fluxion.core.registry.agent_registry" title="Link to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="fluxion.core.registry.agent_registry.AgentRegistry">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fluxion.core.registry.agent_registry.</span></span><span class="sig-name descname"><span class="pre">AgentRegistry</span></span><a class="reference internal" href="_modules/fluxion/core/registry/agent_registry.html#AgentRegistry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion.core.registry.agent_registry.AgentRegistry" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A centralized registry to ensure unique agent names.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="fluxion.core.registry.agent_registry.AgentRegistry.clear_registry">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clear_registry</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fluxion/core/registry/agent_registry.html#AgentRegistry.clear_registry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion.core.registry.agent_registry.AgentRegistry.clear_registry" title="Link to this definition"></a></dt>
-<dd><p>Clear the agent registry.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="fluxion.core.registry.agent_registry.AgentRegistry.get_agent">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fluxion/core/registry/agent_registry.html#AgentRegistry.get_agent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion.core.registry.agent_registry.AgentRegistry.get_agent" title="Link to this definition"></a></dt>
-<dd><p>Retrieve an agent by its name.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The name of the agent.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The agent instance, or None if not found.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="fluxion.core.html#fluxion.core.agent.Agent" title="fluxion.core.agent.Agent">Agent</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="fluxion.core.registry.agent_registry.AgentRegistry.list_agents">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">list_agents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fluxion/core/registry/agent_registry.html#AgentRegistry.list_agents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion.core.registry.agent_registry.AgentRegistry.list_agents" title="Link to this definition"></a></dt>
-<dd><p>List all registered agents.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A list of all agent names.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>List[str]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="fluxion.core.registry.agent_registry.AgentRegistry.register_agent">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">register_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_instance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fluxion/core/registry/agent_registry.html#AgentRegistry.register_agent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion.core.registry.agent_registry.AgentRegistry.register_agent" title="Link to this definition"></a></dt>
-<dd><p>Register an agent in the registry.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) – The name of the agent.</p></li>
-<li><p><strong>agent_instance</strong> (<a class="reference internal" href="fluxion.core.html#fluxion.core.agent.Agent" title="fluxion.core.agent.Agent"><em>Agent</em></a>) – The agent instance.</p></li>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.registry.agent_registry.html">fluxion.core.registry.agent_registry module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="fluxion.core.registry.agent_registry.html#fluxion.core.registry.agent_registry.AgentRegistry"><code class="docutils literal notranslate"><span class="pre">AgentRegistry</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="fluxion.core.registry.agent_registry.html#fluxion.core.registry.agent_registry.AgentRegistry.clear_registry"><code class="docutils literal notranslate"><span class="pre">AgentRegistry.clear_registry()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="fluxion.core.registry.agent_registry.html#fluxion.core.registry.agent_registry.AgentRegistry.get_agent"><code class="docutils literal notranslate"><span class="pre">AgentRegistry.get_agent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="fluxion.core.registry.agent_registry.html#fluxion.core.registry.agent_registry.AgentRegistry.list_agents"><code class="docutils literal notranslate"><span class="pre">AgentRegistry.list_agents()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="fluxion.core.registry.agent_registry.html#fluxion.core.registry.agent_registry.AgentRegistry.register_agent"><code class="docutils literal notranslate"><span class="pre">AgentRegistry.register_agent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="fluxion.core.registry.agent_registry.html#fluxion.core.registry.agent_registry.AgentRegistry.unregister_agent"><code class="docutils literal notranslate"><span class="pre">AgentRegistry.unregister_agent()</span></code></a></li>
 </ul>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If the name is already registered.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="fluxion.core.registry.agent_registry.AgentRegistry.unregister_agent">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unregister_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fluxion/core/registry/agent_registry.html#AgentRegistry.unregister_agent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion.core.registry.agent_registry.AgentRegistry.unregister_agent" title="Link to this definition"></a></dt>
-<dd><p>Unregister an agent from the registry.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The name of the agent.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</section>
-<section id="fluxion-core-registry-tool-registry-module">
-<h2>fluxion.core.registry.tool_registry module<a class="headerlink" href="#fluxion-core-registry-tool-registry-module" title="Link to this heading"></a></h2>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.registry.tool_registry.html">fluxion.core.registry.tool_registry module</a></li>
+</ul>
+</div>
 </section>
 <section id="module-fluxion.core.registry">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-fluxion.core.registry" title="Link to this heading"></a></h2>
@@ -190,7 +120,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Fluxion’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="fluxion.core.html" class="btn btn-neutral float-right" title="fluxion.core package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="fluxion.core.registry.agent_registry.html" class="btn btn-neutral float-right" title="fluxion.core.registry.agent_registry module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
