@@ -1,3 +1,24 @@
+""" 
+fluxion.workflows.agent_node
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This module defines the AgentNode class, which represents a node in the workflow graph with explicit input and output definitions. The AgentNode class is used to define the structure of the workflow graph and execute agents
+at each node based on the dependencies and inputs provided. The AgentNode class is part of the Fluxion framework and is used to build and execute workflows with multiple agents and dependencies.
+
+The AgentNode class includes the following attributes:
+- name: The unique name of the agent node.
+- agent: The agent to be executed at
+this node.
+- dependencies: The list of dependencies for this node.
+- inputs: Mapping of input keys to their source outputs (e.g., {"key1": "NodeA.output1"}).
+- outputs: List of output keys provided by this node.
+
+The AgentNode class provides methods to resolve inputs, execute the agent, and validate the outputs of the agent execution. The AgentNode class is used in conjunction with the AbstractWorkflow class to build and execute
+complex workflows with multiple agents and dependencies.
+
+The AgentNode class is a fundamental component of the Fluxion framework and enables the creation and execution of intelligent workflows with multiple agents and dependencies.
+
+"""
+
 from typing import Dict, Any, List
 from fluxion.core.agent import Agent
 import inspect

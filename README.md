@@ -2,7 +2,7 @@
 
 ![CI Workflow](https://github.com/ymitiku/fluxion/actions/workflows/ci.yml/badge.svg)
 
-**Fluxion** is a Python library for building flow-based agentic workflows. Designed with extensibility and modularity in mind, it integrates seamlessly with locally hosted language models (LLMs) powered by [Ollama](https://ollama.com). Fluxion enables the creation of intelligent agents that perform tasks such as conversational interactions, tool calling, and contextual reasoning.
+**Fluxion** is a Python library for orchestrating flow-based agentic workflows. Designed for modularity, scalability, and extensibility, it integrates seamlessly with locally or remotly hosted language models (LLMs) powered by [Ollama](https://ollama.com). Fluxion enables developers to build intelligent systems with capabilities like conversational interactions, tool calling, contextual reasoning, and decision-making.
 
 ---
 
@@ -14,18 +14,24 @@
 - [Usage](#usage)
   - [Calling Locally Hosted LLMs](#calling-locally-hosted-llms)
   - [Using Agents for Chat and Tool Calls](#using-agents-for-chat-and-tool-calls)
+  - [Building Workflows](#building-workflows)
+- [Architecture Overview](#architecture-overview)
 - [Examples](#examples)
 - [Contributing](#contributing)
+- [Roadmap](#roadmap)
 - [License](#license)
 
 ---
 
 ## **Features**
 
-- **Agent Management:** Design and execute agents for tasks like LLM interactions, tool calling, and contextual reasoning.
-- **LLM Integration:** Connect to local LLMs hosted using [Ollama](https://ollama.com).
-- **Tool Calling Support:** Agents can dynamically call functions with generated arguments.
-- **Extensible Architecture:** Modular design allows for seamless customization and scalability.
+- **Agent-Oriented Workflow Management:** Design agents that interact through modular workflows.
+- **LLM Integration:** Seamlessly connect to locally hosted LLMs using [Ollama](https://ollama.com).
+- **Perception and Environment Modeling:** Agents can perceive, process, and act on data from diverse sources.
+- **Dynamic Tool Invocation:** Agents dynamically call registered tools with arguments generated at runtime.
+- **Modular Architecture:** Create, register, and reuse components like agents, tools, and workflows.
+- **Extensibility:** Add custom modules or agents without modifying core logic.
+- **Visualization Support:** Visualize workflows for debugging and understanding execution flows.
 
 ---
 
@@ -34,22 +40,18 @@
 ### **Prerequisites**
 
 - Python 3.11+
-- Anaconda or virtual environment setup
+- Anaconda or a virtual environment
 - [Ollama](https://ollama.com/docs) installed for hosting LLMs
-- PyAudio
-    ```bash
-    sudo apt install portaudio19-dev
-    ```
-- Graphviz
-    ```bash
-    sudo apt install graphviz
-    ```
+- System Dependencies:
+  ```bash
+  sudo apt install portaudio19-dev graphviz
+  ```
 
 ### **Steps**
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/your-username/fluxion.git
+   git clone https://github.com/ymitiku/fluxion.git
    cd fluxion
    ```
 
@@ -63,29 +65,32 @@
    bash scripts/run_tests.sh
    ```
 
+4. **Build Documentation (Optional):**
+   ```bash
+   bash scripts/build_docs.sh
+   ```
+
 ---
 
 ## **Setting Up Ollama**
 
-Fluxion is optimized for locally hosted LLMs using [Ollama](https://ollama.com). Follow these steps to set up your Ollama environment:
+Fluxion uses [Ollama](https://ollama.com) to connect to locally hosted LLMs. Here's how to set it up:
 
 1. **Install Ollama:**
-   - Visit the [Ollama Installation Guide](https://ollama.com/docs/installation) for detailed instructions.
+   Follow the [Ollama Installation Guide](https://ollama.com/docs/installation).
 
 2. **Download a Model:**
-   - After installing Ollama, download a model (e.g., `llama3.2`):
-     ```bash
-     ollama pull llama3.2
-     ```
+   ```bash
+   ollama pull llama3.2
+   ```
 
 3. **Start the Ollama Server:**
-   - Run the Ollama server locally to host your model:
-     ```bash
-     ollama serve
-     ```
+   ```bash
+   ollama serve
+   ```
 
 4. **Verify the Server:**
-   - Ensure the server is running and accessible at `http://localhost:11434`.
+   Confirm it's running at `http://localhost:11434`.
 
 ---
 
@@ -93,7 +98,7 @@ Fluxion is optimized for locally hosted LLMs using [Ollama](https://ollama.com).
 
 ### **Calling Locally Hosted LLMs**
 
-You can use Fluxion to interact with locally hosted LLMs. Here's a basic example:
+Use Fluxion to interact with locally hosted LLMs. For example:
 
 ```python
 from fluxion.modules.llm_modules import LLMQueryModule, LLMChatModule
@@ -105,15 +110,15 @@ print("Query Response:", response)
 
 # Initialize the LLMChatModule
 llm_chat = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2")
-response = llm_chat.execute(messages=[
-    {"role": "user", "content": "Hello!"}
-])
+response = llm_chat.execute(messages=[{"role": "user", "content": "Hello!"}])
 print("Chat Response:", response)
 ```
 
+---
+
 ### **Using Agents for Chat and Tool Calls**
 
-Fluxion provides the `LLMChatAgent` class to manage conversations and tool calls:
+Agents can perform tool calls dynamically:
 
 ```python
 from fluxion.core.agent import LLMChatAgent
@@ -122,34 +127,82 @@ from fluxion.modules.llm_modules import LLMChatModule
 
 # Define a tool function
 def get_weather(city_name: str) -> dict:
-    """Returns dummy weather data."""
     return {"temperature": 20, "description": "sunny"}
-
-
 
 # Initialize the LLMChatModule
 llm_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2")
 
 # Initialize the agent
 llm_agent = LLMChatAgent(name="WeatherAgent", llm_module=llm_module)
-# Register the tool
 llm_agent.register_tool(get_weather)
+
 # Execute a conversation
 messages = [{"role": "user", "content": "What's the weather in Paris?"}]
 response = llm_agent.execute(messages=messages)
 print("Chat with Tool Call Response:", response)
 ```
 
+---
+
+### **Building Workflows**
+
+Fluxion supports creating workflows using agent nodes:
+
+```python
+from fluxion.workflows.agent_node import AgentNode
+from fluxion.workflows.abstract_workflow import AbstractWorkflow
+
+class CustomWorkflow(AbstractWorkflow):
+    def define_workflow(self):
+        node1 = AgentNode(name="Node1", agent=YourCustomAgent1())
+        node2 = AgentNode(name="Node2", agent=YourCustomAgent2(), dependencies=[node1])
+        self.add_node(node1)
+        self.add_node(node2)
+
+workflow = CustomWorkflow(name="ExampleWorkflow")
+inputs = {"key": "value"}
+results = workflow.execute(inputs=inputs)
+print("Workflow Results:", results)
+```
+
+---
+
+## **Architecture Overview**
+
+Fluxion organizes its functionalities into the following key components:
+
+1. **Agents:** Perform tasks such as querying LLMs or calling tools.
+2. **Modules:** Include APIs, indexing, and retrieval modules.
+3. **Workflows:** Define execution flows for agents.
+4. **Registry:** Manage agents and tools for reuse.
+5. **Visualization:** Visualize workflow graphs for clarity.
+
+---
+
+## **Examples**
+
+For complete examples and tutorials, visit the [Fluxion Documentation](https://ymitiku.github.io/fluxion/).
 
 ---
 
 ## **Contributing**
 
-We welcome contributions to Fluxion! See the [CONTRIBUTING.md](CONTRIBUTING.md) file for guidelines on how to contribute.
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+---
+
+## **Roadmap**
+
+- **Version 1.0.0:**
+  - Complete core modules: Error recovery, program execution, and STT/TTS.
+  - Enhance visualization support.
+- **Future Versions:**
+  - Reinforcement learning integrations.
+  - Support for distributed workflows.
+  - Plugin system for third-party integrations.
 
 ---
 
 ## **License**
 
-This project is licensed under the [Apache License 2.0](LICENSE). You may use, modify, and distribute this software in accordance with the terms specified in the license.
-
+This project is licensed under the [Apache License 2.0](LICENSE).

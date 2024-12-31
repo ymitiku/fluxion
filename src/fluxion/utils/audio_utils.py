@@ -1,3 +1,23 @@
+""" 
+fluxion.utils.audio_utils
+~~~~~~~~~~~~~~~~~~~~~~~~~
+This module provides utility functions for audio processing tasks such as
+speech-to-text (STT) and text-to-speech (TTS) conversion.
+
+Classes:
+    - AudioUtils: A utility class for handling audio-related tasks.
+    
+Exceptions:
+    - AudioUtilsError: Base exception for AudioUtils errors.
+    - SpeechToTextError: Exception raised for Speech-to-Text errors.
+    - TextToSpeechError: Exception raised for Text-to-Speech errors.
+
+Functions:
+    - google_text_to_speech: Converts text to speech and saves it as an audio file.
+    - play_audio: Plays an audio file.
+    - load_audio: Loads audio data from a file or microphone.
+"""
+
 import tempfile
 import os
 

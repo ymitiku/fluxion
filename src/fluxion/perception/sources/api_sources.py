@@ -1,3 +1,20 @@
+""" 
+fluxion.perception.sources.api_sources
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Provides a source for retrieving data from an API endpoint.
+
+Example:
+    ```python
+    from fluxion.perception.sources.api_sources import APISource
+
+    api_url = "https://jsonplaceholder.typicode.com/posts/1"
+    api_source = APISource(api_url=api_url)
+
+    data = api_source.get_data()
+    print(data)
+    ```
+"""
+
 import requests
 from typing import Dict, Any
 from fluxion.perception.sources.perception_source import PerceptionSource

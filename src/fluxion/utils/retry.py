@@ -1,3 +1,12 @@
+""" 
+fluxion.utils.retry
+~~~~~~~~~~~~~~~~~~~~
+This module provides a decorator for retrying a function call if it raises an exception.
+
+Functions:
+    - retry: Retry a function call if it raises an exception.
+"""
+
 import time
 from typing import Callable
 

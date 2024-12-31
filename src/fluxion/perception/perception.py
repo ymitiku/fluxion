@@ -1,3 +1,12 @@
+""" 
+fluxion.perception.perception
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This module provides the base class for perceptions.
+
+Classes:
+    - Perception: Abstract base class for perceptions.
+    - RawPerception: Perception for raw data.
+"""
 from abc import ABC, abstractmethod
 from typing import Dict, Any
 from fluxion.perception.sources.perception_source import PerceptionSource

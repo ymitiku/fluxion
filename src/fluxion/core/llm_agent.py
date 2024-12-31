@@ -1,3 +1,14 @@
+"""
+fluxion.core.llm_agent
+~~~~~~~~~~~~~~~~~~~~~~
+
+Defines agents for interacting with Large Language Models (LLMs).
+
+The module includes:
+- `LLMQueryAgent` for simple query-based interactions with an LLM.
+- `LLMChatAgent` for chat-based interactions that support tool calls.
+"""
+
 from typing import Dict, List, Callable
 from fluxion.core.agent import Agent
 from fluxion.core.registry.agent_registry import AgentRegistry
@@ -8,14 +19,18 @@ from fluxion.core.registry.tool_registry import ToolRegistry
 class LLMQueryAgent(Agent):
     """
     An agent that queries an LLM for a response.
+
+    Attributes:
+        llm_module (LLMQueryModule): The LLM module used for query-based interaction.
     """
+
     def __init__(self, name: str, llm_module: LLMQueryModule, system_instructions: str = ""):
         """
         Initialize the LLMQueryAgent.
 
         Args:
             name (str): The unique name of the agent.
-            llm_module (LLMQueryModule): The LLMQueryModule module.
+            llm_module (LLMQueryModule): The LLMQueryModule instance.
             system_instructions (str): System instructions for the agent (default: "").
         """
         self.llm_module = llm_module
@@ -30,6 +45,9 @@ class LLMQueryAgent(Agent):
 
         Returns:
             str: The response from the LLM.
+
+        Raises:
+            ValueError: If the query is empty or invalid.
         """
         if query.strip() == "":
             raise ValueError("Invalid query: Empty")
@@ -40,28 +58,34 @@ class LLMQueryAgent(Agent):
 class LLMChatAgent(Agent):
     """
     An agent that interacts with an LLM for chat and supports tool calls.
+
+    Attributes:
+        llm_module (LLMChatModule): The LLM module used for chat-based interaction.
+        max_tool_call_depth (int): The maximum recursion depth for handling tool calls.
+        tool_registry (ToolRegistry): The registry of tools available for invocation.
     """
+
     def __init__(self, name: str, llm_module: LLMChatModule, system_instructions: str = "", max_tool_call_depth: int = 2):
         """
         Initialize the LLMChatAgent.
 
         Args:
             name (str): The unique name of the agent.
-            llm_module (LLMChatModule): The LLMChatModule module.
+            llm_module (LLMChatModule): The LLMChatModule instance.
             system_instructions (str): System instructions for the agent (default: "").
+            max_tool_call_depth (int): The maximum depth for recursive tool calls (default: 2).
         """
         self.llm_module = llm_module
         self.max_tool_call_depth = max_tool_call_depth
         self.tool_registry = ToolRegistry()
         super().__init__(name, system_instructions)
 
-
     def register_tool(self, func: Callable):
         """
         Register a tool function with the agent's ToolRegistry.
 
         Args:
-            func (callable): The tool function to register.
+            func (Callable): The tool function to register.
         """
         self.tool_registry.register_tool(func)
 
@@ -71,9 +95,13 @@ class LLMChatAgent(Agent):
 
         Args:
             messages (List[Dict[str, str]]): The chat history, including the user query.
+            depth (int): Current depth of recursion for tool calls (default: 0).
 
         Returns:
             List[Dict[str, str]]: The updated chat history with the LLM and tool responses.
+
+        Raises:
+            ValueError: If the input messages are not valid.
         """
         if not isinstance(messages, list) or not all(
             isinstance(msg, dict) and "role" in msg and "content" in msg for msg in messages
@@ -90,7 +118,6 @@ class LLMChatAgent(Agent):
 
         # Get tools from the agent's ToolRegistry
         tools = [{"type": "function", "function": tool} for _, tool in self.tool_registry.list_tools().items()]
-
 
         # Interact with the LLM
         response = self.llm_module.execute(messages=messages, tools=tools)
@@ -124,4 +151,3 @@ class LLMChatAgent(Agent):
             return f"Tool invocation failed: {te}"
         except Exception as e:
             return f"Unexpected error during tool invocation: {e}"
-        

@@ -1,3 +1,25 @@
+""" 
+fluxion.perception.sources.audio_sources
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Audio sources for perception.
+
+Classes:
+    - AudioSource: Abstract base class for audio sources.
+    - AudioFileSource: Audio source for audio files.
+    - AudioRecordingSource: Audio source for audio recordings.
+
+Examples:
+    - AudioFileSource: 
+        audio_source = AudioFileSource(audio_path="path/to/audio/file")
+        audio_data = audio_source.get_data()
+        print(audio_data)
+    - AudioRecordingSource:
+        audio_source = AudioRecordingSource()
+        audio_data = audio_source.get_data()
+        print(audio_data)
+
+"""
+
 from abc import abstractmethod
 import numpy as np
 from fluxion.perception.sources.perception_source import PerceptionSource
