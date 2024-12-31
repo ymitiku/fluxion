@@ -1,12 +1,12 @@
 import unittest
 from unittest.mock import patch, Mock, mock_open
-from fluxion.core.perception.sources.api_sources import APISource
-from fluxion.core.perception.sources.image_sources import (
+from fluxion.perception.sources.api_sources import APISource
+from fluxion.perception.sources.image_sources import (
     RawImageFileSource,
     ScaledImageFileSource,
     ImageEmbeddingSource,
 )
-from fluxion.core.perception.sources.text_sources import FileTextSource, StringBufferSource
+from fluxion.perception.sources.text_sources import FileTextSource, StringBufferSource
 from PIL import Image
 import numpy as np
 
