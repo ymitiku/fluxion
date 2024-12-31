@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Dict, Any, Union, Generator, Iterable
-from fluxion.core.perception.sources.perception_source import PerceptionSource
+from fluxion.perception.sources.perception_source import PerceptionSource
 
 
 doc = """
