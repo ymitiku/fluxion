@@ -11,7 +11,7 @@ from PIL import Image
 import numpy as np
 
 class TestAPISource(unittest.TestCase):
-    @patch("fluxion.core.perception.sources.api_sources.requests.get")
+    @patch("fluxion.perception.sources.api_sources.requests.get")
     def test_get_data_success_with_get(self, mock_get):
         mock_response = Mock()
         mock_response.status_code = 200
@@ -22,7 +22,7 @@ class TestAPISource(unittest.TestCase):
         data = source.get_data()
         self.assertEqual(data, '{"message": "success"}')
 
-    @patch("fluxion.core.perception.sources.api_sources.requests.post")
+    @patch("fluxion.perception.sources.api_sources.requests.post")
     def test_get_data_success_with_post(self, mock_post):
         mock_response = Mock()
         mock_response.status_code = 200
@@ -93,7 +93,7 @@ class TestImageSources(unittest.TestCase):
 
     @patch("PIL.Image.open")
     @patch("numpy.expand_dims")
-    @patch("fluxion.core.perception.sources.image_sources.np.array")
+    @patch("fluxion.perception.sources.image_sources.np.array")
     def test_image_embedding_source(self, mock_np_array, mock_expand_dims, mock_open_image):
         mock_image = Mock(spec=Image.Image)
         mock_open_image.return_value = mock_image

@@ -1,6 +1,6 @@
 from abc import abstractmethod, ABC
 from typing import Dict, Any, Union,  Tuple
-from fluxion.core.perception.sources.perception_source import PerceptionSource
+from fluxion.perception.sources.perception_source import PerceptionSource
 from PIL import Image
 import numpy as np
 

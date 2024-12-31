@@ -1,6 +1,6 @@
 import requests
 from typing import Dict, Any
-from fluxion.core.perception.sources.perception_source import PerceptionSource
+from fluxion.perception.sources.perception_source import PerceptionSource
 
 
 
