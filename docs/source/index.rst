@@ -19,14 +19,13 @@ Indices and tables
    :maxdepth: 3
    :caption: API Reference:
 
-   api/fluxion.core.registry
-   api/fluxion.core
-   api/fluxion.modules
-   api/fluxion.perception
-   api/fluxion.utils
-   api/fluxion.workflows
-   api/fluxion
-   api/modules
+   fluxion.core.registry
+   fluxion.core
+   fluxion.modules
+   fluxion.perception
+   fluxion.utils
+   fluxion.workflows
+   fluxion
 
 
 .. toctree::
