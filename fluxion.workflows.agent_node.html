@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>fluxion.workflows.agent_node module &mdash; Fluxion 0.0.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
@@ -52,11 +52,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="fluxion.workflows.html">fluxion.workflows package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="fluxion.workflows.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="fluxion.workflows.abstract_workflow.html">fluxion.workflows.abstract_workflow module</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">fluxion.workflows.agent_node module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#fluxion-workflows-agent-node">fluxion.workflows.agent_node</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fluxion.workflows.agent_node.AgentNode"><code class="docutils literal notranslate"><span class="pre">AgentNode</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">fluxion.workflows.agent_node module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="fluxion.workflows.flyte_adapter.html">fluxion.workflows.flyte_adapter module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="fluxion.workflows.workflow_progress_tracker.html">fluxion.workflows.workflow_progress_tracker module</a></li>
 </ul>
@@ -96,106 +92,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-fluxion.workflows.agent_node">
-<span id="fluxion-workflows-agent-node-module"></span><h1>fluxion.workflows.agent_node module<a class="headerlink" href="#module-fluxion.workflows.agent_node" title="Link to this heading"></a></h1>
-<section id="fluxion-workflows-agent-node">
-<h2>fluxion.workflows.agent_node<a class="headerlink" href="#fluxion-workflows-agent-node" title="Link to this heading"></a></h2>
-<p>This module defines the AgentNode class, which represents a node in the workflow graph with explicit input and output definitions. The AgentNode class is used to define the structure of the workflow graph and execute agents
-at each node based on the dependencies and inputs provided. The AgentNode class is part of the Fluxion framework and is used to build and execute workflows with multiple agents and dependencies.</p>
-<p>The AgentNode class includes the following attributes:
-- name: The unique name of the agent node.
-- agent: The agent to be executed at
-this node.
-- dependencies: The list of dependencies for this node.
-- inputs: Mapping of input keys to their source outputs (e.g., {“key1”: “NodeA.output1”}).
-- outputs: List of output keys provided by this node.</p>
-<p>The AgentNode class provides methods to resolve inputs, execute the agent, and validate the outputs of the agent execution. The AgentNode class is used in conjunction with the AbstractWorkflow class to build and execute
-complex workflows with multiple agents and dependencies.</p>
-<p>The AgentNode class is a fundamental component of the Fluxion framework and enables the creation and execution of intelligent workflows with multiple agents and dependencies.</p>
-</section>
-<dl class="py class">
-<dt class="sig sig-object py" id="fluxion.workflows.agent_node.AgentNode">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fluxion.workflows.agent_node.</span></span><span class="sig-name descname"><span class="pre">AgentNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="fluxion.core.agent.html#fluxion.core.agent.Agent" title="fluxion.core.agent.Agent"><span class="pre">Agent</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dependencies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#fluxion.workflows.agent_node.AgentNode" title="fluxion.workflows.agent_node.AgentNode"><span class="pre">AgentNode</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fluxion/workflows/agent_node.html#AgentNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion.workflows.agent_node.AgentNode" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Represents a node in the workflow graph with explicit input and output definitions.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="fluxion.workflows.agent_node.AgentNode.name">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#fluxion.workflows.agent_node.AgentNode.name" title="Link to this definition"></a></dt>
-<dd><p>The unique name of the agent node.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="fluxion.workflows.agent_node.AgentNode.agent">
-<span class="sig-name descname"><span class="pre">agent</span></span><a class="headerlink" href="#fluxion.workflows.agent_node.AgentNode.agent" title="Link to this definition"></a></dt>
-<dd><p>The agent to be executed at this node.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="fluxion.core.agent.html#fluxion.core.agent.Agent" title="fluxion.core.agent.Agent">Agent</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="fluxion.workflows.agent_node.AgentNode.dependencies">
-<span class="sig-name descname"><span class="pre">dependencies</span></span><a class="headerlink" href="#fluxion.workflows.agent_node.AgentNode.dependencies" title="Link to this definition"></a></dt>
-<dd><p>The list of dependencies for this node.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List[<a class="reference internal" href="#fluxion.workflows.agent_node.AgentNode" title="fluxion.workflows.agent_node.AgentNode">AgentNode</a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="fluxion.workflows.agent_node.AgentNode.inputs">
-<span class="sig-name descname"><span class="pre">inputs</span></span><a class="headerlink" href="#fluxion.workflows.agent_node.AgentNode.inputs" title="Link to this definition"></a></dt>
-<dd><p>Mapping of input keys to their source outputs (e.g., {“key1”: “NodeA.output1”}).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[str, str]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="fluxion.workflows.agent_node.AgentNode.outputs">
-<span class="sig-name descname"><span class="pre">outputs</span></span><a class="headerlink" href="#fluxion.workflows.agent_node.AgentNode.outputs" title="Link to this definition"></a></dt>
-<dd><p>List of output keys provided by this node.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List[str]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="fluxion.workflows.agent_node.AgentNode.execute">
-<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/fluxion/workflows/agent_node.html#AgentNode.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion.workflows.agent_node.AgentNode.execute" title="Link to this definition"></a></dt>
-<dd><p>Execute the agent of this node by collecting the required arguments
-from the workflow’s <cite>results</cite> and <cite>inputs</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>results</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – A dictionary containing the outputs of executed nodes.</p></li>
-<li><p><strong>inputs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – A dictionary containing the inputs for the workflow.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The result of executing the agent.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[str, Any]</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+  <section id="fluxion-workflows-agent-node-module">
+<h1>fluxion.workflows.agent_node module<a class="headerlink" href="#fluxion-workflows-agent-node-module" title="Link to this heading"></a></h1>
 </section>
 
 
