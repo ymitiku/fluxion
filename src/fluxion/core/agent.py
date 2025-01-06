@@ -8,8 +8,12 @@ Agents represent intelligent components that can execute tasks, process inputs, 
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict
+from typing import Any, Dict, Union
 from fluxion.core.registry.agent_registry import AgentRegistry
+from fluxon.parser import parse_json_with_recovery
+from fluxon.structured_parsing.fluxon_structured_parser import FluxonStructuredParser
+from fluxon.structured_parsing.exceptions import FluxonError
+import json
 
 
 class Agent(ABC):
@@ -65,3 +69,49 @@ class Agent(ABC):
         Unregister the agent from the registry.
         """
         AgentRegistry.unregister_agent(self.name)
+
+class JsonInputOutputAgent(ABC):
+    """
+    Abstract base class for agents that output JSON data. It provides powerful interface for parsing LLM responses into JSON.
+    It supports the following methods:
+    - parse_response: Parse the response into JSON.
+    - Error recovery: Automatically recover from JSON parsing errors.
+    """
+
+    def __init__(self, *args, input_schema: Dict[str, Any] = None, output_schema: Dict[str, Any] = None, **kwargs):
+        """
+        Initialize the agent.
+        """
+        super().__init__(*args, **kwargs)
+        self.input_schema = input_schema
+        self.output_schema = output_schema
+            
+
+
+    def parse_response(self, response: str) -> Dict[str, Any]:
+        """
+        Parse the response into JSON.
+
+        Args:
+            response (str): The response to parse.
+
+        Returns:
+            Dict[str, Any]: The parsed JSON data.
+
+        Raises:
+            ValueError: If the response cannot be parsed.
+        """
+        try:
+            return json.loads(response)
+        except json.decoder.JSONDecodeError:
+            structured_parser = FluxonStructuredParser()
+            parsed_tokens = structured_parser.parse(parse_json_with_recovery(response))
+            parsed_json = structured_parser.render(parsed_tokens, compact=True)
+            return json.loads(parsed_json)
+        except FluxonError as e:
+            print("Response", response)
+            parsed_json = parse_json_with_recovery(response)
+            return json.loads(parsed_json)
+        except Exception as e:
+            raise ValueError(f"Failed to parse response: {str(e)}")
+            
