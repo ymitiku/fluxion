@@ -102,16 +102,19 @@ class JsonInputOutputAgent(ABC):
             ValueError: If the response cannot be parsed.
         """
         try:
+            print("Trying to parse response using json.loads")
             return json.loads(response)
         except json.decoder.JSONDecodeError:
-            structured_parser = FluxonStructuredParser()
-            parsed_tokens = structured_parser.parse(parse_json_with_recovery(response))
-            parsed_json = structured_parser.render(parsed_tokens, compact=True)
-            return json.loads(parsed_json)
-        except FluxonError as e:
-            print("Response", response)
-            parsed_json = parse_json_with_recovery(response)
-            return json.loads(parsed_json)
+            try:
+                print("Json loads failed. Trying to parse response using structured parser")
+                structured_parser = FluxonStructuredParser()
+                parsed_tokens = structured_parser.parse(response)
+                parsed_json = structured_parser.render(parsed_tokens, compact=True)
+                return json.loads(parsed_json)
+            except FluxonError as e:
+                print("Structured parser failed. Trying to parse response using recovery")
+                return parse_json_with_recovery(response)
+
         except Exception as e:
             raise ValueError(f"Failed to parse response: {str(e)}")
             
