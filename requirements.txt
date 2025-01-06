@@ -11,4 +11,4 @@ playsound
 PyAudio
 numpy==1.26.0
 graphviz==0.20.3
-git+ssh://git@github.com/ymitiku/fluxon.git@main#egg=fluxon
+git+https://github.com/ymitiku/fluxon.git@main#egg=fluxon
