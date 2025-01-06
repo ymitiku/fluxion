@@ -1,4 +1,4 @@
-name: Create Tag After PR Merge
+name: Create Tag and Release
 
 on:
   pull_request:
@@ -67,3 +67,5 @@ jobs:
           echo "Creating tag $VERSION"
           git tag -a $VERSION -m "Release $VERSION"
           git push origin --tags $VERSION
+          gh release create $VERSION --target main --title $VERSION --notes "Release $VERSION"
+
