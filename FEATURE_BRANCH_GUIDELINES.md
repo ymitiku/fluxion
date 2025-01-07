@@ -86,7 +86,7 @@ Feature branch names should follow a consistent and descriptive naming pattern:
 
 1. **Open a Pull Request**:
    - Create a PR targeting the release branch (e.g., `release/v1.0.0`).
-   - Use the following template:
+   - Use the following template(Will be enforced after v1.0.0):
 
      ```markdown
      ### Feature: <Feature Name>
@@ -101,7 +101,7 @@ Feature branch names should follow a consistent and descriptive naming pattern:
      - <Steps taken to test the feature or linked test cases>
      ```
 
-2. **Review Process**:
+2. **Review Process**: (Will be enforced after v1.0.0)
    - Ensure at least one code review is completed before merging.
    - Address any feedback promptly.
 
@@ -153,7 +153,7 @@ Feature branch names should follow a consistent and descriptive naming pattern:
 
 Before merging, ensure the following checklist is met:
 
-1. **Code Quality:**
+1. **Code Quality:**(Will be enforced in the future)
    - Code is linted and formatted.
    - All unit tests pass locally and in CI/CD pipelines.
 
@@ -166,7 +166,7 @@ Before merging, ensure the following checklist is met:
    - Edge cases and error scenarios are handled.
 
 4. **Review:**
-   - PR is reviewed and approved by at least one team member.
+   - PR is reviewed and approved by at least one team member(Will be enforced in the future).
 
 ---
 

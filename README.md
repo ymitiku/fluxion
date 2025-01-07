@@ -122,7 +122,6 @@ Agents can perform tool calls dynamically:
 
 ```python
 from fluxion.core.agent import LLMChatAgent
-from fluxion.core.registry.tool_registry import ToolRegistry
 from fluxion.modules.llm_modules import LLMChatModule
 
 # Define a tool function
@@ -141,6 +140,82 @@ messages = [{"role": "user", "content": "What's the weather in Paris?"}]
 response = llm_agent.execute(messages=messages)
 print("Chat with Tool Call Response:", response)
 ```
+
+---
+
+
+### **Using AgentCallingWrapper with LLMChatAgent**
+
+`AgentCallingWrapper` allows dynamic invocation of agents, enabling seamless communication between agents in a modular workflow. It supports retries, backoff strategies, and fallback logic for robust execution.
+
+Here’s how to integrate it with an `LLMChatAgent`:
+
+```python
+from fluxion.core.agent_calling_wrapper import AgentCallingWrapper
+from fluxion.core.agent import LLMChatAgent
+from fluxion.modules.llm_modules import LLMChatModule
+
+# Define a tool function
+def get_weather(city_name: str) -> dict:
+    return {"temperature": 20, "description": "sunny"}
+
+# Initialize the LLMChatModule
+llm_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2")
+
+# Initialize the agent
+llm_agent = LLMChatAgent(name="WeatherAgent", llm_module=llm_module)
+llm_agent.register_tool(get_weather)
+
+# Register AgentCallingWrapper for dynamic agent invocation
+llm_agent.register_tool(AgentCallingWrapper.call_agent)
+```
+
+---
+
+####  **Advanced Features**
+
+1. **Retries**:
+   - Specify the maximum number of retries for an agent call.
+   - Use `retry_backoff` to introduce a delay between retries.
+
+2. **Fallback Logic**:
+   - Define a fallback function to handle cases where retries are exhausted.
+
+3. **Example: Using Retries and Fallback**
+
+```python
+def fallback_logic(inputs):
+    return {"message": "Unable to complete request. Please try again later."}
+
+inputs = {"agent_name": "mock_agent", "inputs": {"value": 5}}
+
+try:
+    result = AgentCallingWrapper.call_agent(
+        agent_name="mock_agent",
+        inputs=inputs,
+        max_retries=3,
+        retry_backoff=0.5,
+        fallback=fallback_logic,
+    )
+    print("Agent Result:", result)
+except RuntimeError as e:
+    print("Error calling agent:", e)
+```
+
+#### **What This Does:**
+- Retries the agent call up to three times.
+- Uses a backoff delay of 0.5 seconds between retries.
+- Executes the fallback logic if all retries fail.
+
+---
+
+### **When to Use AgentCallingWrapper**
+- **Inter-Agent Communication**:
+  - When agents need to invoke other agents dynamically in workflows.
+- **Error Recovery**:
+  - To handle transient failures with retries or provide fallback results for irrecoverable errors.
+- **Modular Workflow Design**:
+  - Enables complex workflows with minimal coupling between agents.
 
 ---
 
