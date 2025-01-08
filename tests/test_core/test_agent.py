@@ -146,29 +146,31 @@ class TestAgentCallingWrapper(unittest.TestCase):
             self.assertIn("execution failed after 1 retries", str(context.exception))
 
 
-    @patch("fluxion.core.agent_calling_wrapper.AgentCallingWrapper.logger")
+    @patch("fluxion.core.agent.AgentCallingWrapper.logger")
     def test_logging_on_success(self, mock_logger):
         inputs = {"value": 5}
         result = AgentCallingWrapper.call_agent("mock_agent", inputs)
         self.assertEqual(result, {"result": 10})
         mock_logger.info.assert_any_call("Starting agent call: mock_agent with inputs: {'value': 5}")
         mock_logger.info.assert_any_call("Agent 'mock_agent' executed successfully on attempt 1")
+    
 
-    @patch("fluxion.core.agent_calling_wrapper.AgentCallingWrapper.logger")
+    @patch("fluxion.core.agent.AgentCallingWrapper.logger")
     def test_logging_on_failure_and_fallback(self, mock_logger):
         def fallback_logic(inputs):
             return {"result": 0}
+        
+        mock_agent = MockStructuredAgent("new_mock_agent")
 
-        with patch.object(MockAgent, "execute", side_effect=RuntimeError("Simulated failure")):
+        # Patch the `execute` method on the agent instance, not the class
+        with patch.object(mock_agent, "execute", side_effect=RuntimeError("Simulated failure")) as mock_execute:
             result = AgentCallingWrapper.call_agent(
-                "mock_agent", {"value": 5}, max_retries=2, fallback=fallback_logic
+                "new_mock_agent", {"value": 5}, max_retries=2, fallback=fallback_logic
             )
             self.assertEqual(result, {"result": 0})
-            mock_logger.warning.assert_called_with("Execution failed for agent 'mock_agent' on attempt 1")
-            mock_logger.info.assert_any_call("Max retries exceeded for agent 'mock_agent'. Executing fallback.")
-
-
-
+            mock_execute.assert_called()
+            mock_logger.warning.assert_any_call("Execution failed for agent 'new_mock_agent' on attempt 1: Simulated failure")
+            mock_logger.info.assert_any_call("Max retries exceeded for agent 'new_mock_agent'. Executing fallback.")
 
 
 class MockJsonInputOutputAgent(JsonInputOutputAgent):
