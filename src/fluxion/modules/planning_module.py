@@ -4,6 +4,7 @@ from typing import List, Dict, Any
 from fluxion.modules.llm_modules import LLMChatModule
 from fluxion.core.registry.tool_registry import ToolRegistry
 from fluxion.core.agent import AgentCallingWrapper
+from fluxion.models.plan_model import Plan, PlanStep
 
 """ 
 fluxion.modules.planning_module
@@ -17,7 +18,7 @@ class PlanningModule(ABC):
     """
 
     @abstractmethod
-    def generate_plan(self, task: str, context: Dict[str, Any] = None) -> List[Dict[str, Any]]:
+    def generate_plan(self, task: str, context: Dict[str, Any] = None) -> Plan:
         """
         Generate a structured task plan.
 
@@ -26,81 +27,72 @@ class PlanningModule(ABC):
             context (Dict[str, Any], optional): Additional context for planning.
 
         Returns:
-            List[Dict[str, Any]]: A list of actions representing the plan.
+            Plan: A structured task plan.
         """
         pass
 
-    def execute_plan(self, plan: List[Dict[str, Any]]) -> List[Any]:
+    def execute_plan(self, plan: Plan) -> List[Any]:
         """
         Execute a structured task plan.
 
         Args:
-            plan (List[Dict[str, Any]]): A list of actions representing the plan.
+            plan (Plan): The structured task plan.
 
         Returns:
             List[Any]: Results of each action in the plan.
         """
         results = []
-        for step in plan:
+        for step in plan.steps:
             try:
                 result = self.execute_action(step)
                 results.append(result)
             except Exception as e:
-                on_error = step.get("on_error", "terminate")
-                if on_error == "skip":
-                    results.append({"status": "skipped", "action": step})
-                elif on_error == "terminate":
+                if step.on_error == "skip":
+                    results.append({"status": "skipped", "step": step.dict()})
+                elif step.on_error == "terminate":
                     raise RuntimeError(f"Execution terminated due to error in step: {step}") from e
         return results
 
-    def execute_action(self, action: Dict[str, Any]) -> Any:
+    def execute_action(self, step: PlanStep) -> Any:
         """
-        Execute a single action (tool_call or agent_call).
+        Execute a single step in the plan.
 
         Args:
-            action (Dict[str, Any]): The action to execute.
+            step (PlanStep): The step to execute.
 
         Returns:
             Any: The result of the action.
         """
-        if action["action"] == "tool_call":
-            return self.invoke_tool(action)
-        elif action["action"] == "agent_call":
-            return self.invoke_agent(action)
-        raise ValueError(f"Unsupported action type: {action['action']}")
+        if step.action == "tool_call":
+            return self.invoke_tool(step)
+        elif step.action == "agent_call":
+            return self.invoke_agent(step)
+        raise ValueError(f"Unsupported action type: {step.action}")
 
-    def invoke_tool(self, action: Dict[str, Any]) -> Any:
+    @abstractmethod
+    def invoke_tool(self, step: PlanStep) -> Any:
         """
-        Invoke a tool based on the action.
+        Invoke a tool based on the step.
 
         Args:
-            action (Dict[str, Any]): The action containing tool details.
+            step (PlanStep): The step containing tool details.
 
         Returns:
             Any: The result of the tool call.
         """
-        tool_name = action["tool"]
-        tool_input = action["input"]
-        # Mocked tool invocation
-        return {"tool_result": f"Executed tool {tool_name} with input {tool_input}"}
-
-    def invoke_agent(self, action: Dict[str, Any]) -> Any:
+        
+    @abstractmethod
+    def invoke_agent(self, step: PlanStep) -> Any:
         """
-        Invoke another agent based on the action.
+        Invoke another agent using the agent calling wrapper.
 
         Args:
-            action (Dict[str, Any]): The action containing agent details.
+            step (PlanStep): The step containing agent details.
 
         Returns:
             Any: The result of the agent call.
         """
-        agent_name = action["agent"]
-        agent_input = action["input"]
-        # Mocked agent invocation
-        return {"agent_result": f"Called agent {agent_name} with input {agent_input}"}
-
-
-
+        pass
 
 
 class LlmPlanningModule(PlanningModule):
@@ -118,8 +110,7 @@ class LlmPlanningModule(PlanningModule):
         self.llm_chat_module = llm_chat_module
         self.tool_registry = ToolRegistry()
 
-
-    def generate_plan(self, task: str, context: Dict[str, Any] = None) -> List[Dict[str, Any]]:
+    def generate_plan(self, task: str, context: Dict[str, Any] = None) -> Plan:
         """
         Generate a structured task plan using the LLM.
 
@@ -128,62 +119,53 @@ class LlmPlanningModule(PlanningModule):
             context (Dict[str, Any], optional): Additional context for planning.
 
         Returns:
-            List[Dict[str, Any]]: A list of actions representing the plan.
+            Plan: A structured task plan.
         """
         # Prepare the prompt for the LLM
         prompt = (
             f"Task: {task}\n\n"
-            "Generate a structured JSON plan for this task. Each step should include:\n"
-            "- action (tool_call or agent_call)\n"
-            "- description of the action\n"
-            "- input data\n"
-            "- on_error (retry, skip, or terminate)\n"
-            "- max_retries (if applicable)\n\n"
-            "Return the plan as a JSON object."
+            f"Context: {json.dumps(context, indent=2) if context else 'None'}\n\n"
+            f"Schema for the plan:\n{Plan.schema_as_json()}\n\n"
+            f"Generate a structured plan based on the schema."
         )
-
-        prompt += f"\nContext: {json.dumps(context, indent=2)}" if context else ""
 
         # Query the LLM
         response = self.llm_chat_module.execute(messages=[{"role": "user", "content": prompt}])
 
         # Parse the LLM's response into a plan
         try:
-            plan = json.loads(response["content"])
-            return plan["plan"]
-        except (KeyError, json.JSONDecodeError) as e:
-            raise ValueError(f"Failed to parse plan from LLM response: {response}")
+            parsed_plan = json.loads(response["content"])
+            return Plan(**parsed_plan)
+        except (KeyError, json.JSONDecodeError, ValueError) as e:
+            raise ValueError(f"Failed to parse plan from LLM response: {response}") from e
 
-    def invoke_tool(self, action: Dict[str, Any]) -> Any:
+
+    def invoke_tool(self, step: PlanStep) -> Any:
         """
-        Invoke a tool from the module's ToolRegistry.
+        Invoke a tool based on the step.
 
         Args:
-            action (Dict[str, Any]): The action containing tool details.
+            step (PlanStep): The step containing tool details.
 
         Returns:
             Any: The result of the tool call.
         """
-        tool_name = action["tool"]
-        tool_input = action["input"]
-        return self.tool_registry.invoke_tool_call({"function": {"name": tool_name, "arguments": tool_input}})
-    
+        return self.tool_registry.invoke_tool_call({"function": {"name": step.input["tool"], "arguments": step.input}})
 
-    def invoke_agent(self, action: Dict[str, Any]) -> Any:
+    def invoke_agent(self, step: PlanStep) -> Any:
         """
         Invoke another agent using the agent calling wrapper.
 
         Args:
-            action (Dict[str, Any]): The action containing agent details.
+            step (PlanStep): The step containing agent details.
 
         Returns:
             Any: The result of the agent call.
         """
-        agent_name = action["agent"]
-        agent_input = action["input"]
-        max_retries = action.get("max_retries", 1)
-        retry_backoff = action.get("retry_backoff", 0.5)
-        fallback = action.get("fallback", None)
-
-        
-        return AgentCallingWrapper.call_agent(agent_name, agent_input, max_retries, retry_backoff, fallback)
+        return AgentCallingWrapper.call_agent(
+            agent_name=step.input["agent"],
+            inputs=step.input,
+            max_retries=step.max_retries,
+            retry_backoff=step.retry_backoff,
+            fallback=step.fallback,
+        )
