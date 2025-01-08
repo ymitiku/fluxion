@@ -24,17 +24,18 @@ class LLMQueryAgent(Agent):
         llm_module (LLMQueryModule): The LLM module used for query-based interaction.
     """
 
-    def __init__(self, name: str, llm_module: LLMQueryModule, system_instructions: str = ""):
+    def __init__(self, name: str, llm_module: LLMQueryModule, description: str = "", system_instructions: str = ""):
         """
         Initialize the LLMQueryAgent.
 
         Args:
             name (str): The unique name of the agent.
             llm_module (LLMQueryModule): The LLMQueryModule instance.
+            description (str): The description of the agent (default: "").
             system_instructions (str): System instructions for the agent (default: "").
         """
         self.llm_module = llm_module
-        super().__init__(name, system_instructions)
+        super().__init__(name, description = description, system_instructions = system_instructions)
 
     def execute(self, query: str) -> str:
         """
@@ -65,20 +66,21 @@ class LLMChatAgent(Agent):
         tool_registry (ToolRegistry): The registry of tools available for invocation.
     """
 
-    def __init__(self, name: str, llm_module: LLMChatModule, system_instructions: str = "", max_tool_call_depth: int = 2):
+    def __init__(self, name: str, llm_module: LLMChatModule, description: str = "", system_instructions: str = "", max_tool_call_depth: int = 2):
         """
         Initialize the LLMChatAgent.
 
         Args:
             name (str): The unique name of the agent.
             llm_module (LLMChatModule): The LLMChatModule instance.
+            description (str): The description of the agent (default: "").
             system_instructions (str): System instructions for the agent (default: "").
             max_tool_call_depth (int): The maximum depth for recursive tool calls (default: 2).
         """
         self.llm_module = llm_module
         self.max_tool_call_depth = max_tool_call_depth
         self.tool_registry = ToolRegistry()
-        super().__init__(name, system_instructions)
+        super().__init__(name, description=description, system_instructions = system_instructions)
 
     def register_tool(self, func: Callable):
         """

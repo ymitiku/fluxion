@@ -1,4 +1,5 @@
 from typing import Any, Dict, List
+import logging
 class AgentRegistry:
     """
     A centralized registry for managing agents with modular names.
@@ -106,4 +107,28 @@ class AgentRegistry:
             "input_schema": agent.input_schema.schema() if agent.input_schema else None,
             "output_schema": agent.output_schema.schema() if agent.output_schema else None,
         }
+  
     
+    @classmethod
+    def get_agent_metadata(cls, group: str = None, sort: bool = False) -> List[Dict[str, Any]]:
+        """
+        Retrieve metadata for all registered agents.
+
+        Args:
+            group (str, optional): The group prefix to filter agents. If None, retrieves all agents.
+
+        Returns:
+            Dict[str, Any]: A dictionary containing metadata for all agents.
+        """
+        agent_metadata = []
+        for agent_name in cls.list_agents(group):
+            agent = cls._registry.get(agent_name)
+            if agent and hasattr(agent, "metadata"):
+                try:
+                    agent_metadata.append(agent.metadata())
+                except Exception as e:
+                    logging.warning(f"Failed to get metadata for agent '{agent_name}': {e}")
+        if sort:
+            agent_metadata = sorted(agent_metadata, key=lambda x: x.get("name", ""))
+        return agent_metadata
+

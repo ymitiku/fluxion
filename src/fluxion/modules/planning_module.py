@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
 import json
-from typing import List, Dict, Any
+import logging
+from typing import Any, Dict, List
 from fluxion.modules.llm_modules import LLMChatModule
-from fluxion.core.registry.tool_registry import ToolRegistry
-from fluxion.core.agent import AgentCallingWrapper
+from fluxion.core.registry.agent_registry import AgentRegistry
+from fluxion.core.registry.tool_registry import ToolRegistry, call_agent
 from fluxion.models.plan_model import Plan, PlanStep
 
 """ 
@@ -100,7 +101,7 @@ class LlmPlanningModule(PlanningModule):
     A planning module that generates plans using an LLM via LLMChatModule.
     """
 
-    def __init__(self, llm_chat_module: LLMChatModule):
+    def __init__(self, llm_chat_module: LLMChatModule, agent_group: str= None):
         """
         Initialize the LlmPlanningModule.
 
@@ -109,6 +110,8 @@ class LlmPlanningModule(PlanningModule):
         """
         self.llm_chat_module = llm_chat_module
         self.tool_registry = ToolRegistry()
+        self.agent_group = agent_group
+        self.tool_registry.register_tool(call_agent)
 
     def generate_plan(self, task: str, context: Dict[str, Any] = None) -> Plan:
         """
@@ -122,22 +125,68 @@ class LlmPlanningModule(PlanningModule):
             Plan: A structured task plan.
         """
         # Prepare the prompt for the LLM
-        prompt = (
-            f"Task: {task}\n\n"
-            f"Context: {json.dumps(context, indent=2) if context else 'None'}\n\n"
-            f"Schema for the plan:\n{Plan.schema_as_json()}\n\n"
-            f"Generate a structured plan based on the schema."
-        )
+        agent_metadata = AgentRegistry.get_agent_metadata(self.agent_group)
+
+        if not agent_metadata:
+            logging.warning("No agents available for task planning.")
+
+        prompt = self._construct_prompt(task, agent_metadata, self.tool_registry.list_tools(), context)
+
+        system_instruction = self._construct_system_instruction()
+
+        messages = [{"role": "system", "content": system_instruction}] if system_instruction else []
+        messages.append({"role": "user", "content": prompt})
+
+        # Get tools from the agent's ToolRegistry
+        tools = [{"type": "function", "function": tool} for _, tool in self.tool_registry.list_tools().items()]
+
 
         # Query the LLM
-        response = self.llm_chat_module.execute(messages=[{"role": "user", "content": prompt}])
+        response = self.llm_chat_module.execute(messages=messages, tools=tools)
 
         # Parse the LLM's response into a plan
         try:
             parsed_plan = json.loads(response["content"])
             return Plan(**parsed_plan)
         except (KeyError, json.JSONDecodeError, ValueError) as e:
+            logging.error(f"Failed to parse plan for task '{task}' with response: {response}")
             raise ValueError(f"Failed to parse plan from LLM response: {response}") from e
+        
+    
+    def _construct_prompt(self, task: str, agent_metadata: List[Dict[str, Any]], tools_metadata: List[Dict[str, Any]], context: Dict[str, Any]) -> str:
+        """
+        Construct the user prompt for the LLM.
+
+        Args:
+            task (str): The task description.
+            agent_metadata (List[Dict[str, Any]]): Metadata for available agents.
+            tools_metadata (List[Dict[str, Any]]): Metadata for available tools.
+            context (Dict[str, Any]): Additional task context.
+
+        Returns:
+            str: The constructed prompt.
+        """
+        return (
+            f"Task: {task}\n\n"
+            f"Context: {json.dumps(context, indent=2) if context else 'None'}\n\n"
+            f"List of available agents for calling:\n{json.dumps(agent_metadata, indent=2)}\n\n"
+            f"Schema for the plan:\n{Plan.schema_as_json()}\n\n"
+            f"Generate a structured plan based on the schema."
+        )
+
+    def _construct_system_instruction(self) -> str:
+        """
+        Construct the system instruction for the LLM.
+
+        Returns:
+            str: The system instruction.
+        """
+        return (
+            "You are an intelligent agent that generates robust plans for given tasks.\n"
+            "You have access to tools and agents to accomplish these tasks.\n"
+            "You will receive a task description, context, and a schema for the plan.\n"
+            "Generate a structured plan based on the schema provided."
+        )
 
 
     def invoke_tool(self, step: PlanStep) -> Any:
@@ -162,9 +211,12 @@ class LlmPlanningModule(PlanningModule):
         Returns:
             Any: The result of the agent call.
         """
-        return AgentCallingWrapper.call_agent(
-            agent_name=step.input["agent"],
-            inputs=step.input,
+        inputs = step.input
+        agent_name = inputs.pop("agent_name")
+        
+        return call_agent(
+            agent_name=agent_name,
+            inputs=inputs,
             max_retries=step.max_retries,
             retry_backoff=step.retry_backoff,
             fallback=step.fallback,
