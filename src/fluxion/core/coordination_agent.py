@@ -15,7 +15,7 @@ class CoordinationAgent(LLMChatAgent):
         self.agents_groups = agents_groups
         self.register_tool(call_agent)
 
-    def generate_tool_call(self, task: str) -> Dict:
+    def execute(self, messages: List[Dict[str, str]], depth: int = 0) -> List[Dict[str, str]]:
         """
         Generates a tool call using an LLM based on the given task and available agents.
 
@@ -49,22 +49,24 @@ class CoordinationAgent(LLMChatAgent):
             "{\n"
             "    \"error\": \"No suitable agent found or inputs could not be generated.\"\n"
             "}\n\n"
-            f"Task: {task}\n\n"
         )
-        print("User Prompt:", user_prompt)
         # Combine system message and user prompt
-        messages = [
-            {"role": "user", "content": user_prompt}
-        ]
+        messages = [{"role": "user", "content": user_prompt}] + messages
 
         # Query the LLM
-        response = self.execute(messages=messages)
+        response = super().execute(messages=messages)
 
         try:
             # Parse the LLM response
-            content =  json.loads(response[-1]["content"])
-            return parse_json_with_recovery(content)
-        except json.JSONDecodeError:
+            if "error" in response[-1]:
+                return response[-1]
+            content =  response[-1]["content"]
+            output =  parse_json_with_recovery(content)
+
+            if content and not output:
+                return {"error": "Failed to parse the response from the LLM."}
+            return output
+        except ValueError:
             return {"error": "Failed to parse the response from the LLM."}
 
 # Example Usage
@@ -118,5 +120,8 @@ if __name__ == "__main__":
 
 
     # Generate a tool call
-    tool_call = coordination_agent.generate_tool_call(task)
+    messages = [
+        {"role": "user", "content": task},
+    ]
+    tool_call = coordination_agent.execute(messages)
     print("Generated Tool Call:", json.dumps(tool_call, indent=2))
