@@ -9,7 +9,8 @@ The module includes:
 - `LLMChatAgent` for chat-based interactions that support tool calls.
 """
 
-from typing import Dict, List, Callable
+import json
+from typing import Any, Callable, Dict, List
 from fluxion.core.agent import Agent
 from fluxion.core.registry.agent_registry import AgentRegistry
 from fluxion.modules.llm_modules import LLMQueryModule, LLMChatModule
@@ -91,20 +92,18 @@ class LLMChatAgent(Agent):
         """
         self.tool_registry.register_tool(func)
 
-    def execute(self, messages: List[Dict[str, str]], depth: int = 0) -> List[Dict[str, str]]:
+    def register_tools(self, tools: List[Callable]):
         """
-        Execute the LLM chat agent logic.
+        Register multiple tool functions with the agent's ToolRegistry.
 
         Args:
-            messages (List[Dict[str, str]]): The chat history, including the user query.
-            depth (int): Current depth of recursion for tool calls (default: 0).
-
-        Returns:
-            List[Dict[str, str]]: The updated chat history with the LLM and tool responses.
-
-        Raises:
-            ValueError: If the input messages are not valid.
+            tools (List[Callable]): The list of tool functions to register.
         """
+        for tool in tools:
+            self.register_tool(tool)
+
+
+    def construct_llm_inputs(self, messages: List[Dict[str, str]]):
         if not isinstance(messages, list) or not all(
             isinstance(msg, dict) and "role" in msg and "content" in msg for msg in messages
         ):
@@ -119,19 +118,56 @@ class LLMChatAgent(Agent):
             messages.insert(0, system_message)
 
         # Get tools from the agent's ToolRegistry
-        tools = [{"type": "function", "function": tool} for _, tool in self.tool_registry.list_tools().items()]
+        tools = self.get_llm_tools()
+
+
+        return dict(messages=messages, tools=tools)
+    
+    def get_llm_tools(self):
+        return [{"type": "function", "function": tool} for _, tool in self.tool_registry.list_tools().items()]
+
+
+    def execute(self, messages: List[Dict[str, str]], depth: int = 0) -> List[Dict[str, str]]:
+        """
+        Execute the LLM chat agent logic.
+
+        Args:
+            messages (List[Dict[str, str]]): The chat history, including the user query.
+            depth (int): Current depth of recursion for tool calls (default: 0).
+
+        Returns:
+            List[Dict[str, str]]: The updated chat history with the LLM and tool responses.
+
+        Raises:
+            ValueError: If the input messages are not valid.
+        """
 
         # Interact with the LLM
-        response = self.llm_module.execute(messages=messages, tools=tools)
+        response = self.llm_module.execute(**self.construct_llm_inputs(messages))
         messages.append(response)
 
         # Handle tool calls if present
+        messages = self._execute_tool_calls(response, messages, depth)
+        return messages
+    
+    def _execute_tool_calls(self, response: Dict[str, Any], messages: List[Dict[str, str]], depth: int = 0) -> List[Dict[str, str]]:
+        """
+        Execute tool calls in the chat history.
+
+        Args:
+            messages (List[Dict[str, str]]): The chat history, including the user query.
+
+        Returns:
+            List[Dict[str, str]]: The updated chat history with the LLM and tool responses.
+        """
         if "tool_calls" in response:
             for tool_call in response["tool_calls"]:
                 tool_result = self._handle_tool_call(tool_call)
-                messages.append({"role": "tool", "content": str(tool_result)})
+                messages.append({"role": "tool", "content": json.dumps(tool_result, indent=2)})
 
             if depth < self.max_tool_call_depth:  # Prevent infinite recursion
+                if messages[0]["role"] == "system":
+                    messages = messages[1:] # Skip the system message
                 return self.execute(messages, depth=depth + 1)
         return messages
 

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Union
 import requests
 from .api_module import ApiModule
 
@@ -147,6 +147,15 @@ class LLMQueryModule(LLMApiModule):
             "stream": False
         }
         return data
+    
+    def post_process(self, response: Union[str, Dict[str, Any]], full_response = False):
+        if response is None:
+            return {"error": "No response received."}
+        if isinstance(response, str):
+            return {
+                "content": response
+            }
+        return super().post_process(response, full_response)
     
 
 class LLMChatModule(LLMApiModule):
