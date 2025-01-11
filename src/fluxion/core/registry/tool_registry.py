@@ -41,7 +41,6 @@ def call_agent(
     """
     logger.info(f"Starting agent call: {agent_name} with inputs: {inputs}")
 
-    print("CALL AGENT")
     # Retrieve the agent from the registry
     agent = AgentRegistry.get_agent(agent_name)
     if not agent:

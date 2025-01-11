@@ -11,12 +11,12 @@ from abc import ABC, abstractmethod
 import json
 from typing import Any, Dict, Type
 from pydantic import BaseModel
+import logging
 
 from fluxion.core.registry.agent_registry import AgentRegistry
 from fluxon.parser import parse_json_with_recovery
 from fluxon.structured_parsing.fluxon_structured_parser import FluxonStructuredParser
 from fluxon.structured_parsing.exceptions import FluxonError
-
 
 
 class Agent(ABC):
@@ -61,8 +61,6 @@ class Agent(ABC):
         """
 
         if self.input_schema:
-            print("input_schema", self.input_schema.schema())
-            print("input_data", input_data)
             return self.input_schema(**input_data)
         else:
             return input_data
@@ -158,17 +156,17 @@ class JsonInputOutputAgent(ABC):
             ValueError: If the response cannot be parsed.
         """
         try:
-            print("Trying to parse response using json.loads")
+            logging.info("Trying to parse response using json.loads")
             return json.loads(response)
         except json.decoder.JSONDecodeError:
             try:
-                print("Json loads failed. Trying to parse response using structured parser")
+                logging.info("Json loads failed. Trying to parse response using structured parser")
                 structured_parser = FluxonStructuredParser()
                 parsed_tokens = structured_parser.parse(response)
                 parsed_json = structured_parser.render(parsed_tokens, compact=True)
                 return json.loads(parsed_json)
             except FluxonError as e:
-                print("Structured parser failed. Trying to parse response using recovery")
+                logging.info("Structured parser failed. Trying to parse response using recovery")
                 return parse_json_with_recovery(response)
 
         except Exception as e:
