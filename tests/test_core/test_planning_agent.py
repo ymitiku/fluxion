@@ -136,8 +136,6 @@ class TestPlanExecutionAgent(unittest.TestCase):
             "Step 2: Failed\n"
             "- Action: Summarize | Result: Error in summarizing"
         )
-        print("Result: ", self.agent._gather_previous_results())
-        print("Expect: ", expected_result)
         self.assertEqual(self.agent._gather_previous_results(), expected_result)
 
     @patch("fluxon.parser.parse_json_with_recovery")

@@ -32,13 +32,9 @@ class PlanGenerationAgent(LLMQueryAgent):
     def execute(self, task: str, goals: List[str], constraints: List[str] = []) -> Plan:
         logging.info(f"{self.name}: Generating a structured plan for the task...")
         prompt = self.generate_structured_planning_prompt(task, goals, constraints)
-        logging.info("========================= Prompt =========================")
-        logging.info(f"Prompt:\n{prompt}")
-        logging.info("==========================================================")
-        logging.info(f"Executing LLM query for plan generation...")
+        
         response = self.llm_module.execute(prompt=prompt)
         try:
-            logging.info(f"Parsing the generated plan...")
             response = parse_json_with_recovery(response)
             response["task"] = task
             return Plan.model_validate_json(json.dumps(response))
@@ -167,9 +163,6 @@ class PlanExecutionAgent(LLMChatAgent):
         try:
             # Gather results of previous actions
             logging.info(f"Querying LLM to execute action: {action}")
-            print("Task: ", task)
-            print("step_description: ", step_description)
-            print("action: ", action)
             response = super().execute(messages = self.construct_planning_prompt(task, step_description, action))
             try:
                 return parse_json_with_recovery(response[-1]["content"])
