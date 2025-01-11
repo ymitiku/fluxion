@@ -1,6 +1,10 @@
 import unittest
+from typing import Dict, Any
 from fluxion.core.registry.tool_registry import ToolRegistry, extract_function_metadata
-
+from fluxion.core.registry.agent_registry import AgentRegistry
+from fluxion.core.registry.tool_registry import call_agent
+from fluxion.core.agent import Agent
+from pydantic import BaseModel
 
 class TestToolRegistry(unittest.TestCase):
     def setUp(self):
@@ -26,7 +30,7 @@ class TestToolRegistry(unittest.TestCase):
     def test_metadata_extraction(self):
         metadata = extract_function_metadata(self.example_tool)
         expected_metadata = {
-            "name": "example_tool",
+            "name": "test_tool_registry.example_tool",
             "description": "Example tool function.",
             "parameters": {
                 "type": "object",
@@ -41,26 +45,27 @@ class TestToolRegistry(unittest.TestCase):
 
     def test_register_tool(self):
         tools = self.tool_registry.list_tools()
-        self.assertIn("example_tool", tools)
-        self.assertEqual(tools["example_tool"]["name"], "example_tool")
+        self.assertIn("test_tool_registry.example_tool", tools)
+        self.assertEqual(tools["test_tool_registry.example_tool"]["name"], "test_tool_registry.example_tool")
 
     def test_invoke_tool_call_success(self):
         tool_call = {
             "function": {
-                "name": "example_tool",
+                "name": "test_tool_registry.example_tool",
                 "arguments": {
                     "param1": 42,
                     "param2": "hello",
                 },
             }
         }
+        print("current tool_registry", self.tool_registry.list_tools())
         result = self.tool_registry.invoke_tool_call(tool_call)
         self.assertEqual(result, "Received 42 and hello")
 
     def test_invoke_tool_call_missing_argument(self):
         tool_call = {
             "function": {
-                "name": "example_tool",
+                "name": "test_tool_registry.example_tool",
                 "arguments": {
                     "param2": "hello",
                 },
@@ -73,7 +78,7 @@ class TestToolRegistry(unittest.TestCase):
     def test_invoke_tool_call_invalid_tool(self):
         tool_call = {
             "function": {
-                "name": "non_existent_tool",
+                "name": "test_tool_registry.non_existent_tool",
                 "arguments": {
                     "param1": 42,
                 },
@@ -81,12 +86,12 @@ class TestToolRegistry(unittest.TestCase):
         }
         with self.assertRaises(ValueError) as context:
             self.tool_registry.invoke_tool_call(tool_call)
-        self.assertIn("Tool 'non_existent_tool' is not registered.", str(context.exception))
+        self.assertIn("Tool 'test_tool_registry.non_existent_tool' is not registered.", str(context.exception))
 
     def test_invoke_tool_call_type_error(self):
         tool_call = {
             "function": {
-                "name": "example_tool",
+                "name": "test_tool_registry.example_tool",
                 "arguments": {
                     "param1": "invalid_type",  # Should be int
                     "param2": "hello",
@@ -97,6 +102,45 @@ class TestToolRegistry(unittest.TestCase):
             self.tool_registry.invoke_tool_call(tool_call)
         self.assertIn("Argument 'param1' must be of type int.", str(context.exception))
 
+
+class MockStructuredAgent(Agent):
+    class InputSchema(BaseModel):
+        value: int
+
+    class OutputSchema(BaseModel):
+        result: int
+
+    def __init__(self, name: str):
+        super().__init__(
+            name=name,
+            input_schema=MockStructuredAgent.InputSchema,
+            output_schema=MockStructuredAgent.OutputSchema,
+        )
+
+    def execute(self, value: int) -> Dict[str, Any]:
+        return {"result": value * 2}
+
+
+class TestCallAgent(unittest.TestCase):
+    def setUp(self):
+        AgentRegistry.clear_registry()
+        self.agent = MockStructuredAgent("mock_agent")
+
+    def tearDown(self):
+        AgentRegistry.clear_registry()
+
+    def test_call_agent_valid(self):
+        inputs = {"value": 10}
+        result = call_agent("mock_agent", inputs)
+        self.assertEqual(result, {"result": 20})
+
+    def test_call_agent_invalid_input(self):
+        with self.assertRaises(ValueError):
+            call_agent("mock_agent", {"value": "invalid"})
+
+    def test_call_agent_not_registered(self):
+        with self.assertRaises(ValueError):
+            call_agent("non_existent_agent", {})
 
 if __name__ == "__main__":
     unittest.main()

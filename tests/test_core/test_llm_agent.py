@@ -10,6 +10,8 @@ from fluxion.core.registry.tool_registry import ToolRegistry
 
 
 
+def example_tool(param1: str):
+    return f"Processed {param1}"
 
 class TestLLMQueryAgent(unittest.TestCase):
     def setUp(self):
@@ -93,14 +95,11 @@ class TestLLMChatAgent(unittest.TestCase):
         AgentRegistry.clear_registry()
 
     def test_register_and_invoke_tool(self):
-        def test_tool(param1: str):
-            """A test tool."""
-            return f"Processed {param1}"
 
-        self.agent.tool_registry.register_tool(test_tool)
+        self.agent.tool_registry.register_tool(example_tool)
         tool_call = {
             "function": {
-                "name": "test_tool",
+                "name": "test_llm_agent.example_tool",
                 "arguments": {"param1": "data"}
             }
         }
@@ -109,28 +108,23 @@ class TestLLMChatAgent(unittest.TestCase):
         self.assertEqual(result, "Processed data")
 
     def test_tool_registry_with_duplicate_tool_name(self):
-        def test_tool():
-            """A test tool."""
-            return "Tool A"
 
-        self.agent.tool_registry.register_tool(test_tool)
+
+        self.agent.tool_registry.register_tool(example_tool)
 
         with self.assertRaises(ValueError):
-            self.agent.tool_registry.register_tool(test_tool)  # Registering the same tool should raise an error
+            self.agent.tool_registry.register_tool(example_tool)  # Registering the same tool should raise an error
 
     def test_execute_with_single_tool_call(self):
         self.mock_llm_module.execute.return_value = {
             "role": "assistant",
             "content": "",
             "tool_calls": [
-                {"function": {"name": "test_tool", "arguments": {"param1": "data"}}}
+                {"function": {"name": "test_llm_agent.example_tool", "arguments": {"param1": "data"}}}
             ]
         }
 
-        def test_tool(param1: str):
-            return f"Processed {param1}"
-
-        self.agent.tool_registry.register_tool(test_tool)
+        self.agent.tool_registry.register_tool(example_tool)
 
         messages = [{"role": "user", "content": "What is the result?"}]
         result = self.agent.execute(messages)
@@ -143,16 +137,13 @@ class TestLLMChatAgent(unittest.TestCase):
                 "role": "assistant",
                 "content": "",
                 "tool_calls": [
-                    {"function": {"name": "test_tool", "arguments": {"param1": "data"}}}
+                    {"function": {"name": "test_llm_agent.example_tool", "arguments": {"param1": "data"}}}
                 ]
             },
             {"role": "assistant", "content": "Final response."}
         ]
 
-        def test_tool(param1: str):
-            return f"Processed {param1}"
-
-        self.agent.tool_registry.register_tool(test_tool)
+        self.agent.tool_registry.register_tool(example_tool)
 
         messages = [{"role": "user", "content": "What is the result?"}]
         result = self.agent.execute(messages)
@@ -166,23 +157,22 @@ class TestLLMChatAgent(unittest.TestCase):
                 "role": "assistant",
                 "content": "",
                 "tool_calls": [
-                    {"function": {"name": "test_tool", "arguments": {"param1": "data"}}}
+                    {"function": {"name": "test_llm_agent.example_tool", "arguments": {"param1": "data"}}}
                 ]
             },
             {
                 "role": "assistant",
                 "content": "",
                 "tool_calls": [
-                    {"function": {"name": "test_tool", "arguments": {"param1": "data2"}}}
+                    {"function": {"name": "test_llm_agent.example_tool", "arguments": {"param1": "data2"}}}
                 ]
             },
             {"role": "assistant", "content": "Final response."}
         ]
 
-        def test_tool(param1: str):
-            return f"Processed {param1}"
+        
 
-        self.agent.tool_registry.register_tool(test_tool)
+        self.agent.tool_registry.register_tool(example_tool)
 
         messages = [{"role": "user", "content": "What is the result?"}]
         result = self.agent.execute(messages)

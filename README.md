@@ -121,7 +121,7 @@ print("Chat Response:", response)
 Agents can perform tool calls dynamically:
 
 ```python
-from fluxion.core.agent import LLMChatAgent
+from fluxion.core.llm_agent import LLMChatAgent
 from fluxion.modules.llm_modules import LLMChatModule
 
 # Define a tool function
@@ -151,8 +151,8 @@ print("Chat with Tool Call Response:", response)
 Here’s how to integrate it with an `LLMChatAgent`:
 
 ```python
-from fluxion.core.agent_calling_wrapper import AgentCallingWrapper
-from fluxion.core.agent import LLMChatAgent
+from fluxion.core.agent import AgentCallingWrapper
+from fluxion.core.llm_agent import LLMChatAgent
 from fluxion.modules.llm_modules import LLMChatModule
 
 # Define a tool function
