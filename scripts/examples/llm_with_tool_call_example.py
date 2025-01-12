@@ -1,6 +1,6 @@
 import requests
-from fluxion.modules.llm_modules import LLMChatModule
-from fluxion.core.llm_agent import LLMChatAgent
+from fluxion.core.modules.llm_modules import LLMChatModule
+from fluxion.core.agents.llm_agent import LLMChatAgent
 from fluxion.core.registry.tool_registry import ToolRegistry
 
 

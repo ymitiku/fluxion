@@ -1,4 +1,4 @@
-from fluxion.modules.llm_modules import LLMQueryModule, LLMChatModule
+from fluxion.core.modules.llm_modules import LLMQueryModule, LLMChatModule
 
 
 if __name__ == "__main__":
