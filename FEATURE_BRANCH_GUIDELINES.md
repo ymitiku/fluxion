@@ -138,7 +138,7 @@ Feature branch names should follow a consistent and descriptive naming pattern:
 
 **Dependencies:**
 - ToolRegistry for invoking tools dynamically.
-- AgentCallingWrapper for invoking agents.
+- call_agent for invoking agents.
 
 **Planned Actions:**
 1. Add base class for PlanningAgent.
