@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from fluxion.core.coordination_agent import CoordinationAgent
+from fluxion.core.agents.coordination_agent import CoordinationAgent
 from fluxion.core.registry.agent_registry import AgentRegistry
-from fluxion.modules.llm_modules import LLMChatModule
+from fluxion.core.modules.llm_modules import LLMChatModule
 from fluxon.parser import parse_json_with_recovery
 import json
 

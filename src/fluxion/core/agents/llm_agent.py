@@ -11,9 +11,9 @@ The module includes:
 
 import json
 from typing import Any, Callable, Dict, List
-from fluxion.core.agent import Agent
+from fluxion.core.agents.agent import Agent
 from fluxion.core.registry.agent_registry import AgentRegistry
-from fluxion.modules.llm_modules import LLMQueryModule, LLMChatModule
+from fluxion.core.modules.llm_modules import LLMQueryModule, LLMChatModule
 from fluxion.core.registry.tool_registry import ToolRegistry
 
 

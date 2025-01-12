@@ -42,8 +42,8 @@ Example:
 """
 
 
-from fluxion.modules.ir_module import EmbeddingApiModule, RetrievalModule
-from fluxion.modules.llm_modules import LLMChatModule   
+from fluxion.core.modules.ir_module import EmbeddingApiModule, RetrievalModule
+from fluxion.core.modules.llm_modules import LLMChatModule   
 
 class RagModule(EmbeddingApiModule):
     """

@@ -3,7 +3,7 @@ import unittest
 import os
 from fluxion.workflows.abstract_workflow import AbstractWorkflow
 from fluxion.workflows.agent_node import AgentNode
-from fluxion.core.agent import Agent
+from fluxion.core.agents.agent import Agent
 from fluxion.core.registry.agent_registry import AgentRegistry
 
 class MockAgent(Agent):

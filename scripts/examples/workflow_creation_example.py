@@ -1,5 +1,5 @@
 from fluxion.workflows.abstract_workflow import AbstractWorkflow
-from fluxion.core.agent import Agent
+from fluxion.core.agents.agent import Agent
 from fluxion.workflows.agent_node import AgentNode
 
 

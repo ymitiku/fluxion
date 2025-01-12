@@ -33,7 +33,7 @@ Example Usage:
 import faiss
 from typing import List, Generator, Dict, Any
 import numpy as np
-from fluxion.modules.api_module import ApiModule
+from fluxion.core.modules.api_module import ApiModule
 import logging
 
 

@@ -3,7 +3,7 @@ from typing import Dict, Any
 import unittest
 from unittest.mock import patch, MagicMock
 from fluxion.core.registry.agent_registry import AgentRegistry
-from fluxion.core.agent import Agent, JsonInputOutputAgent
+from fluxion.core.agents.agent import Agent, JsonInputOutputAgent
 from fluxon.structured_parsing.exceptions import FluxonError
 from fluxion.core.registry.tool_registry import call_agent
 

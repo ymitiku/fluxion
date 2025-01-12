@@ -2,8 +2,8 @@ from fluxon.parser import parse_json_with_recovery
 import json
 import logging
 from typing import Any, Dict, List, Tuple
-from fluxion.core.llm_agent import LLMQueryAgent, LLMChatAgent
-from fluxion.modules.llm_modules import LLMQueryModule, LLMChatModule
+from fluxion.core.agents.llm_agent import LLMQueryAgent, LLMChatAgent
+from fluxion.core.modules.llm_modules import LLMQueryModule, LLMChatModule
 from fluxion.models.plan_model import Plan, PlanStep, StepExecutionResult
 
 class PlanGenerationAgent(LLMQueryAgent):

@@ -3,7 +3,7 @@ from typing import Dict, Any
 from fluxion.core.registry.tool_registry import ToolRegistry, extract_function_metadata
 from fluxion.core.registry.agent_registry import AgentRegistry
 from fluxion.core.registry.tool_registry import call_agent
-from fluxion.core.agent import Agent
+from fluxion.core.agents.agent import Agent
 from pydantic import BaseModel
 
 class TestToolRegistry(unittest.TestCase):

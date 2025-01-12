@@ -1,10 +1,10 @@
 import requests
 import unittest
 from unittest.mock import patch
-from fluxion.modules.llm_modules import LLMQueryModule, LLMChatModule
+from fluxion.core.modules.llm_modules import LLMQueryModule, LLMChatModule
 
 class TestLLMModules(unittest.TestCase):
-    @patch("fluxion.modules.api_module.requests.post")
+    @patch("fluxion.core.modules.api_module.requests.post")
     def test_llm_query_success(self, mock_post):
         # Mock a successful API response
         mock_post.return_value.json.return_value = {"response": "Paris"}
@@ -20,7 +20,7 @@ class TestLLMModules(unittest.TestCase):
         self.assertEqual(result, "Paris")
         mock_post.assert_called_once()
 
-    @patch("fluxion.modules.api_module.requests.post")
+    @patch("fluxion.core.modules.api_module.requests.post")
     def test_llm_query_failure(self, mock_post):
         # Mock a failed API request
         mock_post.side_effect = requests.exceptions.RequestException("API request failed.")
@@ -35,7 +35,7 @@ class TestLLMModules(unittest.TestCase):
         self.assertIn("error", result)
         self.assertIn("API request failed", result["error"])
 
-    @patch("fluxion.modules.api_module.requests.post")
+    @patch("fluxion.core.modules.api_module.requests.post")
     def test_llm_chat_success(self, mock_post):
         # Mock a successful API response for chat
         mock_post.return_value.json.return_value = {"message": "Hello, how can I help you?"}
@@ -51,7 +51,7 @@ class TestLLMModules(unittest.TestCase):
         self.assertEqual(result, "Hello, how can I help you?")
         mock_post.assert_called_once()
 
-    @patch("fluxion.modules.api_module.requests.post")
+    @patch("fluxion.core.modules.api_module.requests.post")
     def test_llm_chat_failure(self, mock_post):
         # Mock a failed API request
         mock_post.side_effect = requests.exceptions.RequestException("API request failed.")
@@ -66,7 +66,7 @@ class TestLLMModules(unittest.TestCase):
         self.assertIn("error", result)
         self.assertIn("API request failed", result["error"])
 
-    @patch("fluxion.modules.api_module.requests.post")
+    @patch("fluxion.core.modules.api_module.requests.post")
     def test_llm_query_full_response(self, mock_post):
         # Mock a successful API response with full response mode
         mock_post.return_value.json.return_value = {"response": "Paris", "other_info": "details"}

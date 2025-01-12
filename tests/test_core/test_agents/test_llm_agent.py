@@ -3,9 +3,9 @@
 import unittest
 from unittest.mock import Mock, patch, MagicMock
 
-from fluxion.core.llm_agent import LLMQueryAgent, LLMChatAgent
+from fluxion.core.agents.llm_agent import LLMQueryAgent, LLMChatAgent
 from fluxion.core.registry.agent_registry import AgentRegistry
-from fluxion.modules.llm_modules import LLMQueryModule, LLMChatModule
+from fluxion.core.modules.llm_modules import LLMQueryModule, LLMChatModule
 from fluxion.core.registry.tool_registry import ToolRegistry
 
 
@@ -20,7 +20,7 @@ class TestLLMQueryAgent(unittest.TestCase):
     def tearDown(self):
         AgentRegistry.clear_registry()
 
-    @patch("fluxion.modules.api_module.requests.post")
+    @patch("fluxion.core.modules.api_module.requests.post")
     def test_execute_success(self, mock_post):
         # Mock LLMQueryModule response
         mock_post.return_value.json.return_value = {"response": "Paris"}
@@ -42,7 +42,7 @@ class TestLLMQueryAgent(unittest.TestCase):
             timeout=10
         )
 
-    @patch("fluxion.modules.api_module.requests.post")
+    @patch("fluxion.core.modules.api_module.requests.post")
     def test_execute_with_system_instructions(self, mock_post):
         # Mock LLMQueryModule response
         mock_post.return_value.json.return_value = {"response": "Paris"}

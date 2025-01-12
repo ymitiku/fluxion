@@ -1,9 +1,9 @@
 import json
 import unittest
 from unittest.mock import MagicMock, patch
-from fluxion.modules.llm_modules import LLMQueryModule
+from fluxion.core.modules.llm_modules import LLMQueryModule
 from fluxion.core.registry.agent_registry import AgentRegistry
-from fluxion.core.planning_agent import PlanGenerationAgent, PlanExecutionAgent
+from fluxion.core.agents.planning_agent import PlanGenerationAgent, PlanExecutionAgent
 from fluxion.models.plan_model import Plan, PlanStep, StepExecutionResult
 from fluxon.parser import parse_json_with_recovery
 
@@ -157,7 +157,7 @@ class TestPlanExecutionAgent(unittest.TestCase):
         self.assertEqual(result["status"], "failed")
         self.assertIn("Failed to parse the response", result["result"])
 
-    @patch("fluxion.core.planning_agent.PlanExecutionAgent.execute_action")
+    @patch("fluxion.core.agents.planning_agent.PlanExecutionAgent.execute_action")
     def test_execute_plan(self, mock_execute_action):
         mock_execute_action.side_effect = lambda task, action, desc: {
             "status": "done" if action == "LoadCSV" else "failed",
