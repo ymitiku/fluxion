@@ -144,14 +144,14 @@ print("Chat with Tool Call Response:", response)
 ---
 
 
-### **Using AgentCallingWrapper with LLMChatAgent**
+### **Using call_agent with LLMChatAgent**
 
-`AgentCallingWrapper` allows dynamic invocation of agents, enabling seamless communication between agents in a modular workflow. It supports retries, backoff strategies, and fallback logic for robust execution.
+`call_agent` allows dynamic invocation of agents, enabling seamless communication between agents in a modular workflow. It supports retries, backoff strategies, and fallback logic for robust execution.
 
 Here’s how to integrate it with an `LLMChatAgent`:
 
 ```python
-from fluxion.core.agents.agent import AgentCallingWrapper
+from fluxion.core.registry.tool_registry import call_agent
 from fluxion.core.agents.llm_agent import LLMChatAgent
 from fluxion.core.modules.llm_modules import LLMChatModule
 
@@ -166,8 +166,8 @@ llm_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="ll
 llm_agent = LLMChatAgent(name="WeatherAgent", llm_module=llm_module)
 llm_agent.register_tool(get_weather)
 
-# Register AgentCallingWrapper for dynamic agent invocation
-llm_agent.register_tool(AgentCallingWrapper.call_agent)
+# Register call_agent for dynamic agent invocation
+llm_agent.register_tool(call_agent)
 ```
 
 ---
@@ -190,7 +190,7 @@ def fallback_logic(inputs):
 inputs = {"agent_name": "mock_agent", "inputs": {"value": 5}}
 
 try:
-    result = AgentCallingWrapper.call_agent(
+    result = call_agent(
         agent_name="mock_agent",
         inputs=inputs,
         max_retries=3,
@@ -209,7 +209,7 @@ except RuntimeError as e:
 
 ---
 
-### **When to Use AgentCallingWrapper**
+### **When to Use call_agent**
 - **Inter-Agent Communication**:
   - When agents need to invoke other agents dynamically in workflows.
 - **Error Recovery**:
