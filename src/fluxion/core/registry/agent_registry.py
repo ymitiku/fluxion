@@ -3,6 +3,29 @@ import logging
 class AgentRegistry:
     """
     A centralized registry for managing agents with modular names.
+
+    AgentRegistry:
+    example-usage::
+        from fluxion.core.registry.agent_registry import AgentRegistry
+        from fluxion.core.agents.agent import Agent
+
+        class MyAgent(Agent):
+            def __init__(self, name: str, description: str):
+                super().__init__(name, description=description)
+
+        agent = MyAgent(name="MyAgent", description="My first agent")
+        AgentRegistry.register_agent("my_module.MyAgent", agent)
+
+        # Retrieve the agent
+        agent = AgentRegistry.get_agent("my_module.MyAgent")
+        print(agent)
+
+        # List all registered agents
+        agents = AgentRegistry.list_agents()
+        print(agents)
+
+        # Clear the agent registry
+        AgentRegistry.clear_registry()
     """
     _registry = {}
 

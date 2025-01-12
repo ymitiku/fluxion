@@ -6,6 +6,60 @@ from typing import List, Dict, Any
 from fluxion.core.registry.tool_registry import call_agent
 
 class CoordinationAgent(LLMChatAgent):
+    """
+    An agent that generates tool calls by calling other agents based on the given task and available agents. 
+    It uses an LLM to generate the tool call. 
+
+    CoordinationAgent:
+    example-usage::
+        from fluxion.core.agents.coordination_agent import CoordinationAgent
+        from fluxion.core.modules.llm_modules import LLMChatModule
+        from fluxion.core.agents.agent import Agent
+        from pydantic import Field, BaseModel
+        
+        llm_chat_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2", timeout=120)
+        
+        class DataLoaderAgent(Agent):
+            class InputSchema(BaseModel):
+                source: str = Field(..., description="The source of the data, e.g., 'sales.csv'.")
+        
+            class OutputSchema(BaseModel):
+                data: str = Field(..., description="The loaded data as a string.")
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+                self.input_schema = self.InputSchema
+                self.output_schema = self.OutputSchema
+        
+            def execute(self, inputs: Dict[str, Any]) -> Dict[str, Any]:
+                return {"data": f"Sales data loaded successfully. {inputs['source']}"}
+        
+        class DataSummarizerAgent(Agent):
+            class InputSchema(BaseModel):
+                data: str = Field(..., description="The data to summarize.")
+        
+            class OutputSchema(BaseModel):
+                summary: str = Field(..., description="The summary of the data.")
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+                self.input_schema = self.InputSchema
+                self.output_schema = self.OutputSchema
+        
+            def execute(self, data: Dict[str, Any]) -> Dict[str, Any]:
+                return {"summary": "{} records summarized.".format(len(data["data"]))}
+        
+        loader_agent = DataLoaderAgent(name="sales.DataLoader", description="Loads data from a specified source.")
+        summarizer_agent = DataSummarizerAgent(name="sales.DataSummarizer")
+        
+        coordination_agent = CoordinationAgent(name="CoordinationAgent", llm_module=llm_chat_module, agents_groups=["sales"])
+        
+        messages = [
+            {"role": "user", "content": "Summarize sales data and generate a report."},
+        ]
+        tool_call = coordination_agent.execute(messages)
+        print("Generated Tool Call:", json.dumps(tool_call, indent=2))
+    """
+    
+
     def __init__(self, *args, agents_groups = [],  **kwargs):
         super().__init__(*args, **kwargs)
         self.system_instructions = self.system_instructions or (

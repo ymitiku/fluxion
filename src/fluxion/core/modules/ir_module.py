@@ -8,8 +8,9 @@ Provides modules for indexing and retrieving information using embeddings.
 This module defines classes for embedding generation, indexing, and retrieval
 of documents using a locally hosted embedding model and FAISS for efficient similarity search.
 
-Example Usage:
-    ```python
+
+ir_module:
+example-usage::
     from fluxion.modules.ir_module import IndexingModule, RetrievalModule
 
     # Initialize the IndexingModule
@@ -25,7 +26,6 @@ Example Usage:
     # Retrieve relevant context
     response = retrieval_module.execute(query="What is the capital of France?", top_k=1)
     print(response)
-    ```
 """
 
 
@@ -40,6 +40,25 @@ import logging
 class EmbeddingApiModule(ApiModule):
     """
     A module for generating embeddings using a locally hosted embedding model via REST API.
+
+    This module provides methods for encoding documents into embeddings and processing the API responses.
+
+    EmbeddingApiModule:
+    example-usage::
+        from fluxion.modules.ir_module import EmbeddingApiModule
+
+        # Initialize the EmbeddingApiModule
+        embedding_module = EmbeddingApiModule(endpoint="http://localhost:11434/api/encode", model="sentence-transformers/paraphrase-MiniLM-L6-v2")
+
+        # Encode a single document
+        embedding = embedding_module.execute(documents="Hello, World!")
+        print(embedding)
+
+        # Encode multiple documents
+        documents = ["Capital of France is Paris", "USA got independence in 1776"]
+        embeddings = embedding_module.execute(documents=documents)
+        print(embeddings)
+
     """
     def __init__(self, endpoint: str, model: str = None, headers: dict = None, timeout: int = 10, embedding_size: int = 768, batch_size: int = 4, documents_key: str = "documents"):
         """
@@ -192,7 +211,20 @@ class EmbeddingApiModule(ApiModule):
 
 class IndexingModule(EmbeddingApiModule):
     """
-    A module for indexing documents using FAISS.
+    A module for indexing documents using FAISS. Inherits from EmbeddingApiModule.
+
+    This module provides methods for encoding documents into embeddings, adding them to a FAISS index, and processing the API responses.
+
+    IndexingModule:
+    example-usage::
+        from fluxion.modules.ir_module import IndexingModule
+
+        # Initialize the IndexingModule
+        indexing_module = IndexingModule(endpoint="http://localhost:11434/api/index", model="sentence-transformers/paraphrase-MiniLM-L6-v2")
+
+        # Index documents
+        documents = ["Capital of France is Paris", "USA got independence in 1776"]
+        index = indexing_module.execute(documents=documents)
     """
     def __init__(self, endpoint: str, model: str = None, headers: dict = {}, timeout: int = 10, embedding_size: int = 768, batch_size: int = 4):
         """
@@ -232,6 +264,19 @@ class IndexingModule(EmbeddingApiModule):
 class RetrievalModule(EmbeddingApiModule):
     """
     A module for retrieving documents using a FAISS index and query embeddings.
+
+    This module provides methods for encoding queries into embeddings, searching the FAISS index for the most similar documents, and processing the API responses.
+
+    RetrievalModule:
+    example-usage::
+        from fluxion.modules.ir_module import RetrievalModule
+
+        # Initialize the RetrievalModule
+        retrieval_module = RetrievalModule(index=index, documents=documents, endpoint="http://localhost:11434/api/retrieve", model="sentence-transformers/paraphrase-MiniLM-L6-v2")
+
+        # Retrieve relevant context
+        response = retrieval_module.execute(query="What is the capital of France?", top_k=1)
+        print(response)
     """
     def __init__(self, index: faiss.IndexFlatIP, documents: List[str], endpoint: str, model: str = None, headers: dict = {}, timeout: int = 10, embedding_size: int = 768, batch_size: int = 4):
         """

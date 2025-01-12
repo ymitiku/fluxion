@@ -21,11 +21,30 @@ from fluxon.structured_parsing.exceptions import FluxonError
 
 class Agent(ABC):
     """
-    Abstract base class for all agents with unique name enforcement.
+    Abstract base class for all agents with unique name enforcement. It provides methods to validate input and output data against the defined schemas,
+    execute the agent logic, and generate metadata. The agent is automatically registered in the agent registry upon initialization. Deleting the agent will unregister 
+    it from agent registry. 
+    
+    It provides the following attributes:
+    - name: The unique name of the agent.
+    - description: The description of the agent.
+    - system_instructions: System instructions for the agent.
+    - input_schema: The input schema for the agent.
+    - output_schema: The output schema for the agent.
 
-    Attributes:
-        name (str): The unique name of the agent.
-        system_instructions (str): System instructions for the agent.
+    Agent:
+    Example usage::
+        from fluxion.core.agent import Agent
+        class MyAgent(Agent):
+            def execute(self, **kwargs):
+                return "Hello, World!"
+        my_agent = MyAgent(name="MyAgent", description="My first agent")
+        result = my_agent.execute()
+        print(result)
+        # Hello, World!
+
+    
+
     """
 
     def __init__(self, name: str, description: str = "", system_instructions: str = "", input_schema: Type[BaseModel] = None, output_schema: Type[BaseModel] = None):
@@ -126,21 +145,20 @@ class Agent(ABC):
 
 class JsonInputOutputAgent(ABC):
     """
-    Abstract base class for agents that output JSON data. It provides powerful interface for parsing LLM responses into JSON.
-    It supports the following methods:
-    - parse_response: Parse the response into JSON.
-    - Error recovery: Automatically recover from JSON parsing errors.
+    This class provides abstraction for agents the produce json output. It provides a method to parse the response into JSON data.
+
+    JsonInputOutputAgent:
+    Example usage::
+        from fluxion.core.agent import JsonInputOutputAgent
+        class MyAgent(JsonInputOutputAgent):
+            def execute(self, **kwargs):
+                return self.parse_response("{\"message\": \"Hello, World!\"}")
+        my_agent = MyAgent(name="MyAgent", description="My first agent")
+        response = my_agent.execute()
+        result = my_agent.parse_response(response)
+        print(result)
+
     """
-
-    def __init__(self, *args, input_schema: Dict[str, Any] = None, output_schema: Dict[str, Any] = None, **kwargs):
-        """
-        Initialize the agent.
-        """
-        super().__init__(*args, **kwargs)
-        self.input_schema = input_schema
-        self.output_schema = output_schema
-            
-
 
     def parse_response(self, response: str) -> Dict[str, Any]:
         """
