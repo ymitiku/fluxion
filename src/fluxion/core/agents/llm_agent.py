@@ -19,10 +19,20 @@ from fluxion.core.registry.tool_registry import ToolRegistry
 
 class LLMQueryAgent(Agent):
     """
-    An agent that queries an LLM for a response.
+    An agent that queries an LLM for a response. It uses an LLMQueryModule for execution. 
 
-    Attributes:
-        llm_module (LLMQueryModule): The LLM module used for query-based interaction.
+    LLMQueryAgent:
+    example-usage::
+        from fluxion.core.agents.llm_agent import LLMQueryAgent
+        from fluxion.core.modules.llm_modules import LLMQueryModule
+
+        llm_query_module = LLMQueryModule(endpoint="http://localhost:11434/api/query", model="llama3.2", timeout=120)
+        llm_query_agent = LLMQueryAgent(name="LLMQueryAgent", llm_module=llm_query_module)
+
+        query = "Summarize the key points from the article."
+        response = llm_query_agent.execute(query)
+        print("LLM Response:", response)
+
     """
 
     def __init__(self, name: str, llm_module: LLMQueryModule, description: str = "", system_instructions: str = ""):
@@ -61,10 +71,27 @@ class LLMChatAgent(Agent):
     """
     An agent that interacts with an LLM for chat and supports tool calls.
 
-    Attributes:
-        llm_module (LLMChatModule): The LLM module used for chat-based interaction.
-        max_tool_call_depth (int): The maximum recursion depth for handling tool calls.
-        tool_registry (ToolRegistry): The registry of tools available for invocation.
+    LLMChatAgent:
+    example-usage::
+
+        from fluxion.core.agents.llm_agent import LLMChatAgent
+        from fluxion.core.modules.llm_modules import LLMChatModule
+        from fluxion.core.registry.tool_registry import ToolRegistry
+
+        llm_chat_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2", timeout=120)
+        llm_chat_agent = LLMChatAgent(name="LLMChatAgent", llm_module=llm_chat_module)
+
+        def tool_summarize(data: Dict[str, Any]) -> Dict[str, Any]:
+            return {"summary": f"Summarized data: {data}"}
+
+        llm_chat_agent.register_tool(tool_summarize)
+
+        messages = [
+            {"role": "user", "content": "Summarize the data."},
+        ]
+        response = llm_chat_agent.execute(messages)
+        print("LLM Chat Response:", response)
+
     """
 
     def __init__(self, name: str, llm_module: LLMChatModule, description: str = "", system_instructions: str = "", max_tool_call_depth: int = 2):

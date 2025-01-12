@@ -4,12 +4,12 @@ import requests
 from .api_module import ApiModule
 
 """
-fluxion.modules.ir_module
+fluxion.modules.llm_modules
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 Provides an interface for interacting with a locally or remotely hosted LLM via REST API.
 
-Example:
-    ```python
+llm_modules:
+Example-Usage::
     from fluxion.modules.llm_query_module import LLMQueryModule
 
     # Initialize the LLMQueryModule
@@ -39,12 +39,14 @@ Example:
     )
 
     print(response)
-    ```
 """
 
 class LLMApiModule(ApiModule, ABC):
     """
     Provides an interface for interacting with a locally hosted LLM via REST API.
+
+    This class abstracts common patterns for interacting with an LLM via REST API.
+
     """
     def __init__(self, endpoint: str, model: str = None, headers: dict = {}, timeout: int = 10, response_key: str = "response"):
         """ Initialize the LLMApiModule.
@@ -127,7 +129,21 @@ class LLMApiModule(ApiModule, ABC):
 
 class LLMQueryModule(LLMApiModule):
     """
-    A class to handle querying an LLM via REST API.
+    A class to handle querying an LLM via REST API. 
+
+    This class abstracts common patterns for querying an LLM via REST API.
+
+    LLMQueryModule:
+    example-usage::
+        from fluxion.modules.llm_query_module import LLMQueryModule
+
+        # Initialize the LLMQueryModule
+        llm_module = LLMQueryModule(endpoint="http://localhost:11434/api/generate", model="llama3.2")
+
+        # Query the LLM
+        response = llm_module.query(prompt="What is the capital of France?")
+        print(response)
+        
     """
 
 
@@ -161,6 +177,26 @@ class LLMQueryModule(LLMApiModule):
 class LLMChatModule(LLMApiModule):
     """
     A class to handle chatting with an LLM via REST API.
+
+    LLMChatModule:
+    example-usage::
+        from fluxion.modules.llm_query_module import LLMChatModule
+
+        # Initialize the LLMChatModule
+        llm_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2")
+
+        # Chat with the LLM
+        response = llm_module.chat(messages= [{
+            "role": "user",
+            "content": "Hello!"
+            },
+            {
+            "role": "assistant",
+            "content": "Hello, how can I help you?"
+            }]
+        )
+
+        print(response)
     """
 
     def __init__(self, endpoint, model = None, headers = {}, timeout = 10, response_key = "message"):

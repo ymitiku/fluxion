@@ -142,6 +142,13 @@ def extract_function_metadata(func):
 class ToolRegistry:
     """
     Instance-based registry for managing tools within an agent.
+
+    ToolRegistry:
+    Example usage::
+        from fluxion.core.registry.tool_registry import ToolRegistry
+        tool_registry = ToolRegistry()
+        tool_registry.register_tool(my_tool_function)
+        tool_registry.invoke_tool_call(tool_call)
     """
     def __init__(self):
         self._registry: Dict[str, Callable] = {}

@@ -101,7 +101,7 @@ Fluxion uses [Ollama](https://ollama.com) to connect to locally hosted LLMs. Her
 Use Fluxion to interact with locally hosted LLMs. For example:
 
 ```python
-from fluxion.modules.llm_modules import LLMQueryModule, LLMChatModule
+from fluxion.core.modules.llm_modules import LLMQueryModule, LLMChatModule
 
 # Initialize the LLMQueryModule
 llm_query = LLMQueryModule(endpoint="http://localhost:11434/api/generate", model="llama3.2")
@@ -121,8 +121,8 @@ print("Chat Response:", response)
 Agents can perform tool calls dynamically:
 
 ```python
-from fluxion.core.llm_agent import LLMChatAgent
-from fluxion.modules.llm_modules import LLMChatModule
+from fluxion.core.agents.llm_agent import LLMChatAgent
+from fluxion.core.modules.llm_modules import LLMChatModule
 
 # Define a tool function
 def get_weather(city_name: str) -> dict:
@@ -151,9 +151,9 @@ print("Chat with Tool Call Response:", response)
 Here’s how to integrate it with an `LLMChatAgent`:
 
 ```python
-from fluxion.core.agent import AgentCallingWrapper
-from fluxion.core.llm_agent import LLMChatAgent
-from fluxion.modules.llm_modules import LLMChatModule
+from fluxion.core.agents.agent import AgentCallingWrapper
+from fluxion.core.agents.llm_agent import LLMChatAgent
+from fluxion.core.modules.llm_modules import LLMChatModule
 
 # Define a tool function
 def get_weather(city_name: str) -> dict:

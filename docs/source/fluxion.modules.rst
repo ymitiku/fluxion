@@ -7,9 +7,8 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   fluxion.modules.api_module
-   fluxion.modules.ir_module
-   fluxion.modules.llm_modules
+
+   fluxion.modules.contextual_response
    fluxion.modules.rag_module
 
 Module contents

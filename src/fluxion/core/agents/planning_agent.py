@@ -7,6 +7,25 @@ from fluxion.core.modules.llm_modules import LLMQueryModule, LLMChatModule
 from fluxion.models.plan_model import Plan, PlanStep, StepExecutionResult
 
 class PlanGenerationAgent(LLMQueryAgent):
+    """ An agent that generates a structured plan for a given task using an LLM. 
+
+    PlanGenerationAgent:
+    example-usage::
+        from fluxion.core.agents.planning_agent import PlanGenerationAgent
+        from fluxion.core.modules.llm_modules import LLMQueryModule
+
+        llm_query_module = LLMQueryModule(endpoint="http://localhost:11434/api/query", model="llama3.2", timeout=120)
+        plan_generation_agent = PlanGenerationAgent(name="PlanGenerationAgent", llm_module=llm_query_module)
+
+        task = "Develop a mobile application for tracking fitness goals."
+        goals = ["Create user interface", "Implement data storage"]
+        constraints = ["Use a cross-platform framework", "Complete within 2 weeks"]
+
+        plan = plan_generation_agent.execute(task, goals, constraints)
+        print("Generated Plan
+
+
+    """
     def __init__(self, name: str, llm_module: LLMQueryModule, description: str = "", system_instructions: str = ""):
         system_instructions = system_instructions or (
             "You are an expert planner tasked with designing a structured, executable plan for the following task.\n"
@@ -52,6 +71,38 @@ class PlanGenerationAgent(LLMQueryAgent):
 
 # Plan Execution Agent with Enhanced Context
 class PlanExecutionAgent(LLMChatAgent):
+    """ An agent that executes a structured plan step by step using an LLM.
+
+    PlanExecutionAgent:
+    example-usage::
+        from fluxion.core.agents.planning_agent import PlanExecutionAgent
+        from fluxion.core.modules.llm_modules import LLMQueryModule
+
+        llm_query_module = LLMQueryModule(endpoint="http://localhost:11434/api/query", model="llama3.2", timeout=120)
+        plan_execution_agent = PlanExecutionAgent(name="PlanExecutionAgent", llm_module=llm_query_module)
+        
+        # Define a structured plan
+        plan = {
+            "steps": [
+                {
+                    "step_number": 1,
+                    "description": "Load data from CSV",
+                    "actions": ["LoadCSV"],
+                    "dependencies": []
+                },
+                {
+                    "step_number": 2,
+                    "description": "Summarize data",
+                    "actions": ["Summarize"],
+                    "dependencies": [1]
+                }
+            ]
+        }
+
+        execution_log = plan_execution_agent.execute_plan(plan)
+        print("Execution Log:", execution_log)
+
+    """
     def __init__(self, *args, **kwargs):
         """
         Initialize the PlanExecutionAgent with an LLM module and broader task context.
@@ -217,6 +268,27 @@ class PlanExecutionAgent(LLMChatAgent):
 
 
 class PlanningAgent(LLMChatAgent):
+    """ An agent that coordinates the planning and execution of a structured plan using an LLM.
+
+    PlanningAgent:
+    example-usage::
+        from fluxion.core.agents.planning_agent import PlanningAgent
+        from fluxion.core.modules.llm_modules import LLMQueryModule
+
+        llm_query_module = LLMQueryModule(endpoint="http://localhost:11434/api/query", model="llama3.2", timeout=120)
+        llm_chat_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2", timeout=120)
+        planning_agent = PlanningAgent(name="PlanningAgent", llm_module=llm_chat_module, llm_query_module=llm_query_module)
+
+        task = "Develop a mobile application for tracking fitness goals."
+        goals = ["Create user interface", "Implement data storage"]
+        constraints = ["Use a cross-platform framework", "Complete within 2 weeks"]
+
+        final_response = planning_agent.execute(task, goals, constraints)
+        print("Final Response:", final_response)
+
+    """
+        
+
     def __init__(self, *args, llm_query_module: LLMQueryModule = None, **kwargs):
         super().__init__(*args, **kwargs)
         self.system_instructions = self.system_instructions or (
