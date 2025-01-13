@@ -1,4 +1,4 @@
-# [Fluxion](https://ymitiku.github.io/fluxion/)[<img src="readme-assets/images/fluxion-logo-rounded.png" width="30"/>](readme-assets/images/fluxion-logo-rounded.png)
+# [<img src="readme-assets/images/fluxion-logo-rounded.png" width="27"/>](readme-assets/images/fluxion-logo-rounded.png)[Fluxion](https://ymitiku.github.io/fluxion/)
 
 ![CI Workflow](https://github.com/ymitiku/fluxion/actions/workflows/ci.yml/badge.svg)
 
@@ -368,4 +368,4 @@ Future updates will continue to focus on innovation, developer experience, and r
 This project is licensed under the [Apache License 2.0](LICENSE).
 
 
-Copyright © 2025 Fluxion[<img src="readme-assets/images/fluxion-logo-rounded.png" width="20"/>](readme-assets/images/fluxion-logo-rounded.png)
+Copyright © 2025 [<img src="readme-assets/images/fluxion-logo-rounded.png" width="16"/>](readme-assets/images/fluxion-logo-rounded.png)Fluxion
