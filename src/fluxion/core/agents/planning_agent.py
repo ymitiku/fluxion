@@ -172,6 +172,7 @@ class PlanExecutionAgent(LLMChatAgent):
                 
 
             logging.info(f"Step {step.step_number} completed with status: {step_result.status}")
+
             self.execution_log.append(step_result)
 
         return self.execution_log
@@ -308,7 +309,7 @@ class PlanningAgent(LLMChatAgent):
         prompt = "Task: {}\n\nGoals:\n{}\n\nConstraints:\n{}".format(task, "\n".join([f"- {goal}" for goal in goals]), "\n".join([f"- {constraint}" for constraint in constraints]))
         prompt += "\n\nGenerated Plan:\n" + json.dumps(plan.dict(), indent=2)
         prompt += "\n\nExecution Log:\n" + json.dumps([result.dict() for result in execution_log], indent=2)
-        messages = [{"role": "system", "content": prompt}]
+        messages = [{"role": "user", "content": prompt}]
         summary =  super().execute(messages=messages)
         return {
             "plan": plan,

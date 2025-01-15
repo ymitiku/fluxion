@@ -42,9 +42,6 @@ class Agent(ABC):
         result = my_agent.execute()
         print(result)
         # Hello, World!
-
-    
-
     """
 
     def __init__(self, name: str, description: str = "", system_instructions: str = "", input_schema: Type[BaseModel] = None, output_schema: Type[BaseModel] = None):
