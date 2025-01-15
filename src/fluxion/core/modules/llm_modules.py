@@ -48,7 +48,7 @@ class LLMApiModule(ApiModule, ABC):
     This class abstracts common patterns for interacting with an LLM via REST API.
 
     """
-    def __init__(self, endpoint: str, model: str = None, headers: dict = {}, timeout: int = 10, response_key: str = "response"):
+    def __init__(self, endpoint: str, model: str = None, headers: Dict[str, Any] = {}, timeout: int = 10, response_key: str = "response", temperature: float = 0.5):
         """ Initialize the LLMApiModule.
         
         Args:
@@ -57,11 +57,13 @@ class LLMApiModule(ApiModule, ABC):
             headers (dict, optional): Headers to include in the API requests. Defaults to an empty dictionary.
             timeout (int, optional): Timeout for API requests in seconds. Defaults to 10 seconds.
             response_key (str, optional): The key to use for the response. Defaults to "response"
+            temperature (float, optional): The temperature parameter for the LLM. Defaults to 0.5.
     
         """
         super().__init__(endpoint, headers, timeout)
         self.model = model
         self.response_key = response_key
+        self.temperature = temperature
     
     def execute(self, *args, **kwargs) -> Dict[str, Any]:
         """ Execute the LLM module. 
@@ -160,7 +162,8 @@ class LLMQueryModule(LLMApiModule):
         data = {
             "model": self.model,
             "prompt": prompt,
-            "stream": False
+            "stream": False,
+            "temperature": self.temperature
         }
         return data
     
@@ -198,8 +201,7 @@ class LLMChatModule(LLMApiModule):
 
         print(response)
     """
-
-    def __init__(self, endpoint, model = None, headers = {}, timeout = 10, response_key = "message"):
+    def __init__(self, endpoint: str, model: str = None, headers: Dict[str, Any] = {}, timeout: int = 10, response_key = "message", temperature: float = 0.5):
         """ Initialize the LLMChatModule.
         
         Args:
@@ -209,7 +211,7 @@ class LLMChatModule(LLMApiModule):
             timeout (int, optional): Timeout for API requests in seconds. Defaults to 10 seconds.
             response_key (str, optional): The key to use for the response. Defaults to "message"
         """
-        super().__init__(endpoint, model, headers, timeout, response_key)
+        super().__init__(endpoint, model, headers, timeout, response_key, temperature)
 
     def get_input_params(self, messages: List[str], tools: List[Dict[str, str]] = {}) -> Dict[str, Any]:
         """
@@ -225,7 +227,8 @@ class LLMChatModule(LLMApiModule):
             "model": self.model,
             "messages": messages,
             "stream": False,
-            "tools": tools or []
+            "tools": tools or [],
+            "temperature": self.temperature
         }
         return data
     

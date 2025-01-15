@@ -37,7 +37,7 @@ class TestLLMQueryAgent(unittest.TestCase):
         # Verify API interaction
         mock_post.assert_called_once_with(
             "http://localhost:11434/api/generate",
-            json={"model": "llama3.2", "prompt": "What is the capital of France?", "stream": False},
+            json={"model": "llama3.2", "prompt": "What is the capital of France?", "stream": False, "temperature": 0.5},
             headers={},
             timeout=10
         )
@@ -64,7 +64,7 @@ class TestLLMQueryAgent(unittest.TestCase):
         combined_prompt = "These are system instructions.\n\nWhat is the capital of France?"
         mock_post.assert_called_once_with(
             "http://localhost:11434/api/generate",
-            json={"model": "llama3.2", "prompt": combined_prompt, "stream": False},
+            json={"model": "llama3.2", "prompt": combined_prompt, "stream": False, "temperature": 0.5},
             headers={},
             timeout=10
         )
