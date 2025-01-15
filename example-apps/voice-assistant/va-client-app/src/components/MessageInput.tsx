@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Box, TextField, IconButton, Button } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import MicIcon from '@mui/icons-material/Mic';
@@ -12,8 +12,10 @@ interface MessageInputProps {
 
 const MessageInput: React.FC<MessageInputProps> = ({ onSend, onAudioSend }) => {
   const [message, setMessage] = useState('');
-  const [audioBlobUrl, setAudioBlobUrl] = useState<string | null>(null);
+  const [audioBlobUrl, setAudioBlobUrl] = useState<string>("");
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+  const audioElementRef = useRef<HTMLAudioElement>(null);
+  const [isRecording, setIsRecording] = useState(false);
 
   const handleSend = () => {
     if (message.trim()) {
@@ -26,14 +28,30 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSend, onAudioSend }) => {
     if (audioBlob) {
       onAudioSend(audioBlob);
       setAudioBlob(null);
-      setAudioBlobUrl(null);
+      setAudioBlobUrl("");
     }
   };
 
   const handleAudioDiscard = () => {
     setAudioBlob(null);
-    setAudioBlobUrl(null);
+    setAudioBlobUrl("")
+    const audioElement = audioElementRef.current;
+    if (audioElement) {
+      audioElement.pause();
+      audioElement.currentTime = 0;
+      audioElement.setAttribute('src', '');
+    }
+    setIsRecording(false);
   };
+
+  const handleStartRecording = (startRecording: () => void) => {
+    startRecording();
+  };
+
+  const handleStopRecording = (stopRecording: () => void) => {
+    stopRecording();
+  };
+
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', padding: '8px' }}>
@@ -45,25 +63,32 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSend, onAudioSend }) => {
         variant="outlined"
         sx={{ marginRight: '8px' }}
       />
-      <ReactMediaRecorder
-        audio
-        onStop={(blobUrl, blob) => {
-          setAudioBlobUrl(blobUrl);
-          setAudioBlob(blob);
-        }}
-        render={({ startRecording, stopRecording }) => (
-          <>
-            <IconButton
-              onMouseDown={startRecording}
-              onMouseUp={stopRecording}
-              color="primary"
-            >
-              <MicIcon />
-            </IconButton>
-          </>
-        )}
-      />
-      {audioBlobUrl && (
+      {isRecording && 
+        <ReactMediaRecorder
+          audio
+          onStop={(blobUrl, blob) => {
+            setAudioBlobUrl(blobUrl);
+            setAudioBlob(blob);
+
+          }}
+          
+          render={({ startRecording, stopRecording }) => (
+            <div>
+              <IconButton
+                onMouseDown={() => handleStartRecording(startRecording)}
+                onMouseUp={() => handleStopRecording(stopRecording)}
+                color="primary"
+              >
+                <MicIcon />
+                {isRecording && <audio src={audioBlobUrl} controls ref={audioElementRef} />}
+              </IconButton>
+              
+            </div>
+          )}  
+        />
+      }
+      {!isRecording && <MicIcon onClick={() => setIsRecording(true)} />}
+      {isRecording && (
         <Box
           sx={{
             display: 'flex',
@@ -71,7 +96,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSend, onAudioSend }) => {
             marginLeft: '8px',
           }}
         >
-          <audio src={audioBlobUrl} controls style={{ marginRight: '8px' }} />
+          
           <Button
             onClick={handleAudioSave}
             variant="contained"
