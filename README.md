@@ -78,8 +78,13 @@ Fluxion provides a powerful suite of tools and functionalities to enable the dev
 - Anaconda or a virtual environment
 - [Ollama](https://ollama.com/docs) installed for hosting LLMs
 - System Dependencies:
+   * Ubuntu/Debian:
   ```bash
   sudo apt install portaudio19-dev graphviz
+  ```
+   * MacOS:
+  ```bash
+  brew install portaudio graphviz
   ```
 
 ### **Steps**
