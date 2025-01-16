@@ -1,9 +1,9 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import MessageBubble from "./MessageBubble";
 
 interface ChatWindowProps {
-  messages: { sender: string; content: string }[];
+  messages: { sender: string; content: string, audioUrl: string | null }[];
 }
 
 const ChatWindow: React.FC<ChatWindowProps> = ({ messages }) => {
@@ -18,7 +18,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages }) => {
       }}
     >
       {messages.map((msg, idx) => (
-        <MessageBubble key={idx} sender={msg.sender} content={msg.content} />
+        <MessageBubble key={idx} sender={msg.sender} content={msg.content} audioUrl={msg.audioUrl} />
       ))}
     </Box>
   );
