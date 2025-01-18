@@ -26,8 +26,10 @@ class PlanGenerationAgent(LLMQueryAgent):
 
 
     """
-    def __init__(self, name: str, llm_module: LLMQueryModule, description: str = "", system_instructions: str = ""):
-        system_instructions = system_instructions or (
+    def __init__(self, *args, **kwargs):
+        
+        super().__init__(*args, **kwargs)
+        self.system_instructions = self.system_instructions or  (
             "You are an expert planner tasked with designing a structured, executable plan for the following task.\n"
             "You will receive a task description, goals, and constraints for the plan.\n"
             "Provide a plan in the specified JSON format with detailed steps to accomplish the task.\n\n"
@@ -46,7 +48,6 @@ class PlanGenerationAgent(LLMQueryAgent):
             "Only use actions that are relevant to the task.\n"
             "Do not make any assumptions about the task other than the given description and context.\n"
         )
-        super().__init__(name, llm_module, description=description, system_instructions=system_instructions)
 
     def execute(self, task: str, goals: List[str], constraints: List[str] = []) -> Plan:
         logging.info(f"{self.name}: Generating a structured plan for the task...")

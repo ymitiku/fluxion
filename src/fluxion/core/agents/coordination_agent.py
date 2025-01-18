@@ -27,9 +27,7 @@ class CoordinationAgent(LLMChatAgent):
                 data: str = Field(..., description="The loaded data as a string.")
             def __init__(self, *args, **kwargs):
                 super().__init__(*args, **kwargs)
-                self.input_schema = self.InputSchema
-                self.output_schema = self.OutputSchema
-        
+                
             def execute(self, inputs: Dict[str, Any]) -> Dict[str, Any]:
                 return {"data": f"Sales data loaded successfully. {inputs['source']}"}
         
@@ -41,8 +39,6 @@ class CoordinationAgent(LLMChatAgent):
                 summary: str = Field(..., description="The summary of the data.")
             def __init__(self, *args, **kwargs):
                 super().__init__(*args, **kwargs)
-                self.input_schema = self.InputSchema
-                self.output_schema = self.OutputSchema
         
             def execute(self, data: Dict[str, Any]) -> Dict[str, Any]:
                 return {"summary": "{} records summarized.".format(len(data["data"]))}
@@ -138,31 +134,15 @@ if __name__ == "__main__":
     task = "Summarize sales data and generate a report."
 
     class DataLoaderAgent(Agent):
-        class InputSchema(BaseModel):
-            source: str = Field(..., description="The source of the data, e.g., 'sales.csv'.")
-
-        class OutputSchema(BaseModel):
-            data: str = Field(..., description="The loaded data as a string.")
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            self.input_schema = self.InputSchema
-            self.output_schema = self.OutputSchema
-           
 
         def execute(self, inputs: Dict[str, Any]) -> Dict[str, Any]:
             return {"data": f"Sales data loaded successfully. {inputs['source']}"}
         
     class DataSummarizerAgent(Agent):
-        class InputSchema(BaseModel):
-            data: str = Field(..., description="The data to summarize.")
-
-        class OutputSchema(BaseModel):
-            summary: str = Field(..., description="The summary of the data.")
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            self.input_schema = self.InputSchema
-            self.output_schema = self.OutputSchema
-
         def execute(self, data: Dict[str, Any]) -> Dict[str, Any]:
             return {"summary": "{} records summarized.".format(len(data["data"]))}
         

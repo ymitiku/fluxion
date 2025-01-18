@@ -31,19 +31,6 @@ class TestAgentBase(unittest.TestCase):
     def test_abstract_class_instantiation(self):
         with self.assertRaises(TypeError):
             Agent(name="AbstractAgent")  # Abstract class cannot be instantiated
-    
-    def test_validate_input(self):
-        self.agent.input_schema = MagicMock()
-        self.agent.validate_input({"key": "value"})
-        self.agent.input_schema.assert_called_once_with(key="value")
-    
-    def test_validate_output(self):
-        
-
-        self.agent.output_schema = MagicMock()
-        self.agent.validate_output({"key": "value"})
-        self.agent.output_schema.assert_called_once_with(key="value")
-
     def test_call_agent_with_valid_metadata(self):
         inputs = {"query": "test query"}
         result = call_agent("TestAgent", inputs)
@@ -53,24 +40,6 @@ class TestAgentBase(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
             call_agent("non_existent_agent", {})
         self.assertIn("Agent 'non_existent_agent' is not registered", str(context.exception))
-
-
-class MockStructuredAgent(Agent):
-    class InputSchema(BaseModel):
-        value: int
-
-    class OutputSchema(BaseModel):
-        result: int
-
-    def __init__(self, name: str):
-        super().__init__(
-            name=name,
-            input_schema=MockStructuredAgent.InputSchema,
-            output_schema=MockStructuredAgent.OutputSchema,
-        )
-
-    def execute(self, value: int) -> Dict[str, Any]:
-        return {"result": value * 2}
 
 
 class MockJsonInputOutputAgent(JsonInputOutputAgent):

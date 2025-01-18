@@ -107,29 +107,6 @@ class AgentRegistry:
             for part in parts:
                 current = current.setdefault(part, {})
         return tree
-
-
-    @classmethod
-    def get_agent_schema(cls, name: str) -> Dict[str, Any]:
-        """
-        Retrieve the input/output schemas for a registered agent.
-
-        Args:
-            name (str): The modular name of the agent.
-
-        Returns:
-            Dict[str, Any]: A dictionary with 'input_schema' and 'output_schema'.
-
-        Raises:
-            ValueError: If the agent is not found.
-        """
-        agent = cls.get_agent(name)
-        if not agent:
-            raise ValueError(f"Agent '{name}' is not registered.")
-        return {
-            "input_schema": agent.input_schema.schema() if agent.input_schema else None,
-            "output_schema": agent.output_schema.schema() if agent.output_schema else None,
-        }
   
     
     @classmethod

@@ -35,20 +35,19 @@ class LLMQueryAgent(Agent):
 
     """
 
-    def __init__(self, name: str, llm_module: LLMQueryModule, description: str = "", system_instructions: str = ""):
+    def __init__(self, *args, llm_module: LLMQueryModule, **kwargs):
         """
         Initialize the LLMQueryAgent.
 
         Args:
-            name (str): The unique name of the agent.
+            args: Additional positional arguments for the agent.
             llm_module (LLMQueryModule): The LLMQueryModule instance.
-            description (str): The description of the agent (default: "").
-            system_instructions (str): System instructions for the agent (default: "").
+            kwargs: Additional keyword arguments for the agent.
         """
         self.llm_module = llm_module
-        super().__init__(name, description = description, system_instructions = system_instructions)
+        super().__init__(*args, **kwargs)
 
-    def execute(self, query: str) -> str:
+    def execute(self, messages: List[Dict[str, str]]) -> List[Dict[str, str]]:
         """
         Execute the LLM query agent logic.
 
@@ -61,10 +60,27 @@ class LLMQueryAgent(Agent):
         Raises:
             ValueError: If the query is empty or invalid.
         """
-        if query.strip() == "":
-            raise ValueError("Invalid query: Empty")
+        if not isinstance(messages, list):
+            raise ValueError("Invalid messages: Must be a list of dictionaries.")
+        if len(messages) == 0:
+            raise ValueError("Invalid messages: Empty list.")
+
+        for msg in messages:
+            if not isinstance(msg, dict) or "role" not in msg or "content" not in msg:
+                raise ValueError("Invalid message: Must be a dictionary with 'role' and 'content' keys.")
+            if not msg["content"]:
+                raise ValueError("Invalid message content: Cannot be empty.")
+            if msg["role"] not in ["user", "assistant", "system"]:
+                raise ValueError("Invalid message role: Must be 'user', 'assistant', or 'system'.")
+        query = "\n".join(["{}: {}".format(msg["role"], msg["content"]) for msg in messages])
+    
         prompt = self.system_instructions + "\n\n" + query if self.system_instructions else query
-        return self.llm_module.execute(prompt=prompt)
+        response =  self.llm_module.execute(prompt=prompt)
+        messages.append({
+            "role": "assistant",
+            "content": response
+        })
+        return messages
 
 
 class LLMChatAgent(Agent):
@@ -94,22 +110,20 @@ class LLMChatAgent(Agent):
 
     """
 
-    def __init__(self, name: str, llm_module: LLMChatModule, description: str = "", system_instructions: str = "", max_tool_call_depth: int = 2):
+    def __init__(self, *args, llm_module: LLMChatModule, max_tool_call_depth: int = 2, **kwargs):
         """
         Initialize the LLMChatAgent.
 
         Args:
-            name (str): The unique name of the agent.
-            llm_module (LLMChatModule): The LLMChatModule instance.
-            description (str): The description of the agent (default: "").
-            system_instructions (str): System instructions for the agent (default: "").
-            max_tool_call_depth (int): The maximum depth for recursive tool calls (default: 2).
+            args: Additional positional arguments for the agent.
+            max_tool_call_depth (int): The maximum depth for tool calls (default: 2).
+            kwargs: Additional keyword arguments for the agent.
         """
-        self.llm_module = llm_module
         self.max_tool_call_depth = max_tool_call_depth
         self.tool_registry = ToolRegistry()
-        super().__init__(name, description=description, system_instructions = system_instructions)
-
+        self.llm_module = llm_module
+        super().__init__(*args, **kwargs)
+ 
     def register_tool(self, func: Callable):
         """
         Register a tool function with the agent's ToolRegistry.

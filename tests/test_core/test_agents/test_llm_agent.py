@@ -31,13 +31,14 @@ class TestLLMQueryAgent(unittest.TestCase):
         agent = LLMQueryAgent(name="LLMQueryAgent", llm_module=llm_module)
 
         # Execute query
-        response = agent.execute(query="What is the capital of France?")
+        messages = [{"role": "user", "content": "What is the capital of France?"}]
+        response = agent.execute(messages=messages)[-1]["content"]
         self.assertEqual(response, "Paris")
 
         # Verify API interaction
         mock_post.assert_called_once_with(
             "http://localhost:11434/api/generate",
-            json={"model": "llama3.2", "prompt": "What is the capital of France?", "stream": False, "temperature": 0.5},
+            json={"model": "llama3.2", "prompt": "user: What is the capital of France?", "stream": False},
             headers={},
             timeout=10
         )
@@ -57,11 +58,12 @@ class TestLLMQueryAgent(unittest.TestCase):
         )
 
         # Execute query
-        response = agent.execute(query="What is the capital of France?")
+        messages = [{"role": "user", "content": "What is the capital of France?"}]
+        response = agent.execute(messages=messages)[-1]["content"]
         self.assertEqual(response, "Paris")
 
         # Verify the combined prompt
-        combined_prompt = "These are system instructions.\n\nWhat is the capital of France?"
+        combined_prompt = "These are system instructions.\n\nuser: What is the capital of France?"
         mock_post.assert_called_once_with(
             "http://localhost:11434/api/generate",
             json={"model": "llama3.2", "prompt": combined_prompt, "stream": False, "temperature": 0.5},
@@ -76,7 +78,15 @@ class TestLLMQueryAgent(unittest.TestCase):
 
         # Test with invalid query
         with self.assertRaises(ValueError):
-            agent.execute(query="")  # Empty query
+            agent.execute(messages=[])  # Empty query
+
+        with self.assertRaises(ValueError):
+            agent.execute(messages=[{"role": "user"}])
+        
+        with self.assertRaises(ValueError):
+            agent.execute(messages=[{"role": "user", "content": ""}])
+        with self.assertRaises(ValueError):
+            agent.execute(messages=[{"role": "non_existent", "content": "Invalid role"}])
 
     def test_agent_registration(self):
         # Mock LLMQueryModule
