@@ -103,19 +103,7 @@ class TestToolRegistry(unittest.TestCase):
         self.assertIn("Argument 'param1' must be of type int.", str(context.exception))
 
 
-class MockStructuredAgent(Agent):
-    class InputSchema(BaseModel):
-        value: int
-
-    class OutputSchema(BaseModel):
-        result: int
-
-    def __init__(self, name: str):
-        super().__init__(
-            name=name,
-            input_schema=MockStructuredAgent.InputSchema,
-            output_schema=MockStructuredAgent.OutputSchema,
-        )
+class MockAgent(Agent):
 
     def execute(self, value: int) -> Dict[str, Any]:
         return {"result": value * 2}
@@ -124,7 +112,7 @@ class MockStructuredAgent(Agent):
 class TestCallAgent(unittest.TestCase):
     def setUp(self):
         AgentRegistry.clear_registry()
-        self.agent = MockStructuredAgent("mock_agent")
+        self.agent = MockAgent("mock_agent")
 
     def tearDown(self):
         AgentRegistry.clear_registry()
@@ -133,10 +121,6 @@ class TestCallAgent(unittest.TestCase):
         inputs = {"value": 10}
         result = call_agent("mock_agent", inputs)
         self.assertEqual(result, {"result": 20})
-
-    def test_call_agent_invalid_input(self):
-        with self.assertRaises(ValueError):
-            call_agent("mock_agent", {"value": "invalid"})
 
     def test_call_agent_not_registered(self):
         with self.assertRaises(ValueError):

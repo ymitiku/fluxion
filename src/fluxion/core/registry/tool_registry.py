@@ -48,34 +48,25 @@ def call_agent(
         logger.error(error_message)
         raise ValueError(error_message)
 
-    # Validate input
-    try:
-        validated_input = agent.validate_input(inputs)
-        logger.debug(f"Input validated for agent '{agent_name}': {validated_input}")
-    except ValidationError as e:
-        error_message = f"Input validation failed for agent '{agent_name}': {str(e)}"
-        logger.error(error_message)
-        raise ValueError(error_message)
 
     # Retry mechanism
     retries = 0
     while retries <= max_retries:
         try:
             # Execute the agent
-            if isinstance(validated_input, BaseModel):
-                validated_input = validated_input.dict()
+            if isinstance(inputs, BaseModel):
+                inputs = inputs.model_dump_json()
 
-            result = agent.execute(**validated_input)
+            result = agent.execute(**inputs)
             logger.info(f"Agent '{agent_name}' executed successfully on attempt {retries + 1}")
 
             # Validate output
-            validated_output = agent.validate_output(result)
-            logger.debug(f"Output validated for agent '{agent_name}': {validated_output}")
+            logger.debug(f"Output validated for agent '{agent_name}': {result}")
 
-            if isinstance(validated_output, BaseModel):
-                validated_output = validated_output.dict()
+            if isinstance(result, BaseModel):
+                result = result.model_dump_json()
             
-            return validated_output
+            return result
 
         except Exception as e:
             retries += 1

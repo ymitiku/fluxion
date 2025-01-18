@@ -21,51 +21,29 @@ class DelegationAgent(LLMChatAgent):
 
         class DataSummarizerAgent(LLMChatAgent):
             
-            class InputSchema(BaseModel):
-                data_source: str = Field(..., title="Data Source", description="The source of the data to be summarized.")
-            
-            class OutputSchema(BaseModel):
-                result : str = Field(..., title="Result", description="The result of the data summarization.")
-                status: str = Field(..., title="Status", description="The status of the data summarization operation.")
-
             def __init__(self, *args, **kwargs):
                 super().__init__(*args, **kwargs)
                 self.system_instructions = self.system_instructions or (
                     "You are a data summarizer agent responsible for summarizing data from various sources."
                 )
-                self.input_schema = self.InputSchema
-                self.output_schema = self.OutputSchema
+                
             
             def execute(self, data_source: str) -> Dict[str, Any]:
                 return {"result": f"Data from '{data_source}' summarized successfully.", "status": "completed"}
             
         class DataLoaderAgent(LLMChatAgent):
             
-            class InputSchema(BaseModel):
-                data_source: str = Field(..., title="Data Source", description="The source of the data to be loaded.")
-            
-            class OutputSchema(BaseModel):
-                status: str = Field(..., title="Status", description="The status of the data loading operation.")
-                result: str = Field(..., title="Result", description="The result of the data loading operation.")
-            
+
             def __init__(self, *args, **kwargs):
                 super().__init__(*args, **kwargs)
                 self.system_instructions = self.system_instructions or (
                     "You are a data loader agent responsible for loading data from various sources."
                 )
-                self.input_schema = self.InputSchema
-                self.output_schema = self.OutputSchema
             
             def execute(self, data_source: str) -> Dict[str, Any]:
                 return {"status": "completed", "result": f"Data from '{data_source}' loaded successfully."}
 
         class GenericAgent(LLMQueryAgent):
-            class InputSchema(BaseModel):
-                task_description: str = Field(..., title="Task Description", description="Description of the task to be handled.")
-
-            class OutputSchema(BaseModel):
-                status: str = Field(..., title="Status", description="The status of the task execution.")
-                result: str = Field(..., title="Result", description="The result of the task execution.")
             def execute(self, task_description: str) -> Dict[str, Any]:
                 return {"status": "completed", "result": f"Task '{task_description}' handled by generic agent."}
 
@@ -218,41 +196,23 @@ if __name__ == "__main__":
     from pydantic import Field, BaseModel
 
     class DataSummarizerAgent(LLMChatAgent):
-        
-        class InputSchema(BaseModel):
-            data_source: str = Field(..., title="Data Source", description="The source of the data to be summarized.")
-        
-        class OutputSchema(BaseModel):
-            result : str = Field(..., title="Result", description="The result of the data summarization.")
-            status: str = Field(..., title="Status", description="The status of the data summarization operation.")
-
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.system_instructions = self.system_instructions or (
                 "You are a data summarizer agent responsible for summarizing data from various sources."
             )
-            self.input_schema = self.InputSchema
-            self.output_schema = self.OutputSchema
-        
+            
         def execute(self, data_source: str) -> Dict[str, Any]:
             return {"result": f"Data from '{data_source}' summarized successfully.", "status": "completed"}
         
     class DataLoaderAgent(LLMChatAgent):
         
-        class InputSchema(BaseModel):
-            data_source: str = Field(..., title="Data Source", description="The source of the data to be loaded.")
-        
-        class OutputSchema(BaseModel):
-            status: str = Field(..., title="Status", description="The status of the data loading operation.")
-            result: str = Field(..., title="Result", description="The result of the data loading operation.")
-        
+       
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.system_instructions = self.system_instructions or (
                 "You are a data loader agent responsible for loading data from various sources."
             )
-            self.input_schema = self.InputSchema
-            self.output_schema = self.OutputSchema
         
         def execute(self, data_source: str) -> Dict[str, Any]:
             return {"status": "completed", "result": f"Data from '{data_source}' loaded successfully."}
@@ -260,12 +220,6 @@ if __name__ == "__main__":
 
     # Mock generic agent
     class GenericAgent(LLMQueryAgent):
-        class InputSchema(BaseModel):
-            task_description: str = Field(..., title="Task Description", description="Description of the task to be handled.")
-
-        class OutputSchema(BaseModel):
-            status: str = Field(..., title="Status", description="The status of the task execution.")
-            result: str = Field(..., title="Result", description="The result of the task execution.")
         def execute(self, task_description: str) -> Dict[str, Any]:
             return {"status": "completed", "result": f"Task '{task_description}' handled by generic agent."}
 
