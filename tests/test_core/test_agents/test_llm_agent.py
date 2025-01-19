@@ -66,7 +66,30 @@ class TestLLMQueryAgent(unittest.TestCase):
         combined_prompt = "These are system instructions.\n\nuser: What is the capital of France?"
         mock_post.assert_called_once_with(
             "http://localhost:11434/api/generate",
-            json={"model": "llama3.2", "prompt": combined_prompt, "stream": False, "temperature": 0.5},
+            json={"model": "llama3.2", "prompt": combined_prompt, "stream": False},
+            headers={},
+            timeout=10
+        )
+
+    @patch("fluxion.core.modules.api_module.requests.post")
+    def test_execute_with_seeds_and_temperature(self, mock_post):
+        # Mock LLMQueryModule response
+        mock_post.return_value.json.return_value = {"response": "Paris"}
+        mock_post.return_value.raise_for_status = lambda: None
+
+        # Initialize LLMQueryAgent with seeds and temperature
+        llm_module = LLMQueryModule(endpoint="http://localhost:11434/api/generate", model="llama3.2", seed=123, temperature=0.5)
+        agent = LLMQueryAgent(name="LLMQueryAgent", llm_module=llm_module)
+
+        # Execute query
+        messages = [{"role": "user", "content": "What is the capital of France?"}]
+        response = agent.execute(messages=messages)[-1]["content"]
+        self.assertEqual(response, "Paris")
+
+        # Verify API interaction
+        mock_post.assert_called_once_with(
+            "http://localhost:11434/api/generate",
+            json={"model": "llama3.2", "prompt": "user: What is the capital of France?", "stream": False, "seed": 123, "temperature": 0.5},
             headers={},
             timeout=10
         )
