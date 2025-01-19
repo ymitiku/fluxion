@@ -8,7 +8,7 @@ import json
 class DelegationAgent(LLMChatAgent):
     """
     An agent that delegates tasks to other agents or handles tasks directly when delegation is not possible. It uses an LLMChatModule for execution
-    and a generic agent for handling tasks when delegation fails.
+    and a generic agent for handling tasks when delegation fails. Once it decides which agent to delegate the task it directly passes the messages to the agent.
 
     DelegationAgent:
     Example usage::
@@ -103,13 +103,13 @@ class DelegationAgent(LLMChatAgent):
 
         self.delegation_registry.add_delegation(agent_name, task_description)
           
-    def decide_and_delegate(self, task_description: str) -> Dict[str, Any]:
+    def decide_and_delegate(self, messages: Dict[str, Any]) -> Dict[str, Any]:
         """
         Uses LLM to decide which agent to delegate the task to. If no valid response is generated,
         the generic agent handles the task.
 
         Args:
-            task_description (str): High-level description of the task.
+            messages (Dict[str, Any]): Inputs for the LLM.
 
         Returns:
             Dict[str, Any]: The result of the delegated task or the task handled by the generic agent.
@@ -125,7 +125,6 @@ class DelegationAgent(LLMChatAgent):
 
         # Construct the user prompt
         user_prompt = (
-            f"Task Description: {task_description}\n\n"
             "Agent task delegations:\n" + json.dumps(task_delegations, indent=2) + "\n\n"
             "Generic agent metadata:\n" + json.dumps(self.generic_agent.metadata(), indent=2) + "\n\n"
             "Instructions:\n"
@@ -134,10 +133,7 @@ class DelegationAgent(LLMChatAgent):
             "3. If no agent is suitable, indicate that the task should be handled directly.\n"
             "Respond with the following structure:\n"
             "{\n"
-            "    \"agent_name\": \"<name_of_the_agent>\",\n"
-            "    \"inputs\": {\n"
-            "        \"<input_name>\": \"<input_value>\"\n"
-            "    }\n"
+            "    \"agent_name\": \"<name_of_the_agent>\"\n"
             "}\n"
             "If no agent is suitable:\n"
             "{\n"
@@ -147,11 +143,11 @@ class DelegationAgent(LLMChatAgent):
             "Do not include any additional information in your response."
 
         )
-
+        initial_messages = messages
         # Query the LLM for delegation
         messages = [
             {"role": "user", "content": user_prompt}
-        ]
+        ] + initial_messages
 
         response = self.execute(messages=messages)
 
@@ -159,20 +155,20 @@ class DelegationAgent(LLMChatAgent):
         try:
             # Parse the response
             decision = parse_json_with_recovery(response[-1]["content"])
-            agent_name = decision.get("agent_name")
-            if agent_name == "generic_agent":
-                return self.generic_agent.execute(task_description=task_description)
-
+            if not decision or "agent_name" not in decision:
+                return self.generic_agent.execute(messages=initial_messages)
+            
+            agent_name = decision["agent_name"]
             agent_metadata = self.delegation_registry.get_delegation(agent_name)
             if not agent_metadata:
                 raise ValueError(f"Agent '{agent_name}' is not available in the delegation list.")
 
-            return self.execute_agent(agent_name, decision.get("inputs", {}))
+            return self.execute_agent(agent_name, initial_messages)
         except (json.JSONDecodeError, KeyError, ValueError) as e:
             # Fallback to generic agent if decision fails
-            return self.generic_agent.execute(task_description=task_description)
+            return self.generic_agent.execute(messages=initial_messages)
 
-    def execute_agent(self, agent_name: str, inputs: Dict[str, Any]) -> Dict[str, Any]:
+    def execute_agent(self, agent_name: str, messages: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """
         Executes a task by invoking the specified agent.
 
@@ -187,7 +183,7 @@ class DelegationAgent(LLMChatAgent):
         if not agent:
             raise ValueError(f"Agent '{agent_name}' is not registered.")
 
-        return agent.execute(**inputs)
+        return agent.execute(messages = messages)
 
 # Example Usage
 if __name__ == "__main__":
@@ -202,8 +198,8 @@ if __name__ == "__main__":
                 "You are a data summarizer agent responsible for summarizing data from various sources."
             )
             
-        def execute(self, data_source: str) -> Dict[str, Any]:
-            return {"result": f"Data from '{data_source}' summarized successfully.", "status": "completed"}
+        def execute(self, messages: List[Dict[str, Any]]) -> Dict[str, Any]:
+            return {"result": f"Sales data summarized successfully.", "status": "completed"}
         
     class DataLoaderAgent(LLMChatAgent):
         
@@ -214,14 +210,14 @@ if __name__ == "__main__":
                 "You are a data loader agent responsible for loading data from various sources."
             )
         
-        def execute(self, data_source: str) -> Dict[str, Any]:
-            return {"status": "completed", "result": f"Data from '{data_source}' loaded successfully."}
+        def execute(self, messages: List[Dict[str, Any]]) -> Dict[str, Any]:
+            return {"status": "completed", "result": f"Sales data is loaded successfully."}
 
 
     # Mock generic agent
     class GenericAgent(LLMQueryAgent):
-        def execute(self, task_description: str) -> Dict[str, Any]:
-            return {"status": "completed", "result": f"Task '{task_description}' handled by generic agent."}
+        def execute(self, messages: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+            return {"status": "completed", "result": f"Generic agent handled the task."}
 
 
     # Mock LLMChatModule for demonstration purposes
@@ -243,11 +239,16 @@ if __name__ == "__main__":
     task_description = "There is dataset located at 'data/sales_report.csv' that needs to be analyzed. Load the dataset."
 
     
-
+    messages = [
+        {"role": "user", "content": task_description},
+    ]
     # Decide and delegate
-    result = delegation_agent.decide_and_delegate(task_description)
+    result = delegation_agent.decide_and_delegate(messages = messages)
     print("Delegation Result:", json.dumps(result, indent=2))
 
     task_description = "Summarize the data from the sales report."
-    result = delegation_agent.decide_and_delegate(task_description)
+    messages = [
+        {"role": "user", "content": task_description},
+    ]
+    result = delegation_agent.decide_and_delegate(messages=messages)
     print("Delegation Result:", json.dumps(result, indent=2))
