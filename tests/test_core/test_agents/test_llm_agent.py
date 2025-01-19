@@ -3,7 +3,7 @@
 import unittest
 from unittest.mock import Mock, patch, MagicMock
 
-from fluxion.core.agents.llm_agent import LLMQueryAgent, LLMChatAgent
+from fluxion.core.agents.llm_agent import LLMQueryAgent, LLMChatAgent, PersistentLLMChatAgent
 from fluxion.core.registry.agent_registry import AgentRegistry
 from fluxion.core.modules.llm_modules import LLMQueryModule, LLMChatModule
 from fluxion.core.registry.tool_registry import ToolRegistry
@@ -238,6 +238,121 @@ class TestLLMChatAgent(unittest.TestCase):
         result = self.agent.execute(messages)
 
         self.assertEqual(result[-1]["content"], "Here is your answer.")
+
+
+class TestPersistentLLMChatAgent(unittest.TestCase):
+
+    def setUp(self):
+        AgentRegistry.clear_registry()
+        self.mock_llm_module = MagicMock(spec=LLMChatModule)
+        self.agent = PersistentLLMChatAgent(name="TestAgent", llm_module=self.mock_llm_module, max_tool_call_depth=2)
+
+    def test_execute_with_single_tool_call(self):
+        self.mock_llm_module.execute.return_value = {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+                {"function": {"name": "test_llm_agent.example_tool", "arguments": {"param1": "data"}}}
+            ]
+        }
+
+        self.agent.tool_registry.register_tool(example_tool)
+
+        messages = [{"role": "user", "content": "What is the result?"}]
+        result = self.agent.execute(messages)
+
+        self.assertIn("Processed data", result[-1]["content"])
+
+    def test_execute_with_multiple_tool_calls(self):
+        self.mock_llm_module.execute.side_effect = [
+            {
+                "role": "assistant",
+                "content": "",
+                "tool_calls": [
+                    {"function": {"name": "test_llm_agent.example_tool", "arguments": {"param1": "data"}}}
+                ]
+            },
+            {"role": "assistant", "content": "Final response."}
+        ]
+
+        self.agent.tool_registry.register_tool(example_tool)
+
+        messages = [{"role": "user", "content": "What is the result?"}]
+        result = self.agent.execute(messages)
+
+        self.assertIn("Processed data", result[-2]["content"])
+        self.assertEqual(result[-1]["content"], "Final response.")
+
+    def test_execute_with_tool_call_recursion_depth(self):
+        self.mock_llm_module.execute.side_effect = [
+            {
+                "role": "assistant",
+                "content": "",
+                "tool_calls": [
+                    {"function": {"name": "test_llm_agent.example_tool", "arguments": {"param1": "data"}}}
+                ]
+            },
+            {
+                "role": "assistant",
+                "content": "",
+                "tool_calls": [
+                    {"function": {"name": "test_llm_agent.example_tool", "arguments": {"param1": "data2"}}}
+                ]
+            },
+            {"role": "assistant", "content": "Final response."}
+        ]
+
+        self.agent.tool_registry.register_tool(example_tool)
+
+        messages = [{"role": "user", "content": "What is the result?"}]
+        result = self.agent.execute(messages)
+
+        self.assertEqual(len(result), 6)  # System message + user query + 2 tool calls + 2 assistant responses
+        self.assertIn("Processed data", result[2]["content"])
+        self.assertIn("Processed data2", result[4]["content"])
+
+    def test_execute_with_state(self):
+
+        self.agent.max_state_size = 10
+
+        self.mock_llm_module.execute.side_effect = [
+            {
+                "role": "assistant",
+                "content": "Second response.",
+            }
+        ]
+
+        self.agent.state["messages"] = [
+            {
+                "role": "assistant",
+                "content": "First response.",
+            }
+        ]
+
+        messages = [{"role": "user", "content": "What is the result?"}]
+        result = self.agent.execute(messages)
+        print("Result", result)
+
+
+        self.assertEqual(result[-2]["content"], "What is the result?")
+        self.assertEqual(result[-1]["content"], "Second response.")
+        self.assertEqual(self.agent.state["messages"],  [
+            {
+                "role": "assistant",
+                "content": "First response.",
+            },
+            {
+                "role": "user",
+                "content": "What is the result?",
+            },
+            {
+                "role": "assistant",
+                "content": "Second response.",
+            }
+        ])
+
+        assert False
+
 
 
 

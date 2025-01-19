@@ -10,7 +10,7 @@ The module includes:
 """
 
 import json
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable, Dict, List, Optional
 from fluxion.core.agents.agent import Agent
 from fluxion.core.registry.agent_registry import AgentRegistry
 from fluxion.core.modules.llm_modules import LLMQueryModule, LLMChatModule
@@ -81,7 +81,6 @@ class LLMQueryAgent(Agent):
             "content": response
         })
         return messages
-
 
 class LLMChatAgent(Agent):
     """
@@ -230,3 +229,88 @@ class LLMChatAgent(Agent):
             return f"Tool invocation failed: {te}"
         except Exception as e:
             return f"Unexpected error during tool invocation: {e}"
+
+
+
+class PersistentLLMChatAgent(LLMChatAgent):
+    """
+    An agent that interacts with an LLM for chat and supports tool calls, with persistent state.
+
+    PersistentLLMChatAgent:
+    example-usage::
+
+        from fluxion.core.agents.llm_agent import PersistentLLMChatAgent
+        from fluxion.core.modules.llm_modules import LLMChatModule
+        from fluxion.core.registry.tool_registry import ToolRegistry
+
+        llm_chat_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2", timeout=120)
+        llm_chat_agent = PersistentLLMChatAgent(name="LLMChatAgent", llm_module=llm_chat_module)
+
+        def tool_summarize(data: Dict[str, Any]) -> Dict[str, Any]:
+            return {"summary": f"Summarized data: {data}"}
+
+        llm_chat_agent.register_tool(tool_summarize)
+
+        messages = [
+            {"role": "user", "content": "Summarize the data."},
+        ]
+        response = llm_chat_agent.execute(messages)
+        print("LLM Chat Response:", response)
+
+    """
+
+    def __init__(self, *args, max_state_size: Optional[int] = None, **kwargs):
+        """
+        Initialize the PersistentLLMChatAgent.
+
+        Args:
+            args: Additional positional arguments for the agent.
+            kwargs: Additional keyword arguments for the agent.
+        """
+        super().__init__(*args, **kwargs)
+        self.state = {"messages": []}
+        self.max_state_size = max_state_size
+
+       
+    def execute(self, messages: List[Dict[str, str]], depth: int = 0) -> List[Dict[str, str]]:
+        """
+        Execute the PersistentLLMChatAgent logic with persistent state.
+
+        Args:
+            messages (List[Dict[str, str]]): The chat history, including the user query.
+            depth (int): Current depth of recursion for tool calls (default: 0).
+
+        Returns:
+            List[Dict[str, str]]: The updated chat history with the LLM and tool responses.
+
+        Raises:
+            ValueError: If the input messages are not valid.
+        """
+
+        # Update the agent's state
+        self.update_state(messages)
+
+        # Interact with the LLM
+        response = self.llm_module.execute(**self.construct_llm_inputs(self.state["messages"]))
+        messages.append(response)
+
+        self.update_state([response])
+        
+        # Handle tool calls if present
+        messages = self._execute_tool_calls(response, messages, depth)
+
+        
+
+        return messages
+    
+    def update_state(self, messages: List[Dict[str, str]]):
+        """
+        Update the agent's state.
+
+        Args:
+            state (Dict[str, Any]): The new state to set.
+        """
+        self.state["messages"].extend(messages)
+        if self.max_state_size:
+            self.state["messages"] = self.state["messages"][-self.max_state_size:]
+
