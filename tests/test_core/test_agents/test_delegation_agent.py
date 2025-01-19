@@ -13,7 +13,7 @@ class TestDelegationAgent(unittest.TestCase):
         # Mock LLMChatModule
         AgentRegistry.clear_registry()
         self.mock_llm_module = MagicMock(spec=LLMChatModule)
-        self.mock_llm_module.execute.return_value = {"role": "assistant", "content": '{"agent_name": "DataSummarizer", "inputs": {"data_source": "sales_report.csv"}}'}
+        self.mock_llm_module.execute.return_value = {"role": "assistant", "content": '{"agent_name": "DataSummarizer"}'}
         
 
         # Mock Generic Agent
@@ -21,8 +21,8 @@ class TestDelegationAgent(unittest.TestCase):
             def __init__(self, name="GenericAgent"):
                 super().__init__(name=name)
 
-            def execute(self, task_description: str):
-                return {"status": "completed", "result": f"Task '{task_description}' handled by generic agent."}
+            def execute(self, **kwargs):
+                return [{"role": "assistant", "content": "Task handled by generic agent."}]
 
         self.generic_agent = MockGenericAgent()
 
@@ -37,25 +37,11 @@ class TestDelegationAgent(unittest.TestCase):
         self.mock_agent_metadata = {
             "name": "DataSummarizer",
             "description": "Summarizes the given data.",
-            "input_schema": {
-                "type": "object",
-                "properties": {
-                    "data_source": {"type": "string", "description": "The data to summarize."}
-                },
-                "required": ["data_source"]
-            },
-            "output_schema": {
-                "type": "object",
-                "properties": {
-                    "summary": {"type": "string", "description": "The summary of the data."}
-                },
-                "required": ["summary"]
-            }
         }
 
         # Mock DelegationRegistry
         self.agent.delegation_registry = MagicMock(spec=AgentDelegationRegistry)
-        self.mock_data_summarizer = MagicMock(metadata=lambda: self.mock_agent_metadata, execute=lambda data_source: {"status": "completed", "result": "Summarized successfully."})
+        self.mock_data_summarizer = MagicMock(metadata=lambda: self.mock_agent_metadata, execute=lambda messages: [{"role": "assistant", "content": "Summarized successfully."}])
 
     def test_delegate_task(self):
         self.agent.delegation_registry.add_delegation = MagicMock()
@@ -82,35 +68,32 @@ class TestDelegationAgent(unittest.TestCase):
         }
 
         with patch.object(AgentRegistry, "get_agent", return_value=self.mock_data_summarizer):
-            result = self.agent.decide_and_delegate("Summarize the sales report.")
+            result = self.agent.decide_and_delegate(messages=[{"role": "user", "content": "Summarize the sales report."}])
      
-        self.assertEqual(result, {
-            "status": "completed",
-            "result": "Summarized successfully."
-        })
+        self.assertEqual(result, [{"role": "assistant", "content": "Summarized successfully."}])
         self.mock_llm_module.execute.assert_called_once()
 
     def test_decide_and_delegate_generic_agent(self):
         # Mock LLM response to indicate fallback to generic agent
         self.mock_llm_module.execute.return_value = {"role": "assistant", "content": '{"agent_name": "generic_agent"}'}
         
-        result = self.agent.decide_and_delegate("Analyze an unstructured task.")
+        messages = [
+            {"role": "user", "content": "Analyze an unstructured task."}
+        ]
+        result = self.agent.decide_and_delegate(messages=messages)
 
-        self.assertEqual(result, {
-            "status": "completed",
-            "result": "Task 'Analyze an unstructured task.' handled by generic agent."
-        })
+        self.assertEqual(result, [{"role": "assistant", "content": "Task handled by generic agent."}])
         self.mock_llm_module.execute.assert_called_once()
 
     def test_execute_agent(self):
         agent_instance = MagicMock()
-        agent_instance.execute.return_value = {"status": "completed", "result": "Summarized successfully."}
+        agent_instance.execute.return_value = [{"role": "assistant", "content": "Summarized successfully."}]
 
         with patch.object(AgentRegistry, "get_agent", return_value=agent_instance):
-            result = self.agent.execute_agent("DataSummarizer", {"data_source": "sales_report.csv"})
+            result = self.agent.execute_agent("DataSummarizer", [{"role": "user", "content": "Summarize the sales report."}])
 
-        self.assertEqual(result, {"status": "completed", "result": "Summarized successfully."})
-        agent_instance.execute.assert_called_once_with(data_source="sales_report.csv")
+        self.assertEqual(result, [{"role": "assistant", "content": "Summarized successfully."}])
+        agent_instance.execute.assert_called_once_with(messages=[{"role": "user", "content": "Summarize the sales report."}])
 
     def test_execute_agent_missing_agent(self):
         with patch.object(AgentRegistry, "get_agent", return_value=None):

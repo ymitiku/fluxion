@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Dict, Any, Union
+from typing import List, Dict, Any, Union, Optional
 import requests
 from .api_module import ApiModule
 
@@ -48,7 +48,7 @@ class LLMApiModule(ApiModule, ABC):
     This class abstracts common patterns for interacting with an LLM via REST API.
 
     """
-    def __init__(self, endpoint: str, model: str = None, headers: Dict[str, Any] = {}, timeout: int = 10, response_key: str = "response", temperature: float = 0.5):
+    def __init__(self, endpoint: str, model: str = None, headers: Dict[str, Any] = {}, timeout: int = 10, response_key: str = "response", temperature:  Optional[float] = None, seed: Optional[int] = None):
         """ Initialize the LLMApiModule.
         
         Args:
@@ -57,13 +57,15 @@ class LLMApiModule(ApiModule, ABC):
             headers (dict, optional): Headers to include in the API requests. Defaults to an empty dictionary.
             timeout (int, optional): Timeout for API requests in seconds. Defaults to 10 seconds.
             response_key (str, optional): The key to use for the response. Defaults to "response"
-            temperature (float, optional): The temperature parameter for the LLM. Defaults to 0.5.
+            temperature (float, optional): The temperature parameter for the LLM. Defaults to None.
+            seed (int, optional): The seed parameter for the LLM. Defaults to None.
     
         """
         super().__init__(endpoint, headers, timeout)
         self.model = model
         self.response_key = response_key
         self.temperature = temperature
+        self.seed = seed
     
     def execute(self, *args, **kwargs) -> Dict[str, Any]:
         """ Execute the LLM module. 
@@ -82,7 +84,7 @@ class LLMApiModule(ApiModule, ABC):
                 raise ValueError(f"Invalid input: {key} is empty.")
         return self.get_response(inputs, full_response)
 
-    @abstractmethod
+
     def get_input_params(self, *args, **kwargs) -> Dict[str, Any]:
         """ Get the input parameters for the LLM module.
 
@@ -93,7 +95,16 @@ class LLMApiModule(ApiModule, ABC):
         Returns:
             Dict[str, Any]: The input parameters for the LLM module.
         """
-        pass
+        output = {
+            "model": self.model,
+            "stream": False
+        }
+        if self.temperature:
+            output["temperature"] = self.temperature
+        if self.seed:
+            output["seed"] = self.seed
+        return output
+    
 
     def get_response(self, data, full_response=False) -> Dict[str, Any]:
         """ Send a POST request to the API endpoint and return the response.
@@ -159,12 +170,8 @@ class LLMQueryModule(LLMApiModule):
         Returns:
             Dict[str, str]: The input parameters for the LLM query.
         """
-        data = {
-            "model": self.model,
-            "prompt": prompt,
-            "stream": False,
-            "temperature": self.temperature
-        }
+        data = super().get_input_params(**kwargs)
+        data["prompt"] = prompt
         return data
     
     def post_process(self, response: Union[str, Dict[str, Any]], full_response = False):
@@ -223,13 +230,8 @@ class LLMChatModule(LLMApiModule):
         Returns:
             Dict[str, str]: The input parameters for the LLM chat.
         """
-        data = {
-            "model": self.model,
-            "messages": messages,
-            "stream": False,
-            "tools": tools or [],
-            "temperature": self.temperature
-        }
+        data = super().get_input_params(messages=messages)
+        data["tools"] = tools or []
         return data
     
 
