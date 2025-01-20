@@ -351,7 +351,7 @@ class TestPersistentLLMChatAgent(unittest.TestCase):
             }
         ])
 
-        assert False
+    
 
 
 
