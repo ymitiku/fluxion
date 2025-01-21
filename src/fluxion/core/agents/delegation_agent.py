@@ -2,6 +2,7 @@ from fluxon.parser import parse_json_with_recovery
 from fluxion.core.agents.llm_agent import LLMChatAgent
 from fluxion.core.registry.agent_registry import AgentRegistry
 from fluxion.core.registry.agent_delegation_registry import AgentDelegationRegistry
+from fluxion.models.message_model import MessageHistory, Message
 from typing import Dict, Any, List
 import json
 
@@ -103,7 +104,7 @@ class DelegationAgent(LLMChatAgent):
 
         self.delegation_registry.add_delegation(agent_name, task_description)
           
-    def decide_and_delegate(self, messages: Dict[str, Any]) -> Dict[str, Any]:
+    def decide_and_delegate(self, messages: MessageHistory) -> MessageHistory:
         """
         Uses LLM to decide which agent to delegate the task to. If no valid response is generated,
         the generic agent handles the task.
@@ -145,16 +146,17 @@ class DelegationAgent(LLMChatAgent):
         )
         initial_messages = messages
         # Query the LLM for delegation
-        messages = [
-            {"role": "user", "content": user_prompt}
-        ] + initial_messages
+
+        messages = MessageHistory(messages = [
+            Message(role="system", content=user_prompt)
+        ] + initial_messages.messages)
 
         response = self.execute(messages=messages)
 
 
         try:
             # Parse the response
-            decision = parse_json_with_recovery(response[-1]["content"])
+            decision = parse_json_with_recovery(response[-1].content)
             if not decision or "agent_name" not in decision:
                 return self.generic_agent.execute(messages=initial_messages)
             
@@ -168,7 +170,7 @@ class DelegationAgent(LLMChatAgent):
             # Fallback to generic agent if decision fails
             return self.generic_agent.execute(messages=initial_messages)
 
-    def execute_agent(self, agent_name: str, messages: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def execute_agent(self, agent_name: str, messages: MessageHistory) -> MessageHistory:
         """
         Executes a task by invoking the specified agent.
 
@@ -198,8 +200,10 @@ if __name__ == "__main__":
                 "You are a data summarizer agent responsible for summarizing data from various sources."
             )
             
-        def execute(self, messages: List[Dict[str, Any]]) -> Dict[str, Any]:
-            return {"result": f"Sales data summarized successfully.", "status": "completed"}
+        def execute(self, messages: MessageHistory) -> MessageHistory:
+            # return {"result": f"Sales data summarized successfully.", "status": "completed"}
+            new_message = Message(role="assistant", content="Sales data summarized successfully.")
+            return MessageHistory(messages = [new_message])
         
     class DataLoaderAgent(LLMChatAgent):
         
@@ -210,14 +214,14 @@ if __name__ == "__main__":
                 "You are a data loader agent responsible for loading data from various sources."
             )
         
-        def execute(self, messages: List[Dict[str, Any]]) -> Dict[str, Any]:
-            return {"status": "completed", "result": f"Sales data is loaded successfully."}
+        def execute(self, messages: MessageHistory) -> MessageHistory:
+            return MessageHistory(messages = [Message(role="assistant", content="Sales data loaded successfully.")])
 
 
     # Mock generic agent
     class GenericAgent(LLMQueryAgent):
-        def execute(self, messages: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-            return {"status": "completed", "result": f"Generic agent handled the task."}
+        def execute(self, messages: MessageHistory) -> MessageHistory:
+            return MessageHistory(messages = [Message(role="assistant", content="Task handled by generic agent.")])
 
 
     # Mock LLMChatModule for demonstration purposes
@@ -239,16 +243,12 @@ if __name__ == "__main__":
     task_description = "There is dataset located at 'data/sales_report.csv' that needs to be analyzed. Load the dataset."
 
     
-    messages = [
-        {"role": "user", "content": task_description},
-    ]
+    messages = MessageHistory(messages = [Message(role="user", content=task_description)])
     # Decide and delegate
     result = delegation_agent.decide_and_delegate(messages = messages)
-    print("Delegation Result:", json.dumps(result, indent=2))
+    print("Delegation Result:", json.dumps(json.loads(result.model_dump_json()), indent=2))
 
     task_description = "Summarize the data from the sales report."
-    messages = [
-        {"role": "user", "content": task_description},
-    ]
+    messages = MessageHistory(messages = [Message(role="user", content=task_description)])
     result = delegation_agent.decide_and_delegate(messages=messages)
-    print("Delegation Result:", json.dumps(result, indent=2))
+    print("Delegation Result:", json.dumps(json.loads(result.model_dump_json()), indent=2))
