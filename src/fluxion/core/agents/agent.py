@@ -145,3 +145,33 @@ class JsonInputOutputAgent(ABC):
         except Exception as e:
             raise ValueError(f"Failed to parse response: {str(e)}")
             
+
+
+class StructuredOutputAgent(ABC):
+    def __init__(self, output_schema: Type[BaseModel]):
+        self.output_schema = output_schema
+
+
+    def validate_output(self, output: Dict[str, Any]) -> Dict[str, Any]:
+        try:
+            return self.output_schema(**output).dict()
+        except Exception as e:
+            raise ValueError(f"Output validation failed: {str(e)}")
+        
+    def parse_to_schema(self, response: Dict[str, Any]) -> Dict[str, Any]:
+        """ Parse the response into a structured output format.
+
+        Args:
+            response (Dict[str, Any]): The response to parse. If content is not found or is empty raises ValueError. If the response contains "error" key, it will be propagated as a ValueError.
+
+        raises: 
+            ValueError: If the response contains an error key or content is not found or is empty.
+        
+        """
+        if "error" in response:
+            raise ValueError(response["error"])
+        
+        if "content" not in response or response["content"]  is None or response["content"].strip() == "":
+            raise ValueError("Empty or missing content in response")
+        
+        return self.validate_output(response["content"])
