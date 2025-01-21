@@ -12,9 +12,9 @@ The module includes:
 import json
 from typing import Any, Callable, Dict, List, Optional
 from fluxion.core.agents.agent import Agent
-from fluxion.core.registry.agent_registry import AgentRegistry
 from fluxion.core.modules.llm_modules import LLMQueryModule, LLMChatModule
 from fluxion.core.registry.tool_registry import ToolRegistry
+from fluxion.models.message_model import Message, MessageHistory, ToolCall
 
 
 class LLMQueryAgent(Agent):
@@ -47,7 +47,7 @@ class LLMQueryAgent(Agent):
         self.llm_module = llm_module
         super().__init__(*args, **kwargs)
 
-    def execute(self, messages: List[Dict[str, str]]) -> List[Dict[str, str]]:
+    def execute(self, messages: MessageHistory) -> MessageHistory:
         """
         Execute the LLM query agent logic.
 
@@ -60,26 +60,23 @@ class LLMQueryAgent(Agent):
         Raises:
             ValueError: If the query is empty or invalid.
         """
-        if not isinstance(messages, list):
-            raise ValueError("Invalid messages: Must be a list of dictionaries.")
+        if not isinstance(messages, MessageHistory):
+            raise ValueError("Invalid messages: Must be an instance of MessageHistory.")
         if len(messages) == 0:
-            raise ValueError("Invalid messages: Empty list.")
+            raise ValueError("Invalid messages: Empty message history.")
 
-        for msg in messages:
-            if not isinstance(msg, dict) or "role" not in msg or "content" not in msg:
-                raise ValueError("Invalid message: Must be a dictionary with 'role' and 'content' keys.")
-            if not msg["content"]:
+        for msg in messages.messages:
+            if not isinstance(msg, Message):
+                raise ValueError("Invalid message: Must be instance of {}!".format(msg))
+            if not msg.content:
                 raise ValueError("Invalid message content: Cannot be empty.")
-            if msg["role"] not in ["user", "assistant", "system"]:
-                raise ValueError("Invalid message role: Must be 'user', 'assistant', or 'system'.")
-        query = "\n".join(["{}: {}".format(msg["role"], msg["content"]) for msg in messages])
+            if msg.role not in ["user", "assistant", "system", "tool"]:
+                raise ValueError("Invalid message role: Must be 'user', 'assistant', 'system', or 'tool'.")
+        query = "\n".join(["{}: {}".format(msg.role, msg.content) for msg in messages])
     
         prompt = self.system_instructions + "\n\n" + query if self.system_instructions else query
         response =  self.llm_module.execute(prompt=prompt)
-        messages.append({
-            "role": "assistant",
-            "content": response
-        })
+        messages.append(Message(role="assistant", content=response, tool_calls=None))
         return messages
 
 class LLMChatAgent(Agent):
@@ -109,7 +106,7 @@ class LLMChatAgent(Agent):
 
     """
 
-    def __init__(self, *args, llm_module: LLMChatModule, max_tool_call_depth: int = 2, **kwargs):
+    def __init__(self, *args, llm_module: LLMChatModule, max_tool_call_depth: int = 10, **kwargs):
         """
         Initialize the LLMChatAgent.
 
@@ -143,31 +140,42 @@ class LLMChatAgent(Agent):
             self.register_tool(tool)
 
 
-    def construct_llm_inputs(self, messages: List[Dict[str, str]]):
-        if not isinstance(messages, list) or not all(
-            isinstance(msg, dict) and "role" in msg and "content" in msg for msg in messages
-        ):
-            raise ValueError("Invalid messages: Must be a list of dictionaries with 'role' and 'content' keys.")
-
+    def construct_llm_inputs(self, messages: MessageHistory) -> Dict[str, Any]:
         if not messages:
+            raise ValueError("Invalid messages: Cannot be empty.")
+        if not isinstance(messages, MessageHistory):
+            raise ValueError("Invalid messages: Must be an instance of MessageHistory.")
+        if not messages.messages:
             raise ValueError("Invalid messages: Empty list.")
 
         # Add system instructions as the first message, if provided
-        system_message = {"role": "system", "content": self.system_instructions} if self.system_instructions else None
-        if system_message:
-            messages.insert(0, system_message)
+        if self.system_instructions:
+            output_messages = [{"role": "system", "content": self.system_instructions}]
+        else:
+            output_messages = []
+    
+        output_messages.extend(
+            [
+                {
+                    "role": msg.role, "content": msg.content, 
+                    "tool_calls": [tool_call.to_llm_format() for tool_call in msg.tool_calls] if msg.tool_calls else None
+                } 
+                for msg in messages
+            ]
+        )
+        
 
         # Get tools from the agent's ToolRegistry
         tools = self.get_llm_tools()
 
 
-        return dict(messages=messages, tools=tools)
+        return dict(messages=output_messages, tools=tools)
     
     def get_llm_tools(self):
         return [{"type": "function", "function": tool} for _, tool in self.tool_registry.list_tools().items()]
 
 
-    def execute(self, messages: List[Dict[str, str]], depth: int = 0) -> List[Dict[str, str]]:
+    def execute(self, messages: MessageHistory, depth: int = 0) -> MessageHistory:
         """
         Execute the LLM chat agent logic.
 
@@ -181,16 +189,20 @@ class LLMChatAgent(Agent):
         Raises:
             ValueError: If the input messages are not valid.
         """
-
         # Interact with the LLM
-        response = self.llm_module.execute(**self.construct_llm_inputs(messages))
-        messages.append(response)
+        llm_inputs = self.construct_llm_inputs(messages)
 
+        response = self.llm_module.execute(**llm_inputs)
+        response_message = Message.from_llm_format(response)
+        
+        messages.append(response_message)
+        
         # Handle tool calls if present
-        messages = self._execute_tool_calls(response, messages, depth)
+        messages = self._execute_tool_calls(response_message, messages, depth)
+
         return messages
     
-    def _execute_tool_calls(self, response: Dict[str, Any], messages: List[Dict[str, str]], depth: int = 0) -> List[Dict[str, str]]:
+    def _execute_tool_calls(self, response: Message, messages: MessageHistory, depth: int = 0) -> List[Dict[str, str]]:
         """
         Execute tool calls in the chat history.
 
@@ -200,18 +212,20 @@ class LLMChatAgent(Agent):
         Returns:
             List[Dict[str, str]]: The updated chat history with the LLM and tool responses.
         """
-        if "tool_calls" in response:
-            for tool_call in response["tool_calls"]:
+        if response.tool_calls:
+            for tool_call in response.tool_calls:
                 tool_result = self._handle_tool_call(tool_call)
-                messages.append({"role": "tool", "content": json.dumps(tool_result, indent=2)})
-
+                if tool_result["errors"]:
+                    messages.append(Message(role="tool", content=json.dumps(tool_result["errors"], indent=2)))
+                else:
+                    messages.append(Message(role="tool", content=json.dumps(tool_result["result"], indent=2)))
             if depth < self.max_tool_call_depth:  # Prevent infinite recursion
-                if messages[0]["role"] == "system":
-                    messages = messages[1:] # Skip the system message
+                if messages[0].content == self.system_instructions:
+                    messages.messages = messages.messages[1:]
                 return self.execute(messages, depth=depth + 1)
         return messages
 
-    def _handle_tool_call(self, tool_call: Dict[str, Dict]):
+    def _handle_tool_call(self, tool_call: ToolCall) -> Any:
         """
         Handle a tool call response from the LLM.
 
@@ -222,14 +236,25 @@ class LLMChatAgent(Agent):
             str: The result of the tool invocation.
         """
         try:
-            return self.tool_registry.invoke_tool_call(tool_call)
+            return {
+                "result":  self.tool_registry.invoke_tool_call(tool_call),
+                "errors": None
+            }
         except ValueError as ve:
-            return f"Tool invocation failed: {ve}"
+            return {
+                "result": None,
+                "errors": ["ValueError occurred during tool {} invocation!".format(tool_call.name), str(ve)]
+            }
         except TypeError as te:
-            return f"Tool invocation failed: {te}"
+            return {
+                "result": None,
+                "errors": ["TypeError occurred during tool {} invocation!".format(tool_call.name), str(te)]
+            }
         except Exception as e:
-            return f"Unexpected error during tool invocation: {e}"
-
+            return {
+                "result": None,
+                "errors": ["An error occurred during tool {} invocation!".format(tool_call.name), str(e)]
+            }
 
 
 class PersistentLLMChatAgent(LLMChatAgent):
@@ -268,11 +293,11 @@ class PersistentLLMChatAgent(LLMChatAgent):
             kwargs: Additional keyword arguments for the agent.
         """
         super().__init__(*args, **kwargs)
-        self.state = {"messages": []}
+        self.state = MessageHistory(messages=[])
         self.max_state_size = max_state_size
 
        
-    def execute(self, messages: List[Dict[str, str]], depth: int = 0) -> List[Dict[str, str]]:
+    def execute(self, messages: MessageHistory, depth: int = 0) -> MessageHistory:
         """
         Execute the PersistentLLMChatAgent logic with persistent state.
 
@@ -291,26 +316,28 @@ class PersistentLLMChatAgent(LLMChatAgent):
         self.update_state(messages)
 
         # Interact with the LLM
-        response = self.llm_module.execute(**self.construct_llm_inputs(self.state["messages"]))
-        messages.append(response)
+        response = self.llm_module.execute(**self.construct_llm_inputs(self.state))
+        response_message = Message.from_llm_format(response)
+        messages.append(response_message)
 
-        self.update_state([response])
+        self.update_state(MessageHistory(messages=[response_message]))
+
+        
         
         # Handle tool calls if present
-        messages = self._execute_tool_calls(response, messages, depth)
-
-        
+        messages = self._execute_tool_calls(response_message, messages, depth)
 
         return messages
     
-    def update_state(self, messages: List[Dict[str, str]]):
+    def update_state(self, messages: MessageHistory):
         """
         Update the agent's state.
 
         Args:
-            state (Dict[str, Any]): The new state to set.
+            messages (MessageHistory): The messages to add to the state.
         """
-        self.state["messages"].extend(messages)
+        self.state.extend(messages)
         if self.max_state_size:
-            self.state["messages"] = self.state["messages"][-self.max_state_size:]
+            self.state.messages = self.state.messages[-self.max_state_size:]
+
 
