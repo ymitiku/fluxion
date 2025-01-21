@@ -115,3 +115,5 @@ class FluxionLogger:
         return f"{log_level}: {date_time} - [{self.logger_name}] - {message}"
     
 
+
+# TODO: Implement daily partitioned logger that creates a new log file each day for each logger name
