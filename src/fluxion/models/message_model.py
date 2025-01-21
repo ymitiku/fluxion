@@ -164,3 +164,8 @@ class MessageHistory(BaseModel):
     def append(self, message: Message):
         assert isinstance(message, Message), "Message must be an instance of Message."
         self.messages.append(message)
+
+
+    def extend(self, MeesageHistory: "MessageHistory"):
+        assert isinstance(MessageHistory, MessageHistory), "MessageHistory must be an instance of MessageHistory."
+        self.messages.extend(MessageHistory.messages)
