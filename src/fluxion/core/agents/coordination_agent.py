@@ -82,7 +82,7 @@ class CoordinationAgent(LLMChatAgent):
         return Message.from_llm_format(response)
         
 
-    def coordinate_agents(self, messages: MessageHistory) -> MessageHistory:
+    def coordinate_agents(self, messages: MessageHistory) -> Message:
         """
         Generates a tool call using an LLM based on the given task and available agents.
 
@@ -91,7 +91,7 @@ class CoordinationAgent(LLMChatAgent):
             depth (int): The depth of the recursive call (default: 0).
 
         Returns:
-            MessageHistory: The messages exchanged.
+            Message: Result from agent call or error message.
         """
         available_agents = [agent_metadata for group in self.agents_groups for agent_metadata in AgentRegistry.get_agent_metadata(group)]
         # User prompt
@@ -146,20 +146,31 @@ class CoordinationAgent(LLMChatAgent):
         response = self.execute(messages=messages)
         response.errors = response.errors or []
 
-        if response.errors:
+        if response.errors and len(response.errors) > 0:
             return response
         try:
             response_content = parse_json_with_recovery(response.content)
+            if response_content == {} and (response.content.strip() != "{}" or response.content.strip() != ""):
+                raise ValueError("Invalid JSON response.")
+            elif response.content.strip() == "{}" or response.content.strip() == "":
+                raise ValueError("Empty JSON response.")
+       
+            if "error" in response_content:
+                response.errors.append(response_content["error"])
+                response.content = ""
             if not "agent_name" in response_content:
                 response.errors.append("No agent name found in the response from the LLM.")
-                return response
-            if "arguments" not in response_content:
+                response.content = ""
+            elif "arguments" not in response_content:
                 response.errors.append("No arguments found in the response from the LLM.")
-                return response
-            if not "messages" in response_content["arguments"]:
+                response.content = ""
+            elif not "messages" in response_content["arguments"]:
                 response.errors.append("No messages found in the response from the LLM.")
+                response.content = ""
+      
+            if response.errors and len(response.errors) > 0:
                 return response
-            
+                        
             return call_agent(response_content["agent_name"], response_content["arguments"]["messages"])
 
         except ValueError as ve:
@@ -169,10 +180,6 @@ class CoordinationAgent(LLMChatAgent):
         except TypeError as te:
             response.errors.append("TypeError occurred while parsing the response from the LLM.")
             response.errors.append(str(te))
-            return response
-        except json.JSONDecodeError as jde:
-            response.errors.append("JSONDecodeError occurred while parsing the response from the LLM.")
-            response.errors.append(str(jde))
             return response
         except Exception as e:
             response.errors.append("Unknown error occurred while parsing the response from the LLM.")
