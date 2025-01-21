@@ -1,14 +1,16 @@
 import docstring_parser
 import inspect
 import logging
-from typing import List, Dict, Any, Callable
+from typing import List, Dict, Any, Callable, Optional, Union
 from typing import Dict, Any
+import json
 
 import logging
 import time
 from typing import Dict, Any, Callable, Optional
 from pydantic import ValidationError, BaseModel
 from fluxion.core.registry.agent_registry import AgentRegistry
+from fluxion.models.message_model import ToolCall
 
 
 logger = logging.getLogger("ToolRegistry")
@@ -17,7 +19,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 
 def call_agent(
     agent_name: str,
-    inputs: Dict[str, Any],
+    messages: Union[str, List[Dict[str, Any]]],
     max_retries: int = 1,
     retry_backoff: float = 0.5,
     fallback: Optional[Callable] = None,
@@ -27,7 +29,7 @@ def call_agent(
 
     Args:
         agent_name (str): The name of the agent to invoke.
-        inputs (Dict[str, Any]): Input data for the agent.
+        messages (List[Dict[str, Any]]): The messages to pass to the agent. All messages must be in JSON format with the following structure: [{"role": "user|system|assistant|tool", "content": "message content"}].
         max_retries (int, optional): Maximum number of retries (default: 1).
         retry_backoff (float, optional): Backoff time (in seconds) between retries (default: 0.5).
         fallback (Callable, optional): A fallback function to execute if retries fail.
@@ -39,7 +41,7 @@ def call_agent(
         ValueError: If the agent is not registered or validation fails.
         RuntimeError: If execution fails after retries and no fallback is provided.
     """
-    logger.info(f"Starting agent call: {agent_name} with inputs: {inputs}")
+    logger.info(f"Starting agent call: {agent_name}")
 
     # Retrieve the agent from the registry
     agent = AgentRegistry.get_agent(agent_name)
@@ -48,24 +50,19 @@ def call_agent(
         logger.error(error_message)
         raise ValueError(error_message)
 
+    if type(messages) == str:
+        messages = json.loads(messages)
 
     # Retry mechanism
     retries = 0
     while retries <= max_retries:
         try:
-            # Execute the agent
-            if isinstance(inputs, BaseModel):
-                inputs = inputs.model_dump_json()
-
-            result = agent.execute(**inputs)
+            result = agent.execute(messages=messages)
             logger.info(f"Agent '{agent_name}' executed successfully on attempt {retries + 1}")
 
             # Validate output
             logger.debug(f"Output validated for agent '{agent_name}': {result}")
 
-            if isinstance(result, BaseModel):
-                result = result.model_dump_json()
-            
             return result
 
         except Exception as e:
@@ -78,7 +75,7 @@ def call_agent(
                     logger.info(
                         f"Max retries exceeded for agent '{agent_name}'. Executing fallback."
                     )
-                    fallback_result = fallback(inputs)
+                    fallback_result = fallback(messages)
                     logger.info(f"Fallback executed successfully for agent '{agent_name}'")
                     return fallback_result
                 error_message = (
@@ -115,7 +112,7 @@ def extract_function_metadata(func):
         for name, param in signature.parameters.items()
     }
     metadata = {
-        "name": "{}.{}".format(func.__module__, func.__name__),
+        "name": ("{}.{}".format(func.__module__, func.__name__)).replace(".", "_"),
         "description": docstring.short_description or "No description provided.",
         "parameters": {
             "type": "object",
@@ -183,7 +180,7 @@ class ToolRegistry:
         """
         return {name: tool["metadata"] for name, tool in self._registry.items()}
 
-    def invoke_tool_call(self, tool_call: Dict[str, Any]) -> Any:
+    def invoke_tool_call(self, tool_call:ToolCall) -> Any:
         """
         Invoke a registered tool dynamically.
 
@@ -193,8 +190,8 @@ class ToolRegistry:
         Returns:
             Any: The result of the tool function.
         """
-        func_name = tool_call["function"]["name"]
-        arguments = tool_call["function"]["arguments"]
+        func_name = tool_call.name
+        arguments = tool_call.arguments
 
         metadata = self.get_tool(func_name)["function"]
 
