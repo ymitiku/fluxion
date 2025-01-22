@@ -4,6 +4,7 @@ from fluxion.core.registry.tool_registry import ToolRegistry, extract_function_m
 from fluxion.core.registry.agent_registry import AgentRegistry
 from fluxion.core.registry.tool_registry import call_agent
 from fluxion.core.agents.agent import Agent
+from fluxion.models.message_model import ToolCall, MessageHistory
 from pydantic import BaseModel
 
 class TestToolRegistry(unittest.TestCase):
@@ -49,7 +50,7 @@ class TestToolRegistry(unittest.TestCase):
         self.assertEqual(tools["test_tool_registry.example_tool"]["name"], "test_tool_registry.example_tool")
 
     def test_invoke_tool_call_success(self):
-        tool_call = {
+        tool_call = ToolCall.from_llm_format({
             "function": {
                 "name": "test_tool_registry.example_tool",
                 "arguments": {
@@ -57,39 +58,38 @@ class TestToolRegistry(unittest.TestCase):
                     "param2": "hello",
                 },
             }
-        }
-        print("current tool_registry", self.tool_registry.list_tools())
+        })
         result = self.tool_registry.invoke_tool_call(tool_call)
         self.assertEqual(result, "Received 42 and hello")
 
     def test_invoke_tool_call_missing_argument(self):
-        tool_call = {
+        tool_call = ToolCall.from_llm_format({
             "function": {
                 "name": "test_tool_registry.example_tool",
                 "arguments": {
                     "param2": "hello",
                 },
             }
-        }
+        })
         with self.assertRaises(ValueError) as context:
             self.tool_registry.invoke_tool_call(tool_call)
         self.assertIn("Missing required argument: param1", str(context.exception))
 
     def test_invoke_tool_call_invalid_tool(self):
-        tool_call = {
+        tool_call = ToolCall.from_llm_format({
             "function": {
                 "name": "test_tool_registry.non_existent_tool",
                 "arguments": {
                     "param1": 42,
                 },
             }
-        }
+        })
         with self.assertRaises(ValueError) as context:
             self.tool_registry.invoke_tool_call(tool_call)
         self.assertIn("Tool 'test_tool_registry.non_existent_tool' is not registered.", str(context.exception))
 
     def test_invoke_tool_call_type_error(self):
-        tool_call = {
+        tool_call = ToolCall.from_llm_format({
             "function": {
                 "name": "test_tool_registry.example_tool",
                 "arguments": {
@@ -97,7 +97,7 @@ class TestToolRegistry(unittest.TestCase):
                     "param2": "hello",
                 },
             }
-        }
+        })
         with self.assertRaises(TypeError) as context:
             self.tool_registry.invoke_tool_call(tool_call)
         self.assertIn("Argument 'param1' must be of type int.", str(context.exception))
@@ -105,7 +105,8 @@ class TestToolRegistry(unittest.TestCase):
 
 class MockAgent(Agent):
 
-    def execute(self, value: int) -> Dict[str, Any]:
+    def execute(self, messages: MessageHistory) -> MessageHistory:
+        value = int(messages[-1].content)
         return {"result": value * 2}
 
 
@@ -118,8 +119,8 @@ class TestCallAgent(unittest.TestCase):
         AgentRegistry.clear_registry()
 
     def test_call_agent_valid(self):
-        inputs = {"value": 10}
-        result = call_agent("mock_agent", inputs)
+        messages = [{"role": "user", "content": "10"}]
+        result = call_agent("mock_agent", messages)
         self.assertEqual(result, {"result": 20})
 
     def test_call_agent_not_registered(self):

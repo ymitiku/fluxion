@@ -56,7 +56,7 @@ class TestPlanGenerationAgent(unittest.TestCase):
         goals = ["Summarize feedback", "Identify common issues"]
         constraints = []
 
-        plan = self.agent.execute(task, goals, constraints)
+        plan = self.agent.generate_plan(task, goals, constraints)
         
         self.assertIsInstance(plan, Plan)
         self.assertEqual(plan.task, task)
@@ -74,7 +74,7 @@ class TestPlanGenerationAgent(unittest.TestCase):
         constraints = []
 
         with self.assertRaises(ValueError) as context:
-            self.agent.execute(task, goals, constraints)
+            self.agent.generate_plan(task, goals, constraints)
 
         self.assertIn("Failed to parse the generated plan", str(context.exception))
 
@@ -149,11 +149,11 @@ class TestPlanExecutionAgent(unittest.TestCase):
     @patch("fluxon.parser.parse_json_with_recovery")
     def test_execute_action_failure(self, mock_parse_json_with_recovery):
         mock_parse_json_with_recovery.side_effect = ValueError("Invalid JSON")
-        self.mock_llm.execute.return_value = [
-            {"role": "assistant", "content": "Invalid response"}
-        ]
+        self.mock_llm.execute.return_value = {"role": "assistant", "content": "Invalid response"}
+        
 
         result = self.agent.execute_action("Analyze feedback", "Summarize", "Summarize customer feedback")
+        print("Result", result)
         self.assertEqual(result["status"], "failed")
         self.assertIn("Failed to parse the response", result["result"])
 
