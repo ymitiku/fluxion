@@ -212,7 +212,7 @@ class LLMChatModule(LLMApiModule):
 
         print(response)
     """
-    def __init__(self, endpoint: str, model: str = None, headers: Dict[str, Any] = {}, timeout: int = 10, response_key = "message", temperature: float = 0.5):
+    def __init__(self, *args, response_key: str = "message", **kwargs):
         """ Initialize the LLMChatModule.
         
         Args:
@@ -222,7 +222,7 @@ class LLMChatModule(LLMApiModule):
             timeout (int, optional): Timeout for API requests in seconds. Defaults to 10 seconds.
             response_key (str, optional): The key to use for the response. Defaults to "message"
         """
-        super().__init__(endpoint, model, headers, timeout, response_key, temperature)
+        super().__init__(*args, response_key=response_key, **kwargs)
 
     def get_input_params(self, *args, messages: List[str], tools: List[Dict[str, str]] = {}, **kwargs) -> Dict[str, Any]:
         """

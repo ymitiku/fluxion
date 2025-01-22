@@ -221,5 +221,11 @@ class ToolRegistry:
             if arg not in arguments:
                 raise ValueError(f"Missing required argument: {arg}")
             expected_type = properties[arg]["type"]
+            if expected_type in ["float", "int"] and type(arguments[arg]) == str: # Gracefully handle string to number conversion
+                expected_type_map = {"float": float, "int": int}
+                try:
+                    arguments[arg] = expected_type_map[expected_type](arguments[arg])
+                except ValueError:
+                    raise ValueError(f"Argument '{arg}' must be of type {expected_type}.")
             if expected_type != "unknown" and not isinstance(arguments[arg], eval(expected_type)):
                 raise TypeError(f"Argument '{arg}' must be of type {expected_type}.")
