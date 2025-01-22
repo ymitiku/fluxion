@@ -92,7 +92,6 @@ class TestDelegationAgent(unittest.TestCase):
 
         with patch.object(AgentRegistry, "get_agent", return_value=agent_instance):
             result = self.agent.execute_agent("DataSummarizer", MessageHistory(messages=[Message(role="user", content="Analyze the sales report.")]))   
-        print("result", result)
         self.assertEqual(result, MessageHistory(messages=[Message(role="assistant", content="Summarized successfully.")]))
         agent_instance.execute.assert_called_once_with(messages=MessageHistory(messages=[Message(role="user", content="Analyze the sales report.")]))
 

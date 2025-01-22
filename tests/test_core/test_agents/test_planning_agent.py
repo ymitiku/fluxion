@@ -153,7 +153,6 @@ class TestPlanExecutionAgent(unittest.TestCase):
         
 
         result = self.agent.execute_action("Analyze feedback", "Summarize", "Summarize customer feedback")
-        print("Result", result)
         self.assertEqual(result["status"], "failed")
         self.assertIn("Failed to parse the response", result["result"])
 
