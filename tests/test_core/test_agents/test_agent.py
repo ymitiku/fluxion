@@ -6,10 +6,13 @@ from fluxion.core.registry.agent_registry import AgentRegistry
 from fluxion.core.agents.agent import Agent, JsonInputOutputAgent
 from fluxon.structured_parsing.exceptions import FluxonError
 from fluxion.core.registry.tool_registry import call_agent
+from fluxion.models.message_model import Message, MessageHistory, ToolCall
 
 class MockAgent(Agent):
-    def execute(self, query: str) -> str:
-        return {"result": "Mock response"}
+    def execute(self, messages: MessageHistory) -> Dict[str, Any]: 
+        new_message = Message(role="assistant", content="Mock response")
+        messages.append(new_message)
+        return MessageHistory(messages=messages.messages)
 class TestAgentBase(unittest.TestCase):
     def setUp(self):
         AgentRegistry.clear_registry()
@@ -32,9 +35,9 @@ class TestAgentBase(unittest.TestCase):
         with self.assertRaises(TypeError):
             Agent(name="AbstractAgent")  # Abstract class cannot be instantiated
     def test_call_agent_with_valid_metadata(self):
-        inputs = {"query": "test query"}
-        result = call_agent("TestAgent", inputs)
-        self.assertEqual(result, {"result": "Mock response"})
+        inputs = MessageHistory(messages=[Message(role="user", content="Test message")])
+        result = call_agent("TestAgent", inputs)[-1]
+        self.assertEqual(result, Message(role="assistant", content="Mock response"))
 
     def test_call_agent_with_invalid_metadata(self):
         with self.assertRaises(ValueError) as context:

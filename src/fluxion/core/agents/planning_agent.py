@@ -5,6 +5,7 @@ from typing import Any, Dict, List, Tuple
 from fluxion.core.agents.llm_agent import LLMQueryAgent, LLMChatAgent
 from fluxion.core.modules.llm_modules import LLMQueryModule, LLMChatModule
 from fluxion.models.plan_model import Plan, PlanStep, StepExecutionResult
+from fluxion.models.message_model import MessageHistory, Message
 
 class PlanGenerationAgent(LLMQueryAgent):
     """ An agent that generates a structured plan for a given task using an LLM. 
@@ -47,15 +48,22 @@ class PlanGenerationAgent(LLMQueryAgent):
             "}\n"
             "Only use actions that are relevant to the task.\n"
             "Do not make any assumptions about the task other than the given description and context.\n"
+            "Do not include any additional information in your output.\n"
         )
 
-    def execute(self, task: str, goals: List[str], constraints: List[str] = []) -> Plan:
+    def execute(self, messages: MessageHistory) -> MessageHistory:
+        output = super().execute(messages)
+        return output[-1]
+    
+        
+
+    def generate_plan(self, task: str, goals: List[str], constraints: List[str] = []) -> Plan:
         logging.info(f"{self.name}: Generating a structured plan for the task...")
         prompt = self.generate_structured_planning_prompt(task, goals, constraints)
-        
-        response = self.llm_module.execute(prompt=prompt)
+        messages = MessageHistory(messages = [Message(role="user", content=prompt)])
+        response = self.execute(messages)
         try:
-            response = parse_json_with_recovery(response)
+            response = parse_json_with_recovery(response.content)
             response["task"] = task
             return Plan.model_validate_json(json.dumps(response))
         except Exception as e:
@@ -178,7 +186,7 @@ class PlanExecutionAgent(LLMChatAgent):
 
         return self.execution_log
     
-    def construct_planning_prompt(self, task: str, step_description: str, action: str) -> Dict[str, str]:
+    def construct_planning_prompt(self, task: str, step_description: str, action: str) -> MessageHistory:
         previous_results = self._gather_previous_results()
         prompt =  (
             f"The broader task is: {task}\n\n"
@@ -198,7 +206,7 @@ class PlanExecutionAgent(LLMChatAgent):
             "Strictly adhere to the format to ensure proper processing."
         )
 
-        return [{"role": "user", "content": prompt}]
+        return MessageHistory(messages=[Message(role="user", content=prompt)])
 
 
     def execute_action(self, task: str, action: str, step_description: str) -> Tuple[str, str]:
@@ -218,7 +226,10 @@ class PlanExecutionAgent(LLMChatAgent):
             logging.info(f"Querying LLM to execute action: {action}")
             response = super().execute(messages = self.construct_planning_prompt(task, step_description, action))
             try:
-                return parse_json_with_recovery(response[-1]["content"])
+                output = parse_json_with_recovery(response[-1].content)
+                if output == {}:
+                    return {"status": "failed", "result": "Failed to parse the response"}
+                return output
             except Exception as e:
                 return {"status": "failed", "result": f"Failed to parse the response: {str(e)}"}
 
@@ -303,14 +314,14 @@ class PlanningAgent(LLMChatAgent):
         self.llm_query_module = llm_query_module
         self.plan_generation_agent = PlanGenerationAgent(name="{}.PlanGenerationAgent".format(self.name), llm_module=self.llm_query_module)
         self.execution_agent = PlanExecutionAgent(name="{}.PlanExecutionAgent".format(self.name), llm_module=self.llm_module)
-    def execute(self, task: str, goals: List[str], constraints: List[str] = []) -> Dict[str, Any]:
+    def plan_and_execute(self, task: str, goals: List[str], constraints: List[str] = []) -> Dict[str, Any]:
         
-        plan = self.plan_generation_agent.execute(task, goals, constraints)
+        plan = self.plan_generation_agent.generate_plan(task, goals, constraints)
         execution_log = self.execution_agent.execute_plan(plan)
         prompt = "Task: {}\n\nGoals:\n{}\n\nConstraints:\n{}".format(task, "\n".join([f"- {goal}" for goal in goals]), "\n".join([f"- {constraint}" for constraint in constraints]))
-        prompt += "\n\nGenerated Plan:\n" + json.dumps(plan.dict(), indent=2)
-        prompt += "\n\nExecution Log:\n" + json.dumps([result.dict() for result in execution_log], indent=2)
-        messages = [{"role": "user", "content": prompt}]
+        prompt += "\n\nGenerated Plan:\n" +  json.dumps(plan.model_dump(), indent=2)
+        prompt += "\n\nExecution Log:\n" + json.dumps([result.model_dump() for result in execution_log], indent=2)
+        messages = MessageHistory(messages=[Message(role="user", content=prompt)])
         summary =  super().execute(messages=messages)
         return {
             "plan": plan,
@@ -407,11 +418,13 @@ if __name__ == "__main__":
     planning_agent = PlanningAgent(name="PlanningAgent", llm_module=llm_chat_module, llm_query_module=llm_query_module)
     planning_agent.register_tools([initialize_repo, implement_api, build_ui, add_payment_gateway, search_on_internet])
 
-    final_response = planning_agent.execute(
+    final_response = planning_agent.plan_and_execute(
         task = "Create a hello world program",
         goals = ["Print 'Hello, World!' to the console"],
         constraints = ["Use a programming language of your choice"]
     )
 
     print("Final Response:")
-    print(json.dumps(final_response, indent=2))
+    print("Plan:", json.dumps(final_response["plan"].model_dump(), indent=2))
+    print("Execution Log:", json.dumps([result.model_dump() for result in final_response["execution_log"]], indent=2))
+    print("Summary:", "\n".join([message.content for message in final_response["summary"].messages]))

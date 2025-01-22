@@ -5,6 +5,7 @@ from fluxion.core.agents.delegation_agent import DelegationAgent
 from fluxion.core.registry.agent_registry import AgentRegistry
 from fluxion.core.registry.agent_delegation_registry import AgentDelegationRegistry
 from fluxion.core.modules.llm_modules import LLMChatModule
+from fluxion.models.message_model import MessageHistory, Message
 import json
 
 class TestDelegationAgent(unittest.TestCase):
@@ -21,8 +22,9 @@ class TestDelegationAgent(unittest.TestCase):
             def __init__(self, name="GenericAgent"):
                 super().__init__(name=name)
 
-            def execute(self, **kwargs):
-                return [{"role": "assistant", "content": "Task handled by generic agent."}]
+            def execute(self, messages: MessageHistory) -> MessageHistory:
+                return MessageHistory(messages=[{"role": "assistant", "content": "Task handled by generic agent."}])
+            
 
         self.generic_agent = MockGenericAgent()
 
@@ -41,7 +43,7 @@ class TestDelegationAgent(unittest.TestCase):
 
         # Mock DelegationRegistry
         self.agent.delegation_registry = MagicMock(spec=AgentDelegationRegistry)
-        self.mock_data_summarizer = MagicMock(metadata=lambda: self.mock_agent_metadata, execute=lambda messages: [{"role": "assistant", "content": "Summarized successfully."}])
+        self.mock_data_summarizer = MagicMock(metadata=lambda: self.mock_agent_metadata, execute=lambda messages: MessageHistory(messages=[Message(role="assistant", content="Summarized successfully.")]))
 
     def test_delegate_task(self):
         self.agent.delegation_registry.add_delegation = MagicMock()
@@ -68,32 +70,30 @@ class TestDelegationAgent(unittest.TestCase):
         }
 
         with patch.object(AgentRegistry, "get_agent", return_value=self.mock_data_summarizer):
-            result = self.agent.decide_and_delegate(messages=[{"role": "user", "content": "Summarize the sales report."}])
-     
-        self.assertEqual(result, [{"role": "assistant", "content": "Summarized successfully."}])
+            result = self.agent.decide_and_delegate(messages=MessageHistory(messages=[Message(role="user", content="Analyze the sales report.")]))
+        
+        self.assertEqual(result, MessageHistory(messages=[Message(role="assistant", content="Summarized successfully.")]))
         self.mock_llm_module.execute.assert_called_once()
 
     def test_decide_and_delegate_generic_agent(self):
         # Mock LLM response to indicate fallback to generic agent
         self.mock_llm_module.execute.return_value = {"role": "assistant", "content": '{"agent_name": "generic_agent"}'}
         
-        messages = [
-            {"role": "user", "content": "Analyze an unstructured task."}
-        ]
+        messages = MessageHistory(messages=[Message(role="user", content="Analyze an unstructured task.")])
         result = self.agent.decide_and_delegate(messages=messages)
+        
 
-        self.assertEqual(result, [{"role": "assistant", "content": "Task handled by generic agent."}])
+        self.assertEqual(result, MessageHistory(messages=[Message(role="assistant", content="Task handled by generic agent.")]))
         self.mock_llm_module.execute.assert_called_once()
 
     def test_execute_agent(self):
         agent_instance = MagicMock()
-        agent_instance.execute.return_value = [{"role": "assistant", "content": "Summarized successfully."}]
+        agent_instance.execute.return_value = MessageHistory(messages=[Message(role="assistant", content="Summarized successfully.")])
 
         with patch.object(AgentRegistry, "get_agent", return_value=agent_instance):
-            result = self.agent.execute_agent("DataSummarizer", [{"role": "user", "content": "Summarize the sales report."}])
-
-        self.assertEqual(result, [{"role": "assistant", "content": "Summarized successfully."}])
-        agent_instance.execute.assert_called_once_with(messages=[{"role": "user", "content": "Summarize the sales report."}])
+            result = self.agent.execute_agent("DataSummarizer", MessageHistory(messages=[Message(role="user", content="Analyze the sales report.")]))   
+        self.assertEqual(result, MessageHistory(messages=[Message(role="assistant", content="Summarized successfully.")]))
+        agent_instance.execute.assert_called_once_with(messages=MessageHistory(messages=[Message(role="user", content="Analyze the sales report.")]))
 
     def test_execute_agent_missing_agent(self):
         with patch.object(AgentRegistry, "get_agent", return_value=None):

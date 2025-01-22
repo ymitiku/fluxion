@@ -3,10 +3,11 @@
 import unittest
 from unittest.mock import Mock, patch, MagicMock
 
-from fluxion.core.agents.llm_agent import LLMQueryAgent, LLMChatAgent
+from fluxion.core.agents.llm_agent import LLMQueryAgent, LLMChatAgent, PersistentLLMChatAgent
 from fluxion.core.registry.agent_registry import AgentRegistry
 from fluxion.core.modules.llm_modules import LLMQueryModule, LLMChatModule
 from fluxion.core.registry.tool_registry import ToolRegistry
+from fluxion.models.message_model import MessageHistory, Message, ToolCall
 
 
 
@@ -31,8 +32,8 @@ class TestLLMQueryAgent(unittest.TestCase):
         agent = LLMQueryAgent(name="LLMQueryAgent", llm_module=llm_module)
 
         # Execute query
-        messages = [{"role": "user", "content": "What is the capital of France?"}]
-        response = agent.execute(messages=messages)[-1]["content"]
+        messages = MessageHistory(messages=[Message(role="user", content="What is the capital of France?")])
+        response = agent.execute(messages=messages)[-1].content
         self.assertEqual(response, "Paris")
 
         # Verify API interaction
@@ -58,8 +59,8 @@ class TestLLMQueryAgent(unittest.TestCase):
         )
 
         # Execute query
-        messages = [{"role": "user", "content": "What is the capital of France?"}]
-        response = agent.execute(messages=messages)[-1]["content"]
+        messages = MessageHistory(messages=[Message(role="user", content="What is the capital of France?")])
+        response = agent.execute(messages=messages)[-1].content
         self.assertEqual(response, "Paris")
 
         # Verify the combined prompt
@@ -82,8 +83,8 @@ class TestLLMQueryAgent(unittest.TestCase):
         agent = LLMQueryAgent(name="LLMQueryAgent", llm_module=llm_module)
 
         # Execute query
-        messages = [{"role": "user", "content": "What is the capital of France?"}]
-        response = agent.execute(messages=messages)[-1]["content"]
+        messages = MessageHistory(messages=[Message(role="user", content="What is the capital of France?")])
+        response = agent.execute(messages=messages)[-1].content
         self.assertEqual(response, "Paris")
 
         # Verify API interaction
@@ -107,9 +108,9 @@ class TestLLMQueryAgent(unittest.TestCase):
             agent.execute(messages=[{"role": "user"}])
         
         with self.assertRaises(ValueError):
-            agent.execute(messages=[{"role": "user", "content": ""}])
+            agent.execute(messages=MessageHistory(messages=[Message(role="user", content="")]))  # Empty message content
         with self.assertRaises(ValueError):
-            agent.execute(messages=[{"role": "non_existent", "content": "Invalid role"}])
+            agent.execute(messages=MessageHistory(messages=[Message(role="non_existent", content="Invalid role")]))  # Invalid role
 
     def test_agent_registration(self):
         # Mock LLMQueryModule
@@ -130,12 +131,12 @@ class TestLLMChatAgent(unittest.TestCase):
     def test_register_and_invoke_tool(self):
 
         self.agent.tool_registry.register_tool(example_tool)
-        tool_call = {
+        tool_call = ToolCall.from_llm_format({
             "function": {
                 "name": "test_llm_agent.example_tool",
                 "arguments": {"param1": "data"}
             }
-        }
+        })
 
         result = self.agent.tool_registry.invoke_tool_call(tool_call)
         self.assertEqual(result, "Processed data")
@@ -159,10 +160,10 @@ class TestLLMChatAgent(unittest.TestCase):
 
         self.agent.tool_registry.register_tool(example_tool)
 
-        messages = [{"role": "user", "content": "What is the result?"}]
+        messages = MessageHistory(messages=[Message(role="user", content="What is the result?")])
         result = self.agent.execute(messages)
 
-        self.assertIn("Processed data", result[-1]["content"])
+        self.assertIn("Processed data", result[-1].content)
 
     def test_execute_with_multiple_tool_calls(self):
         self.mock_llm_module.execute.side_effect = [
@@ -178,11 +179,11 @@ class TestLLMChatAgent(unittest.TestCase):
 
         self.agent.tool_registry.register_tool(example_tool)
 
-        messages = [{"role": "user", "content": "What is the result?"}]
+        messages = MessageHistory(messages=[Message(role="user", content="What is the result?")])
         result = self.agent.execute(messages)
 
-        self.assertIn("Processed data", result[-2]["content"])
-        self.assertEqual(result[-1]["content"], "Final response.")
+        self.assertIn("Processed data", result[-2].content)
+        self.assertEqual(result[-1].content, "Final response.")
 
     def test_execute_with_tool_call_recursion_depth(self):
         self.mock_llm_module.execute.side_effect = [
@@ -207,12 +208,12 @@ class TestLLMChatAgent(unittest.TestCase):
 
         self.agent.tool_registry.register_tool(example_tool)
 
-        messages = [{"role": "user", "content": "What is the result?"}]
+        messages = MessageHistory(messages=[Message(role="user", content="What is the result?")])
         result = self.agent.execute(messages)
 
         self.assertEqual(len(result), 6)  # System message + user query + 2 tool calls + 2 assistant responses
-        self.assertIn("Processed data", result[2]["content"])
-        self.assertIn("Processed data2", result[4]["content"])
+        self.assertIn("Processed data", result[2].content)
+        self.assertIn("Processed data2", result[4].content)
 
     def test_execute_with_invalid_tool_call(self):
         self.mock_llm_module.execute.return_value = {
@@ -223,10 +224,11 @@ class TestLLMChatAgent(unittest.TestCase):
             ]
         }
 
-        messages = [{"role": "user", "content": "What is the result?"}]
+        messages = MessageHistory(messages=[Message(role="user", content="What is the result?")])
         result = self.agent.execute(messages)
 
-        self.assertIn("Tool invocation failed", result[-1]["content"])
+
+        self.assertIn("Tool 'non_existent_tool' is not registered.", result[-1].content)
 
     def test_execute_without_tool_calls(self):
         self.mock_llm_module.execute.return_value = {
@@ -234,10 +236,111 @@ class TestLLMChatAgent(unittest.TestCase):
             "content": "Here is your answer."
         }
 
-        messages = [{"role": "user", "content": "What is the result?"}]
+        messages = MessageHistory(messages=[Message(role="user", content="What is the result?")])
         result = self.agent.execute(messages)
 
-        self.assertEqual(result[-1]["content"], "Here is your answer.")
+        self.assertEqual(result[-1].content, "Here is your answer.")
+
+
+class TestPersistentLLMChatAgent(unittest.TestCase):
+
+    def setUp(self):
+        AgentRegistry.clear_registry()
+        self.mock_llm_module = MagicMock(spec=LLMChatModule)
+        self.agent = PersistentLLMChatAgent(name="TestAgent", llm_module=self.mock_llm_module, max_tool_call_depth=2)
+
+    def test_execute_with_single_tool_call(self):
+        self.mock_llm_module.execute.return_value = {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+                {"function": {"name": "test_llm_agent.example_tool", "arguments": {"param1": "data"}}}
+            ]
+        }
+
+        self.agent.tool_registry.register_tool(example_tool)
+
+        messages = MessageHistory(messages=[Message(role="user", content="What is the result?")])
+        result = self.agent.execute(messages)
+
+        self.assertIn("Processed data", result[-1].content)
+
+    def test_execute_with_multiple_tool_calls(self):
+        self.mock_llm_module.execute.side_effect = [
+            {
+                "role": "assistant",
+                "content": "",
+                "tool_calls": [
+                    {"function": {"name": "test_llm_agent.example_tool", "arguments": {"param1": "data"}}},
+                    {"function": {"name": "test_llm_agent.example_tool", "arguments": {"param1": "data2"}}}
+                ]
+            },
+            {"role": "assistant", "content": "Final response."}
+        ]
+        self.agent.tool_registry.register_tool(example_tool)
+
+        messages = MessageHistory(messages=[Message(role="user", content="What is the result?")])
+        result = self.agent.execute(messages)
+        self.assertEqual(result[-3].content, "\"Processed data\"")
+        self.assertEqual(result[-2].content, "\"Processed data2\"")
+        self.assertEqual(result[-1].content, "Final response.")
+
+    def test_execute_with_tool_call_recursion_depth(self):
+        self.mock_llm_module.execute.side_effect = [
+            {
+                "role": "assistant",
+                "content": "",
+                "tool_calls": [
+                    {"function": {"name": "test_llm_agent.example_tool", "arguments": {"param1": "data"}}}
+                ]
+            },
+            {
+                "role": "assistant",
+                "content": "",
+                "tool_calls": [
+                    {"function": {"name": "test_llm_agent.example_tool", "arguments": {"param1": "data2"}}}
+                ]
+            },
+            {"role": "assistant", "content": "Final response."}
+        ]
+
+        self.agent.tool_registry.register_tool(example_tool)
+
+        messages = MessageHistory(messages=[Message(role="user", content="What is the result?")])
+        result = self.agent.execute(messages)
+
+        self.assertEqual(len(result), 6)  # System message + user query + 2 tool calls + 2 assistant responses
+        self.assertIn("Processed data", result[2].content)
+        self.assertIn("Processed data2", result[4].content)
+
+    def test_execute_with_state(self):
+
+        self.agent.max_state_size = 10
+
+        self.mock_llm_module.execute.side_effect = [
+            {
+                "role": "assistant",
+                "content": "Second response.",
+            }
+        ]
+
+        self.agent.state = MessageHistory(messages=[
+            Message(role="assistant", content="First response."),
+        ])
+        messages = MessageHistory(messages=[Message(role="user", content="What is the result?")])
+        result = self.agent.execute(messages)
+
+
+        self.assertEqual(result[-2].content, "What is the result?")
+        self.assertEqual(result[-1].content, "Second response.")
+        self.assertEqual(self.agent.state,  MessageHistory(messages = [
+            Message(role="assistant", content="First response."),
+            Message(role="user", content="What is the result?"),
+            Message(role="assistant", content="Second response.")
+        ]))
+
+    
+
 
 
 

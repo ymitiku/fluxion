@@ -177,12 +177,16 @@ class LLMQueryModule(LLMApiModule):
     def post_process(self, response: Union[str, Dict[str, Any]], full_response = False):
         if response is None:
             return {"error": "No response received."}
-        if isinstance(response, str):
+        elif type(response) == str:
+            if response == "":
+                return {"error": "No response received."}
             return {
-                "content": response
+                "content": response,
+                "role": "assistant"
             }
-        return super().post_process(response, full_response)
-    
+        else:
+            return super().post_process(response, full_response)
+        
 
 class LLMChatModule(LLMApiModule):
     """
@@ -220,7 +224,7 @@ class LLMChatModule(LLMApiModule):
         """
         super().__init__(endpoint, model, headers, timeout, response_key, temperature)
 
-    def get_input_params(self, messages: List[str], tools: List[Dict[str, str]] = {}) -> Dict[str, Any]:
+    def get_input_params(self, *args, messages: List[str], tools: List[Dict[str, str]] = {}, **kwargs) -> Dict[str, Any]:
         """
         Get the input parameters for the LLM chat.
 
@@ -230,10 +234,17 @@ class LLMChatModule(LLMApiModule):
         Returns:
             Dict[str, str]: The input parameters for the LLM chat.
         """
-        data = super().get_input_params(messages=messages)
+        data = super().get_input_params(*args, **kwargs)
+        data["messages"] = messages
         data["tools"] = tools or []
         return data
     
-
-
+    def post_process(self, response, full_response = False):
+        if response is None:
+            return {"error": "No response received."}
+        elif type(response) == dict and "error" in response:
+            return response
+        elif type(response) == dict and self.response_key in response:
+            return response[self.response_key]
+        return super().post_process(response, full_response)
 
