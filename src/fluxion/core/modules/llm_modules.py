@@ -183,6 +183,15 @@ class LLMQueryModule(LLMApiModule):
             }
         return super().post_process(response, full_response)
     
+    def get_response(self, data, full_response=False):
+        output =  super().get_response(data, full_response)
+        if (type(output) == dict and "error" in output) or type(output) == str:
+            return output
+        else:
+            return {
+                "error": "Unexpected response format. Expected a string response. Found a dictionary. {}".format(output)
+            }
+    
 
 class LLMChatModule(LLMApiModule):
     """
@@ -235,6 +244,12 @@ class LLMChatModule(LLMApiModule):
         data["tools"] = tools or []
         return data
     
-
+    def get_response(self, data, full_response=False):
+        output =  super().get_response(data, full_response)
+        if not (type(output) == dict):
+            return {
+                "error": "Unexpected response format. Expected a dictionary response. Found a {}".format(type(output))
+            }
+        return output
 
 

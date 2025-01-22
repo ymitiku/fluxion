@@ -311,18 +311,15 @@ class PersistentLLMChatAgent(LLMChatAgent):
         Raises:
             ValueError: If the input messages are not valid.
         """
-
         # Update the agent's state
         self.update_state(messages)
-
+        llm_inputs = self.construct_llm_inputs(self.state)
         # Interact with the LLM
-        response = self.llm_module.execute(**self.construct_llm_inputs(self.state))
+        response = self.llm_module.execute(**llm_inputs)
         response_message = Message.from_llm_format(response)
         messages.append(response_message)
 
         self.update_state(MessageHistory(messages=[response_message]))
-
-        
         
         # Handle tool calls if present
         messages = self._execute_tool_calls(response_message, messages, depth)
@@ -340,4 +337,13 @@ class PersistentLLMChatAgent(LLMChatAgent):
         if self.max_state_size:
             self.state.messages = self.state.messages[-self.max_state_size:]
 
+
+
+# TODO: Improve the error handling
+#   - Currently the errors are not propagated correctly. I think we need much more robust error handling and propagation. 
+#   - Design a better error handling mechanism for the agents and modules.
+#   - Add more detailed error messages and logging.
+#   - At the moment errors are being propagated through both content and errors fields in the messages. This is not ideal. We need 
+#     to have a more consistent error handling mechanism. As a work around I will modify the unit tests to handle this inconsistency. But 
+#     this is not a good long-term solution.
 

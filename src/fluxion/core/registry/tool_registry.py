@@ -10,7 +10,7 @@ import time
 from typing import Dict, Any, Callable, Optional
 from pydantic import ValidationError, BaseModel
 from fluxion.core.registry.agent_registry import AgentRegistry
-from fluxion.models.message_model import ToolCall
+from fluxion.models.message_model import ToolCall, MessageHistory, Message
 
 
 logger = logging.getLogger("ToolRegistry")
@@ -51,7 +51,11 @@ def call_agent(
         raise ValueError(error_message)
 
     if type(messages) == str:
-        messages = json.loads(messages)
+        messages = MessageHistory.parse_raw(messages).messages
+    elif type(messages) == list:
+        messages = MessageHistory(messages = [Message.from_dict(message) for message in messages])
+    else:
+        assert isinstance(messages, MessageHistory), "messages must be a string, a list of dictionaries, or a MessageHistory object. Found: {}".format(type(messages))
 
     # Retry mechanism
     retries = 0
@@ -112,7 +116,7 @@ def extract_function_metadata(func):
         for name, param in signature.parameters.items()
     }
     metadata = {
-        "name": ("{}.{}".format(func.__module__, func.__name__)).replace(".", "_"),
+        "name": "{}.{}".format(func.__module__, func.__name__),
         "description": docstring.short_description or "No description provided.",
         "parameters": {
             "type": "object",
