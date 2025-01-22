@@ -1,4 +1,5 @@
 from fluxon.parser import parse_json_with_recovery
+from fluxion.core.agents.agent import Agent
 from fluxion.core.agents.llm_agent import LLMChatAgent
 from fluxion.core.registry.agent_registry import AgentRegistry
 from fluxion.core.registry.agent_delegation_registry import AgentDelegationRegistry
@@ -72,11 +73,12 @@ class DelegationAgent(LLMChatAgent):
         result = delegation_agent.decide_and_delegate(task_description)
         print("Delegation Result:", json.dumps(result, indent=2))
     """
-    def __init__(self, *args, generic_agent, **kwargs):
+    def __init__(self, *args, generic_agent: Agent= None, **kwargs):
         super().__init__(*args, **kwargs)
         self.system_instructions = self.system_instructions or (
             "You are a delegation agent responsible for assigning tasks to other agents or handling tasks directly when delegation is not possible."
         )
+        assert generic_agent is not None, "A generic agent must be provided."
         self.generic_agent = generic_agent
         self.delegation_registry = AgentDelegationRegistry()
 
