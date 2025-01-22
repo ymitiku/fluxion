@@ -226,7 +226,10 @@ class PlanExecutionAgent(LLMChatAgent):
             logging.info(f"Querying LLM to execute action: {action}")
             response = super().execute(messages = self.construct_planning_prompt(task, step_description, action))
             try:
-                return parse_json_with_recovery(response[-1].content)
+                output = parse_json_with_recovery(response[-1].content)
+                if output == {}:
+                    return {"status": "failed", "result": "Failed to parse the response"}
+                return output
             except Exception as e:
                 return {"status": "failed", "result": f"Failed to parse the response: {str(e)}"}
 

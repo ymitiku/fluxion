@@ -177,21 +177,16 @@ class LLMQueryModule(LLMApiModule):
     def post_process(self, response: Union[str, Dict[str, Any]], full_response = False):
         if response is None:
             return {"error": "No response received."}
-        if isinstance(response, str):
+        elif type(response) == str:
+            if response == "":
+                return {"error": "No response received."}
             return {
-                "content": response
+                "content": response,
+                "role": "assistant"
             }
-        return super().post_process(response, full_response)
-    
-    def get_response(self, data, full_response=False):
-        output =  super().get_response(data, full_response)
-        if (type(output) == dict and "error" in output) or type(output) == str:
-            return output
         else:
-            return {
-                "error": "Unexpected response format. Expected a string response. Found a dictionary. {}".format(output)
-            }
-    
+            return super().post_process(response, full_response)
+        
 
 class LLMChatModule(LLMApiModule):
     """
@@ -244,12 +239,12 @@ class LLMChatModule(LLMApiModule):
         data["tools"] = tools or []
         return data
     
-    def get_response(self, data, full_response=False):
-        output =  super().get_response(data, full_response)
-        if not (type(output) == dict):
-            return {
-                "error": "Unexpected response format. Expected a dictionary response. Found a {}".format(type(output))
-            }
-        return output
-
+    def post_process(self, response, full_response = False):
+        if response is None:
+            return {"error": "No response received."}
+        elif type(response) == dict and "error" in response:
+            return response
+        elif type(response) == dict and self.response_key in response:
+            return response[self.response_key]
+        return super().post_process(response, full_response)
 
