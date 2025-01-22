@@ -20,7 +20,7 @@ constraints = ["Use only CSV data", "Complete within 24 hours"]
 # Execute the planning process
 try:
     # Step 1: Generate the plan
-    final_response = planning_agent.execute(task=task, goals=goals, constraints=constraints)
+    final_response = planning_agent.plan_and_execute(task=task, goals=goals, constraints=constraints)
     # Step 2: Display the plan
     print("Generated Plan:")
     print(final_response["plan"].model_dump_json(indent=2))

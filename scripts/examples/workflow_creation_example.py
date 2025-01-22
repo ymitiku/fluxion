@@ -1,28 +1,36 @@
 from fluxion.workflows.abstract_workflow import AbstractWorkflow
 from fluxion.core.agents.agent import Agent
 from fluxion.workflows.agent_node import AgentNode
+from fluxion.models.message_model import Message, MessageHistory
+import json
 
 
 # Step 1: Define Mock Agents for Demonstration
 class DataPreprocessingAgent(Agent):
-    def execute(self, raw_data):
+    def execute(self, messages: MessageHistory):
         # Simulate preprocessing data
-        processed_data = raw_data.strip().lower()
-        return {"processed_data": processed_data}
+        processed_data = messages[-1].content.strip().lower()
+        return {
+            "messages": MessageHistory(messages=[Message(role="system", content=processed_data)])
+        }
 
 
 class DataAnalysisAgent(Agent):
-    def execute(self, processed_data):
+    def execute(self, messages: MessageHistory):
         # Simulate analyzing processed data
-        analysis_result = {"word_count": len(processed_data.split())}
-        return {"analysis_result": analysis_result}
-
+        analysis_result = {"word_count": len(messages[-1].content.split())}
+        return {
+            "messages": MessageHistory(messages=[Message(role="system", content=json.dumps(analysis_result))])
+        }
 
 class ReportGenerationAgent(Agent):
-    def execute(self, analysis_result):
+    def execute(self, messages: MessageHistory):
         # Simulate generating a report
+        analysis_result = json.loads(messages[-1].content)
         report = f"Report: Word count is {analysis_result['word_count']}."
-        return {"report": report}
+        return {
+            "messages": MessageHistory(messages=[Message(role="system", content=report)])
+        }
 
 
 
@@ -34,17 +42,22 @@ class DataProcessingWorkflow(AbstractWorkflow):
         # Create nodes
         preprocessing_node = AgentNode(
             name="DataPreprocessing",
-            agent=DataPreprocessingAgent("PreprocessingAgent")
+            agent=DataPreprocessingAgent("PreprocessingAgent"),
+            outputs=["messages"]
         )
         analysis_node = AgentNode(
             name="DataAnalysis",
             agent=DataAnalysisAgent("AnalysisAgent"),
-            dependencies=[preprocessing_node]
+            dependencies=[preprocessing_node],
+            inputs={"messages": "DataPreprocessing.messages"},
+            outputs=["messages"]
         )
         report_node = AgentNode(
             name="ReportGeneration",
             agent=ReportGenerationAgent("ReportAgent"),
-            dependencies=[analysis_node]
+            dependencies=[analysis_node],
+            inputs={"messages": "DataAnalysis.messages"},
+            outputs=["messages"]
         )
         
         # Add nodes to the workflow
@@ -59,11 +72,14 @@ class DataProcessingWorkflow(AbstractWorkflow):
 
 if __name__ == "__main__":
     # Inputs for the workflow
-    inputs = {"raw_data": "  Hello World! Welcome to the workflow demo.  "}
+    inputs = {
+        "messages": MessageHistory(messages=[Message(role="user", content="Hello, World!")])
+    }
     
     # Create and execute the workflow
     workflow = DataProcessingWorkflow()
-    results = workflow.execute(inputs)
+    workflow.define_workflow()
+    results = workflow.execute(inputs = inputs)
     
     # Print the results
     for node_name, result in results.items():
