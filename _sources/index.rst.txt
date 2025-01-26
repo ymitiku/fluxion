@@ -37,6 +37,8 @@ Indices and tables
    fluxion.modules
    fluxion.perception.perception
    fluxion.perception
+   fluxion.prebuilt_agents.chatbot
+   fluxion.prebuilt_agents
    fluxion.utils
    fluxion.workflows.abstract_workflow
    fluxion.workflows.agent_node
