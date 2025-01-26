@@ -142,6 +142,7 @@ Use Fluxion to interact with locally hosted LLMs. For example:
 
 ```python
 from fluxion.core.modules.llm_modules import LLMQueryModule, LLMChatModule
+from fluxion.models.message_models import Message, MessageHistory
 
 # Initialize the LLMQueryModule
 llm_query = LLMQueryModule(endpoint="http://localhost:11434/api/generate", model="llama3.2")
@@ -150,7 +151,8 @@ print("Query Response:", response)
 
 # Initialize the LLMChatModule
 llm_chat = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2")
-response = llm_chat.execute(messages=[{"role": "user", "content": "Hello!"}])
+messages = MessageHistory(messages = [Message(role="user", content="Hello!")])
+response = llm_chat.execute(messages=messages)
 print("Chat Response:", response)
 ```
 
@@ -176,7 +178,7 @@ llm_agent = LLMChatAgent(name="WeatherAgent", llm_module=llm_module)
 llm_agent.register_tool(get_weather)
 
 # Execute a conversation
-messages = [{"role": "user", "content": "What's the weather in Paris?"}]
+messages = MessageHistory(messages = [Message(role="user", content="What's the weather in Paris?")])
 response = llm_agent.execute(messages=messages)
 print("Chat with Tool Call Response:", response)
 ```
@@ -227,12 +229,11 @@ llm_agent.register_tool(call_agent)
 def fallback_logic(inputs):
     return {"message": "Unable to complete request. Please try again later."}
 
-inputs = {"agent_name": "mock_agent", "inputs": {"value": 5}}
-
+messages = MessageHistory(messages = [Message(role="user", content="What's capital of Ireland?")])
 try:
     result = call_agent(
         agent_name="mock_agent",
-        inputs=inputs,
+        messages=messages,
         max_retries=3,
         retry_backoff=0.5,
         fallback=fallback_logic,
