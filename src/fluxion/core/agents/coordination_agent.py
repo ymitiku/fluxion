@@ -97,18 +97,6 @@ class CoordinationAgent(LLMChatAgent):
         # User prompt
         system_prompt = (
             "Available Agents:\n" + json.dumps(available_agents, indent=2) + "\n\n"
-            "# Context\n"
-            "- Agents are classes with execute method that accepts messages in the following format:\n"
-            "```json\n"
-            "{\n"
-            "    \"role\": \"<should be one of user|system|assistant|tool>\",\n"
-            "    \"content\": \"message content\"\n"
-            "}\n"
-            "```\n"
-            "A call to an agent looks like this:\n"
-            "```python\n"
-            "result = call_agent(agent_name=agent_name, messages=messages)\n"
-            "```\n"
             "Instructions:\n"
             "1. Review the task description and the list of available agents.\n"
             "2. Select the best agent to perform the task or subtask.\n"
@@ -128,6 +116,8 @@ class CoordinationAgent(LLMChatAgent):
             "- Ensure the agent name is one of the available agents.\n"
             "- Provide a valid response or error message.\n"
             "- Do not include your thought process or additional information.\n"
+            "- Generate only the agent name with the provided format.\n"
+            "- Strictly follow the instructions and format.\n"
 
 
         )

@@ -1,7 +1,6 @@
 from fluxion.core.agents.llm_agent import LLMChatAgent, LLMQueryAgent
 from fluxion.models.message_model import Message, MessageHistory
 from fluxion.core.modules.llm_modules import LLMChatModule, LLMQueryModule
-from ast import literal_eval
 
 def evaluate_math_expression(expression: str) -> str:
     """ Evaluate a mathematical expression.
@@ -9,10 +8,8 @@ def evaluate_math_expression(expression: str) -> str:
     :param expression: The mathematical expression to evaluate.
     :return: The result of the expression.
     """
-    print("Current expression: ", expression)
 
-    output =  str(eval(expression))
-    return output
+    return str(eval(expression))
 
 # MathAgent: Solves math problems
 
@@ -28,7 +25,6 @@ class MathAgent(LLMChatAgent):
                 "Your task is to get the mathematical expression and evaluate it.\n"
                 "You can use the evaluate_math_expression tool to evaluate the expression."
             ),
-            max_tool_call_depth=1
         )
         self.register_tool(evaluate_math_expression)
 
@@ -116,5 +112,10 @@ for task in tasks:
     messages = MessageHistory(messages=[Message(role="user", content=task)])
     response = coordination_agent.coordinate_agents(messages=messages)
     print(f"Task: {task}")
-    print(f"Response: {response[-1].content}\n")
+
+    if type(response) == Message:
+        errors = "Errors: " + ("\n".join([error for error in response.errors])) if response.errors else ""
+        print(f"Response: {response.content}\n {errors}")
+    else:
+        print(f"Response: {response[-1].content}\n")
     print("~" * 50)
