@@ -17,6 +17,14 @@ source activate fluxion-env
 # python scripts/examples/planning_example.py
 
 
+# echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+# echo "Running Workflow creation example"
+# python scripts/examples/workflow_creation_example.py
+
+# echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+# echo "Running chatbot example"
+# python scripts/examples/chatbot_example.py
+
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-echo "Running Workflow creation example"
-python scripts/examples/workflow_creation_example.py
+echo "Running agent coordination example"
+python scripts/examples/agent_coordination_example.py

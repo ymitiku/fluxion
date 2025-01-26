@@ -97,18 +97,6 @@ class CoordinationAgent(LLMChatAgent):
         # User prompt
         system_prompt = (
             "Available Agents:\n" + json.dumps(available_agents, indent=2) + "\n\n"
-            "# Context\n"
-            "- Agents are classes with execute method that accepts messages in the following format:\n"
-            "```json\n"
-            "{\n"
-            "    \"role\": \"user|system|assistant|tool\",\n"
-            "    \"content\": \"message content\"\n"
-            "}\n"
-            "```\n"
-            "A call to an agent looks like this:\n"
-            "```python\n"
-            "result = call_agent(agent_name=agent_name, messages=messages)\n"
-            "```\n"
             "Instructions:\n"
             "1. Review the task description and the list of available agents.\n"
             "2. Select the best agent to perform the task or subtask.\n"
@@ -121,27 +109,24 @@ class CoordinationAgent(LLMChatAgent):
             "```json\n"
             "{\n"
             "    \"agent_name\": \"agent_name\",\n"
-            "    \"arguments\": {\n"
-            "        \"messages\": [\n"
-            "            {\n"
-            "                \"role\": \"user|system|assistant|tool\",\n"
-            "                \"content\": \"message content\"\n"
-            "            }\n"
-            "        ]\n"
-            "    }\n"
             "}\n"
             "```\n"
             "# Constraints\n"
             "- Strictly adhere to the provided format.\n"
             "- Ensure the agent name is one of the available agents.\n"
             "- Provide a valid response or error message.\n"
-            "- Do not include any additional information.\n"
+            "- Do not include your thought process or additional information.\n"
+            "- Generate only the agent name with the provided format.\n"
+            "- Strictly follow the instructions and format.\n"
 
 
         )
+        # Save original messages
+        original_messages = messages.copy()
         # Combine system message and user prompt
         user_prompt_message = Message(role="system", content=system_prompt)
         messages.messages = [user_prompt_message] + messages.messages
+
         
         response = self.execute(messages=messages)
         response.errors = response.errors or []
@@ -161,17 +146,11 @@ class CoordinationAgent(LLMChatAgent):
             if not "agent_name" in response_content:
                 response.errors.append("No agent name found in the response from the LLM.")
                 response.content = ""
-            elif "arguments" not in response_content:
-                response.errors.append("No arguments found in the response from the LLM.")
-                response.content = ""
-            elif not "messages" in response_content["arguments"]:
-                response.errors.append("No messages found in the response from the LLM.")
-                response.content = ""
-      
+          
             if response.errors and len(response.errors) > 0:
                 return response
                         
-            return call_agent(response_content["agent_name"], response_content["arguments"]["messages"])
+            return call_agent(response_content["agent_name"],  messages=original_messages)
 
         except ValueError as ve:
             response.errors.append("ValueError occurred while parsing the response from the LLM.")

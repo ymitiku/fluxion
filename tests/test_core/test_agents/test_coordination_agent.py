@@ -20,7 +20,7 @@ class TestCoordinationAgent(unittest.TestCase):
         # Mock the LLMChatModule
         AgentRegistry.clear_registry()
         self.mock_llm_module = MagicMock(spec=LLMChatModule)
-        self.mock_llm_module.execute.return_value = {"role": "assistant", "content": '{"agent_name": "test_group.TestAgent", "arguments": {"messages": [{"role": "user", "content": "Task: Perform a test action."}]}}'}
+        self.mock_llm_module.execute.return_value = {"role": "assistant", "content": '{"agent_name": "test_group.TestAgent"}'}
        
         test_agent = MockAgent(name="test_group.TestAgent")
 

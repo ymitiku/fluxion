@@ -226,6 +226,6 @@ class ToolRegistry:
                 try:
                     arguments[arg] = expected_type_map[expected_type](arguments[arg])
                 except ValueError:
-                    raise ValueError(f"Argument '{arg}' must be of type {expected_type}.")
+                    raise TypeError(f"Argument '{arg}' must be of type {expected_type}.")
             if expected_type != "unknown" and not isinstance(arguments[arg], eval(expected_type)):
                 raise TypeError(f"Argument '{arg}' must be of type {expected_type}.")
