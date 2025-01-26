@@ -1,7 +1,7 @@
-fluxion.core.contextual\_response module
+fluxion.modules.contextual\_response module
 ========================================
 
-.. automodule:: fluxion.core.contextual_response
+.. automodule:: fluxion.modules.contextual_response
    :members:
    :undoc-members:
    :show-inheritance:

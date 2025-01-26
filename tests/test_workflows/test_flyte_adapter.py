@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 from fluxion.workflows.flyte_adapter import FlyteWorkflowAdapter, flyte_task, flyte_dynamic_workflow
 from fluxion.workflows.abstract_workflow import AbstractWorkflow
 from fluxion.workflows.agent_node import AgentNode
-from fluxion.core.agent import Agent
+from fluxion.core.agents.agent import Agent
 from fluxion.core.registry.agent_registry import AgentRegistry
 
 

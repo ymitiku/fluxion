@@ -1,7 +1,8 @@
 import requests
-from fluxion.modules.llm_modules import LLMChatModule
-from fluxion.core.llm_agent import LLMChatAgent
+from fluxion.core.modules.llm_modules import LLMChatModule
+from fluxion.core.agents.llm_agent import LLMChatAgent
 from fluxion.core.registry.tool_registry import ToolRegistry
+from fluxion.models.message_model import Message, MessageHistory
 
 
 
@@ -41,21 +42,18 @@ if __name__ == "__main__":
     llm_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2", timeout=60)
 
     # Initialize the LLMChatAgent
-    llm_agent = LLMChatAgent(name="llm_chat_agent", llm_module=llm_module, system_instructions="Provide accurate answers.")
+    llm_agent = LLMChatAgent(name="llm_chat_agent", llm_module=llm_module, system_instructions="Provide accurate answers. Note that the tool names have a <module.function> format.")
     
 
     llm_agent.register_tool(get_current_whether)
     # Execute
 
-    messages = [
-        {
-            "role": "user",
-            "content": "What is the weather in Paris?"
-        }
-    ]
-
+    messages = MessageHistory(messages=[
+        Message(role="user", content="What is the weather in Paris?")
+    ])
     result = llm_agent.execute(messages)
-    print(result)
+    print("Query: ", messages[-1].content)
+    print("Response:", result[-1].content)
     """
     [
         {'role': 'system', 'content': 'Provide accurate answers.'}, 

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="fluxion",
-    version="0.3.10",
+    version="1.0.0-beta",
     description="A library for building flow-based agentic workflows.",
     author="Mitiku Yohannes",
     packages=find_packages(where="src"),

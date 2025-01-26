@@ -15,9 +15,18 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   fluxion.core.agent
-   fluxion.core.contextual_response
-   fluxion.core.llm_agent
+   fluxion.core.agents.agent
+   fluxion.core.agents.coordination_agent
+   fluxion.core.agents.llm_agent
+   fluxion.core.agents.planning_agent
+   fluxion.core.agents
+   fluxion.core.modules.api_module
+   fluxion.core.modules.ir_module
+   fluxion.core.modules.llm_modules
+   fluxion.core.modules
+   fluxion.core.registry.agent_registry
+   fluxion.core.registry.tool_registry
+   fluxion.core.registry
 
 Module contents
 ---------------

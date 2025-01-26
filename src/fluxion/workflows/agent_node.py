@@ -20,7 +20,7 @@ The AgentNode class is a fundamental component of the Fluxion framework and enab
 """
 
 from typing import Dict, Any, List
-from fluxion.core.agent import Agent
+from fluxion.core.agents.agent import Agent
 import inspect
 
 

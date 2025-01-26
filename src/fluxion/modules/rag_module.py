@@ -3,8 +3,9 @@ fluxion.modules.rag_module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Provides an interface for interacting with a RAG module for retrieval-augmented generation.
 
-Example:
-    ```python
+
+rag_module:
+example-usage::
     from fluxion.modules.ir_module import IndexingModule, RetrievalModule
     from fluxion.modules.llm_modules import LLMChatModule
     from fluxion.modules.rag_module import RagModule
@@ -37,13 +38,12 @@ Example:
     response = rag_module.execute(query=query, top_k=2)
     print("Rag Response:", response)
 
-    ```
 
 """
 
 
-from fluxion.modules.ir_module import EmbeddingApiModule, RetrievalModule
-from fluxion.modules.llm_modules import LLMChatModule   
+from fluxion.core.modules.ir_module import EmbeddingApiModule, RetrievalModule
+from fluxion.core.modules.llm_modules import LLMChatModule   
 
 class RagModule(EmbeddingApiModule):
     """

@@ -1,4 +1,4 @@
-from fluxion.modules.llm_modules import LLMQueryModule, LLMChatModule
+from fluxion.core.modules.llm_modules import LLMQueryModule, LLMChatModule
 
 
 if __name__ == "__main__":
@@ -6,7 +6,7 @@ if __name__ == "__main__":
     response = llm_module.execute(prompt="What is the capital of France?")
     print("Query: What is the capital of France?")
     print("Response:", response)
-    llm_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2")
+    llm_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2", timeout=120)
     response = llm_module.execute(messages=[
         {
             "role": "user",

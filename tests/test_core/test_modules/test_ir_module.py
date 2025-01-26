@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 from unittest.mock import Mock
 import faiss
-from fluxion.modules.ir_module import IndexingModule, RetrievalModule
+from fluxion.core.modules.ir_module import IndexingModule, RetrievalModule
 
 class TestIndexingModule(unittest.TestCase):
     def test_indexing(self):
