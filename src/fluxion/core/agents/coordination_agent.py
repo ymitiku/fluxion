@@ -101,7 +101,7 @@ class CoordinationAgent(LLMChatAgent):
             "- Agents are classes with execute method that accepts messages in the following format:\n"
             "```json\n"
             "{\n"
-            "    \"role\": \"user|system|assistant|tool\",\n"
+            "    \"role\": \"<should be one of user|system|assistant|tool>\",\n"
             "    \"content\": \"message content\"\n"
             "}\n"
             "```\n"
@@ -121,27 +121,22 @@ class CoordinationAgent(LLMChatAgent):
             "```json\n"
             "{\n"
             "    \"agent_name\": \"agent_name\",\n"
-            "    \"arguments\": {\n"
-            "        \"messages\": [\n"
-            "            {\n"
-            "                \"role\": \"user|system|assistant|tool\",\n"
-            "                \"content\": \"message content\"\n"
-            "            }\n"
-            "        ]\n"
-            "    }\n"
             "}\n"
             "```\n"
             "# Constraints\n"
             "- Strictly adhere to the provided format.\n"
             "- Ensure the agent name is one of the available agents.\n"
             "- Provide a valid response or error message.\n"
-            "- Do not include any additional information.\n"
+            "- Do not include your thought process or additional information.\n"
 
 
         )
+        # Save original messages
+        original_messages = messages.copy()
         # Combine system message and user prompt
         user_prompt_message = Message(role="system", content=system_prompt)
         messages.messages = [user_prompt_message] + messages.messages
+
         
         response = self.execute(messages=messages)
         response.errors = response.errors or []
@@ -161,17 +156,11 @@ class CoordinationAgent(LLMChatAgent):
             if not "agent_name" in response_content:
                 response.errors.append("No agent name found in the response from the LLM.")
                 response.content = ""
-            elif "arguments" not in response_content:
-                response.errors.append("No arguments found in the response from the LLM.")
-                response.content = ""
-            elif not "messages" in response_content["arguments"]:
-                response.errors.append("No messages found in the response from the LLM.")
-                response.content = ""
-      
+          
             if response.errors and len(response.errors) > 0:
                 return response
                         
-            return call_agent(response_content["agent_name"], response_content["arguments"]["messages"])
+            return call_agent(response_content["agent_name"],  messages=original_messages)
 
         except ValueError as ve:
             response.errors.append("ValueError occurred while parsing the response from the LLM.")
