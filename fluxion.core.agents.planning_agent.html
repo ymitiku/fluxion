@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>fluxion.modules.ir_module module &mdash; Fluxion 0.0.1 documentation</title>
+  <title>fluxion.core.agents.planning_agent module &mdash; Fluxion 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
@@ -19,8 +19,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="fluxion.modules.llm_modules module" href="fluxion.modules.llm_modules.html" />
-    <link rel="prev" title="fluxion.modules.api_module module" href="fluxion.modules.api_module.html" /> 
+    <link rel="next" title="fluxion.core.agents package" href="fluxion.core.agents.html" />
+    <link rel="prev" title="fluxion.core.agents.llm_agent module" href="fluxion.core.agents.llm_agent.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,21 +44,29 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.registry.agent_registry.html">fluxion.core.registry.agent_registry module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.registry.tool_registry.html">fluxion.core.registry.tool_registry module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fluxion.core.registry.html">fluxion.core.registry package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.agents.agent.html">fluxion.core.agents.agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.agents.coordination_agent.html">fluxion.core.agents.coordination_agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.agents.llm_agent.html">fluxion.core.agents.llm_agent module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">fluxion.core.agents.planning_agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.agents.html">fluxion.core.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.modules.api_module.html">fluxion.core.modules.api_module module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.modules.ir_module.html">fluxion.core.modules.ir_module module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.modules.llm_modules.html">fluxion.core.modules.llm_modules module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.modules.html">fluxion.core.modules package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fluxion.core.html">fluxion.core package</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="fluxion.modules.html">fluxion.modules package</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="fluxion.modules.html#submodules">Submodules</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="fluxion.modules.api_module.html">fluxion.modules.api_module module</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">fluxion.modules.ir_module module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="fluxion.modules.llm_modules.html">fluxion.modules.llm_modules module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="fluxion.modules.rag_module.html">fluxion.modules.rag_module module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="fluxion.modules.html#module-fluxion.modules">Module contents</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.modules.rag_module.html">fluxion.modules.rag_module module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.modules.contextual_response.html">fluxion.modules.contextual_response module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.modules.html">fluxion.modules package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.perception.perception.html">fluxion.perception.perception module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fluxion.perception.html">fluxion.perception package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fluxion.utils.html">fluxion.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.workflows.abstract_workflow.html">fluxion.workflows.abstract_workflow module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.workflows.agent_node.html">fluxion.workflows.agent_node module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.workflows.flyte_adapter.html">fluxion.workflows.flyte_adapter module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.workflows.workflow_progress_tracker.html">fluxion.workflows.workflow_progress_tracker module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fluxion.workflows.html">fluxion.workflows package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fluxion.html">fluxion package</a></li>
 </ul>
@@ -81,10 +89,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="fluxion.modules.html">fluxion.modules package</a></li>
-      <li class="breadcrumb-item active">fluxion.modules.ir_module module</li>
+      <li class="breadcrumb-item active">fluxion.core.agents.planning_agent module</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/fluxion.modules.ir_module.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/fluxion.core.agents.planning_agent.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -92,16 +99,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="fluxion-modules-ir-module-module">
-<h1>fluxion.modules.ir_module module<a class="headerlink" href="#fluxion-modules-ir-module-module" title="Link to this heading"></a></h1>
+  <section id="fluxion-core-agents-planning-agent-module">
+<h1>fluxion.core.agents.planning_agent module<a class="headerlink" href="#fluxion-core-agents-planning-agent-module" title="Link to this heading"></a></h1>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="fluxion.modules.api_module.html" class="btn btn-neutral float-left" title="fluxion.modules.api_module module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="fluxion.modules.llm_modules.html" class="btn btn-neutral float-right" title="fluxion.modules.llm_modules module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="fluxion.core.agents.llm_agent.html" class="btn btn-neutral float-left" title="fluxion.core.agents.llm_agent module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="fluxion.core.agents.html" class="btn btn-neutral float-right" title="fluxion.core.agents package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

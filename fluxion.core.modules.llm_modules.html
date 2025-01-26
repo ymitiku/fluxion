@@ -1,0 +1,366 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>fluxion.core.modules.llm_modules module &mdash; Fluxion 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="fluxion.core.modules package" href="fluxion.core.modules.html" />
+    <link rel="prev" title="fluxion.core.modules.ir_module module" href="fluxion.core.modules.ir_module.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Fluxion
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.registry.agent_registry.html">fluxion.core.registry.agent_registry module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.registry.tool_registry.html">fluxion.core.registry.tool_registry module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.registry.html">fluxion.core.registry package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.agents.agent.html">fluxion.core.agents.agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.agents.coordination_agent.html">fluxion.core.agents.coordination_agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.agents.llm_agent.html">fluxion.core.agents.llm_agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.agents.planning_agent.html">fluxion.core.agents.planning_agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.agents.html">fluxion.core.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.modules.api_module.html">fluxion.core.modules.api_module module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.modules.ir_module.html">fluxion.core.modules.ir_module module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">fluxion.core.modules.llm_modules module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#fluxion.core.modules.llm_modules.LLMApiModule"><code class="docutils literal notranslate"><span class="pre">LLMApiModule</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fluxion.core.modules.llm_modules.LLMApiModule.execute"><code class="docutils literal notranslate"><span class="pre">LLMApiModule.execute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fluxion.core.modules.llm_modules.LLMApiModule.get_input_params"><code class="docutils literal notranslate"><span class="pre">LLMApiModule.get_input_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fluxion.core.modules.llm_modules.LLMApiModule.get_response"><code class="docutils literal notranslate"><span class="pre">LLMApiModule.get_response()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fluxion.core.modules.llm_modules.LLMApiModule.post_process"><code class="docutils literal notranslate"><span class="pre">LLMApiModule.post_process()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#fluxion.core.modules.llm_modules.LLMChatModule"><code class="docutils literal notranslate"><span class="pre">LLMChatModule</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fluxion.core.modules.llm_modules.LLMChatModule.get_input_params"><code class="docutils literal notranslate"><span class="pre">LLMChatModule.get_input_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fluxion.core.modules.llm_modules.LLMChatModule.post_process"><code class="docutils literal notranslate"><span class="pre">LLMChatModule.post_process()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#fluxion.core.modules.llm_modules.LLMQueryModule"><code class="docutils literal notranslate"><span class="pre">LLMQueryModule</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fluxion.core.modules.llm_modules.LLMQueryModule.get_input_params"><code class="docutils literal notranslate"><span class="pre">LLMQueryModule.get_input_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fluxion.core.modules.llm_modules.LLMQueryModule.post_process"><code class="docutils literal notranslate"><span class="pre">LLMQueryModule.post_process()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.modules.html">fluxion.core.modules package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.html">fluxion.core package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.modules.rag_module.html">fluxion.modules.rag_module module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.modules.contextual_response.html">fluxion.modules.contextual_response module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.modules.html">fluxion.modules package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.perception.perception.html">fluxion.perception.perception module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.perception.html">fluxion.perception package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.utils.html">fluxion.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.workflows.abstract_workflow.html">fluxion.workflows.abstract_workflow module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.workflows.agent_node.html">fluxion.workflows.agent_node module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.workflows.flyte_adapter.html">fluxion.workflows.flyte_adapter module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.workflows.workflow_progress_tracker.html">fluxion.workflows.workflow_progress_tracker module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.workflows.html">fluxion.workflows package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.html">fluxion package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Getting Started:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Fluxion</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">fluxion.core.modules.llm_modules module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/fluxion.core.modules.llm_modules.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-fluxion.core.modules.llm_modules">
+<span id="fluxion-core-modules-llm-modules-module"></span><h1>fluxion.core.modules.llm_modules module<a class="headerlink" href="#module-fluxion.core.modules.llm_modules" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="fluxion.core.modules.llm_modules.LLMApiModule">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fluxion.core.modules.llm_modules.</span></span><span class="sig-name descname"><span class="pre">LLMApiModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">endpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'response'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fluxion/core/modules/llm_modules.html#LLMApiModule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion.core.modules.llm_modules.LLMApiModule" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="fluxion.core.modules.api_module.html#fluxion.core.modules.api_module.ApiModule" title="fluxion.core.modules.api_module.ApiModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">ApiModule</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Provides an interface for interacting with a locally hosted LLM via REST API.</p>
+<p>This class abstracts common patterns for interacting with an LLM via REST API.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fluxion.core.modules.llm_modules.LLMApiModule.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/fluxion/core/modules/llm_modules.html#LLMApiModule.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion.core.modules.llm_modules.LLMApiModule.execute" title="Link to this definition"></a></dt>
+<dd><p>Execute the LLM module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Variable length argument list.</p></li>
+<li><p><strong>**kwargs</strong> – Arbitrary keyword arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response from the LLM.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fluxion.core.modules.llm_modules.LLMApiModule.get_input_params">
+<span class="sig-name descname"><span class="pre">get_input_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/fluxion/core/modules/llm_modules.html#LLMApiModule.get_input_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion.core.modules.llm_modules.LLMApiModule.get_input_params" title="Link to this definition"></a></dt>
+<dd><p>Get the input parameters for the LLM module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Variable length argument list.</p></li>
+<li><p><strong>**kwargs</strong> – Arbitrary keyword arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The input parameters for the LLM module.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fluxion.core.modules.llm_modules.LLMApiModule.get_response">
+<span class="sig-name descname"><span class="pre">get_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/fluxion/core/modules/llm_modules.html#LLMApiModule.get_response"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion.core.modules.llm_modules.LLMApiModule.get_response" title="Link to this definition"></a></dt>
+<dd><p>Send a POST request to the API endpoint and return the response.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – The data to send in the POST request.</p></li>
+<li><p><strong>full_response</strong> (<em>bool</em>) – Whether to return the full response or a processed subset.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The parsed JSON response from the API.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fluxion.core.modules.llm_modules.LLMApiModule.post_process">
+<span class="sig-name descname"><span class="pre">post_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_response</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fluxion/core/modules/llm_modules.html#LLMApiModule.post_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion.core.modules.llm_modules.LLMApiModule.post_process" title="Link to this definition"></a></dt>
+<dd><p>Post-process the API response.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>response</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – The raw response from the API.</p></li>
+<li><p><strong>full_response</strong> (<em>bool</em>) – Whether to return the full response or a processed subset.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The processed response data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fluxion.core.modules.llm_modules.LLMChatModule">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fluxion.core.modules.llm_modules.</span></span><span class="sig-name descname"><span class="pre">LLMChatModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'message'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fluxion/core/modules/llm_modules.html#LLMChatModule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion.core.modules.llm_modules.LLMChatModule" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#fluxion.core.modules.llm_modules.LLMApiModule" title="fluxion.core.modules.llm_modules.LLMApiModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">LLMApiModule</span></code></a></p>
+<p>A class to handle chatting with an LLM via REST API.</p>
+<p>LLMChatModule:
+example-usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">fluxion.modules.llm_query_module</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMChatModule</span>
+
+<span class="c1"># Initialize the LLMChatModule</span>
+<span class="n">llm_module</span> <span class="o">=</span> <span class="n">LLMChatModule</span><span class="p">(</span><span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;http://localhost:11434/api/chat&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;llama3.2&quot;</span><span class="p">)</span>
+
+<span class="c1"># Chat with the LLM</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">llm_module</span><span class="o">.</span><span class="n">chat</span><span class="p">(</span><span class="n">messages</span><span class="o">=</span> <span class="p">[{</span>
+    <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello!&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+    <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello, how can I help you?&quot;</span>
+    <span class="p">}]</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="fluxion.core.modules.llm_modules.LLMChatModule.get_input_params">
+<span class="sig-name descname"><span class="pre">get_input_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">messages</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tools</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/fluxion/core/modules/llm_modules.html#LLMChatModule.get_input_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion.core.modules.llm_modules.LLMChatModule.get_input_params" title="Link to this definition"></a></dt>
+<dd><p>Get the input parameters for the LLM chat.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>messages</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – The messages to chat with the LLM.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The input parameters for the LLM chat.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fluxion.core.modules.llm_modules.LLMChatModule.post_process">
+<span class="sig-name descname"><span class="pre">post_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fluxion/core/modules/llm_modules.html#LLMChatModule.post_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion.core.modules.llm_modules.LLMChatModule.post_process" title="Link to this definition"></a></dt>
+<dd><p>Post-process the API response.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>response</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – The raw response from the API.</p></li>
+<li><p><strong>full_response</strong> (<em>bool</em>) – Whether to return the full response or a processed subset.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The processed response data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fluxion.core.modules.llm_modules.LLMQueryModule">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fluxion.core.modules.llm_modules.</span></span><span class="sig-name descname"><span class="pre">LLMQueryModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">endpoint</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'response'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fluxion/core/modules/llm_modules.html#LLMQueryModule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion.core.modules.llm_modules.LLMQueryModule" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#fluxion.core.modules.llm_modules.LLMApiModule" title="fluxion.core.modules.llm_modules.LLMApiModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">LLMApiModule</span></code></a></p>
+<p>A class to handle querying an LLM via REST API.</p>
+<p>This class abstracts common patterns for querying an LLM via REST API.</p>
+<p>LLMQueryModule:
+example-usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">fluxion.modules.llm_query_module</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMQueryModule</span>
+
+<span class="c1"># Initialize the LLMQueryModule</span>
+<span class="n">llm_module</span> <span class="o">=</span> <span class="n">LLMQueryModule</span><span class="p">(</span><span class="n">endpoint</span><span class="o">=</span><span class="s2">&quot;http://localhost:11434/api/generate&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;llama3.2&quot;</span><span class="p">)</span>
+
+<span class="c1"># Query the LLM</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">llm_module</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="s2">&quot;What is the capital of France?&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="fluxion.core.modules.llm_modules.LLMQueryModule.get_input_params">
+<span class="sig-name descname"><span class="pre">get_input_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/fluxion/core/modules/llm_modules.html#LLMQueryModule.get_input_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion.core.modules.llm_modules.LLMQueryModule.get_input_params" title="Link to this definition"></a></dt>
+<dd><p>Get the input parameters for the LLM query.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>prompt</strong> (<em>str</em>) – The prompt for the LLM.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The input parameters for the LLM query.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fluxion.core.modules.llm_modules.LLMQueryModule.post_process">
+<span class="sig-name descname"><span class="pre">post_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fluxion/core/modules/llm_modules.html#LLMQueryModule.post_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion.core.modules.llm_modules.LLMQueryModule.post_process" title="Link to this definition"></a></dt>
+<dd><p>Post-process the API response.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>response</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – The raw response from the API.</p></li>
+<li><p><strong>full_response</strong> (<em>bool</em>) – Whether to return the full response or a processed subset.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The processed response data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="fluxion.core.modules.ir_module.html" class="btn btn-neutral float-left" title="fluxion.core.modules.ir_module module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="fluxion.core.modules.html" class="btn btn-neutral float-right" title="fluxion.core.modules package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Mitiku Yohannes.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

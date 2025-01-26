@@ -19,8 +19,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="fluxion.utils package" href="fluxion.utils.html" />
-    <link rel="prev" title="fluxion.perception package" href="fluxion.perception.html" /> 
+    <link rel="next" title="fluxion.perception package" href="fluxion.perception.html" />
+    <link rel="prev" title="fluxion.modules package" href="fluxion.modules.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,23 +44,41 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.registry.agent_registry.html">fluxion.core.registry.agent_registry module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.registry.tool_registry.html">fluxion.core.registry.tool_registry module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fluxion.core.registry.html">fluxion.core.registry package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.agents.agent.html">fluxion.core.agents.agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.agents.coordination_agent.html">fluxion.core.agents.coordination_agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.agents.llm_agent.html">fluxion.core.agents.llm_agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.agents.planning_agent.html">fluxion.core.agents.planning_agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.agents.html">fluxion.core.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.modules.api_module.html">fluxion.core.modules.api_module module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.modules.ir_module.html">fluxion.core.modules.ir_module module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.modules.llm_modules.html">fluxion.core.modules.llm_modules module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.core.modules.html">fluxion.core.modules package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fluxion.core.html">fluxion.core package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.modules.rag_module.html">fluxion.modules.rag_module module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.modules.contextual_response.html">fluxion.modules.contextual_response module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fluxion.modules.html">fluxion.modules package</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="fluxion.perception.html">fluxion.perception package</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="fluxion.perception.html#submodules">Submodules</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">fluxion.perception.perception module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#fluxion-perception-perception">fluxion.perception.perception</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fluxion.perception.perception.Perception"><code class="docutils literal notranslate"><span class="pre">Perception</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#fluxion.perception.perception.RawPerception"><code class="docutils literal notranslate"><span class="pre">RawPerception</span></code></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">fluxion.perception.perception module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#fluxion-perception-perception">fluxion.perception.perception</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fluxion.perception.perception.Perception"><code class="docutils literal notranslate"><span class="pre">Perception</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fluxion.perception.perception.Perception.perceive"><code class="docutils literal notranslate"><span class="pre">Perception.perceive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fluxion.perception.perception.Perception.process_data"><code class="docutils literal notranslate"><span class="pre">Perception.process_data()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#fluxion.perception.perception.RawPerception"><code class="docutils literal notranslate"><span class="pre">RawPerception</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fluxion.perception.perception.RawPerception.process_data"><code class="docutils literal notranslate"><span class="pre">RawPerception.process_data()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="fluxion.perception.html#module-fluxion.perception">Module contents</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.perception.html">fluxion.perception package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fluxion.utils.html">fluxion.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.workflows.abstract_workflow.html">fluxion.workflows.abstract_workflow module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.workflows.agent_node.html">fluxion.workflows.agent_node module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.workflows.flyte_adapter.html">fluxion.workflows.flyte_adapter module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion.workflows.workflow_progress_tracker.html">fluxion.workflows.workflow_progress_tracker module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fluxion.workflows.html">fluxion.workflows package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fluxion.html">fluxion package</a></li>
 </ul>
@@ -83,7 +101,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="fluxion.perception.html">fluxion.perception package</a></li>
       <li class="breadcrumb-item active">fluxion.perception.perception module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/fluxion.perception.perception.rst.txt" rel="nofollow"> View page source</a>
@@ -170,8 +187,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="fluxion.perception.html" class="btn btn-neutral float-left" title="fluxion.perception package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="fluxion.utils.html" class="btn btn-neutral float-right" title="fluxion.utils package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="fluxion.modules.html" class="btn btn-neutral float-left" title="fluxion.modules package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="fluxion.perception.html" class="btn btn-neutral float-right" title="fluxion.perception package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -1,7 +1,7 @@
-fluxion.core.llm\_agent module
+fluxion.core.agents.llm\_agent module
 ==============================
 
-.. automodule:: fluxion.core.llm_agent
+.. automodule:: fluxion.core.agents.llm_agent
    :members:
    :undoc-members:
    :show-inheritance:

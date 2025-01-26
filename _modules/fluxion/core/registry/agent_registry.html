@@ -41,11 +41,29 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.core.registry.agent_registry.html">fluxion.core.registry.agent_registry module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.core.registry.tool_registry.html">fluxion.core.registry.tool_registry module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.core.registry.html">fluxion.core.registry package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.core.agents.agent.html">fluxion.core.agents.agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.core.agents.coordination_agent.html">fluxion.core.agents.coordination_agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.core.agents.llm_agent.html">fluxion.core.agents.llm_agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.core.agents.planning_agent.html">fluxion.core.agents.planning_agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.core.agents.html">fluxion.core.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.core.modules.api_module.html">fluxion.core.modules.api_module module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.core.modules.ir_module.html">fluxion.core.modules.ir_module module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.core.modules.llm_modules.html">fluxion.core.modules.llm_modules module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.core.modules.html">fluxion.core.modules package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.core.html">fluxion.core package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.modules.rag_module.html">fluxion.modules.rag_module module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.modules.contextual_response.html">fluxion.modules.contextual_response module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.modules.html">fluxion.modules package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.perception.perception.html">fluxion.perception.perception module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.perception.html">fluxion.perception package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.utils.html">fluxion.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.workflows.abstract_workflow.html">fluxion.workflows.abstract_workflow module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.workflows.agent_node.html">fluxion.workflows.agent_node module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.workflows.flyte_adapter.html">fluxion.workflows.flyte_adapter module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.workflows.workflow_progress_tracker.html">fluxion.workflows.workflow_progress_tracker module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.workflows.html">fluxion.workflows package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../fluxion.html">fluxion package</a></li>
 </ul>
@@ -79,23 +97,48 @@
            <div itemprop="articleBody">
              
   <h1>Source code for fluxion.core.registry.agent_registry</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <div class="viewcode-block" id="AgentRegistry">
 <a class="viewcode-back" href="../../../../fluxion.core.registry.agent_registry.html#fluxion.core.registry.agent_registry.AgentRegistry">[docs]</a>
-<span></span><span class="k">class</span><span class="w"> </span><span class="nc">AgentRegistry</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AgentRegistry</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A centralized registry to ensure unique agent names.</span>
+<span class="sd">    A centralized registry for managing agents with modular names.</span>
+
+<span class="sd">    AgentRegistry:</span>
+<span class="sd">    example-usage::</span>
+<span class="sd">        from fluxion.core.registry.agent_registry import AgentRegistry</span>
+<span class="sd">        from fluxion.core.agents.agent import Agent</span>
+
+<span class="sd">        class MyAgent(Agent):</span>
+<span class="sd">            def __init__(self, name: str, description: str):</span>
+<span class="sd">                super().__init__(name, description=description)</span>
+
+<span class="sd">        agent = MyAgent(name=&quot;MyAgent&quot;, description=&quot;My first agent&quot;)</span>
+<span class="sd">        AgentRegistry.register_agent(&quot;my_module.MyAgent&quot;, agent)</span>
+
+<span class="sd">        # Retrieve the agent</span>
+<span class="sd">        agent = AgentRegistry.get_agent(&quot;my_module.MyAgent&quot;)</span>
+<span class="sd">        print(agent)</span>
+
+<span class="sd">        # List all registered agents</span>
+<span class="sd">        agents = AgentRegistry.list_agents()</span>
+<span class="sd">        print(agents)</span>
+
+<span class="sd">        # Clear the agent registry</span>
+<span class="sd">        AgentRegistry.clear_registry()</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_registry</span> <span class="o">=</span> <span class="p">{}</span>
 
 <div class="viewcode-block" id="AgentRegistry.register_agent">
 <a class="viewcode-back" href="../../../../fluxion.core.registry.agent_registry.html#fluxion.core.registry.agent_registry.AgentRegistry.register_agent">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">register_agent</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent_instance</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">register_agent</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">agent_instance</span><span class="p">:</span> <span class="s2">&quot;Agent&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Register an agent in the registry.</span>
+<span class="sd">        Register an agent with a modular name.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            name (str): The name of the agent.</span>
+<span class="sd">            name (str): The modular name of the agent (e.g., &quot;ml_agent.feature_extraction.ImageFeatureExtraction&quot;).</span>
 <span class="sd">            agent_instance (Agent): The agent instance.</span>
 
 <span class="sd">        Raises:</span>
@@ -111,10 +154,10 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">unregister_agent</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Unregister an agent from the registry.</span>
+<span class="sd">        Unregister an agent by its modular name.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            name (str): The name of the agent.</span>
+<span class="sd">            name (str): The modular name of the agent.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="p">:</span>
             <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
@@ -123,12 +166,12 @@
 <div class="viewcode-block" id="AgentRegistry.get_agent">
 <a class="viewcode-back" href="../../../../fluxion.core.registry.agent_registry.html#fluxion.core.registry.agent_registry.AgentRegistry.get_agent">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_agent</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_agent</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Agent&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Retrieve an agent by its name.</span>
+<span class="sd">        Retrieve an agent by its modular name.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            name (str): The name of the agent.</span>
+<span class="sd">            name (str): The modular name of the agent.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Agent: The agent instance, or None if not found.</span>
@@ -139,16 +182,22 @@
 <div class="viewcode-block" id="AgentRegistry.list_agents">
 <a class="viewcode-back" href="../../../../fluxion.core.registry.agent_registry.html#fluxion.core.registry.agent_registry.AgentRegistry.list_agents">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">list_agents</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">list_agents</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">group</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        List all registered agents.</span>
+<span class="sd">        List all registered agents, optionally filtered by a group prefix.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            group (str, optional): A group prefix to filter agents (e.g., &quot;ml_agent.feature_extraction&quot;).</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            List[str]: A list of all agent names.</span>
+<span class="sd">            List[str]: A list of agent names matching the group prefix.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">group</span><span class="p">:</span>
+            <span class="n">prefix</span> <span class="o">=</span> <span class="n">group</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span> <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">)]</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
 
-    
+
 <div class="viewcode-block" id="AgentRegistry.clear_registry">
 <a class="viewcode-back" href="../../../../fluxion.core.registry.agent_registry.html#fluxion.core.registry.agent_registry.AgentRegistry.clear_registry">[docs]</a>
     <span class="nd">@classmethod</span>
@@ -157,7 +206,54 @@
 <span class="sd">        Clear the agent registry.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="AgentRegistry.group_tree">
+<a class="viewcode-back" href="../../../../fluxion.core.registry.agent_registry.html#fluxion.core.registry.agent_registry.AgentRegistry.group_tree">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">group_tree</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate a hierarchical representation of registered agents based on their modular names.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A nested dictionary representing the hierarchy of agents.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="p">:</span>
+            <span class="n">parts</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+            <span class="n">current</span> <span class="o">=</span> <span class="n">tree</span>
+            <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">:</span>
+                <span class="n">current</span> <span class="o">=</span> <span class="n">current</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">return</span> <span class="n">tree</span></div>
+
+  
+    
+<div class="viewcode-block" id="AgentRegistry.get_agent_metadata">
+<a class="viewcode-back" href="../../../../fluxion.core.registry.agent_registry.html#fluxion.core.registry.agent_registry.AgentRegistry.get_agent_metadata">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_agent_metadata</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">group</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">sort</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve metadata for all registered agents.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            group (str, optional): The group prefix to filter agents. If None, retrieves all agents.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, Any]: A dictionary containing metadata for all agents.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">agent_metadata</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">agent_name</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">list_agents</span><span class="p">(</span><span class="n">group</span><span class="p">):</span>
+            <span class="n">agent</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">agent_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">agent</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="s2">&quot;metadata&quot;</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">agent_metadata</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">metadata</span><span class="p">())</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to get metadata for agent &#39;</span><span class="si">{</span><span class="n">agent_name</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sort</span><span class="p">:</span>
+            <span class="n">agent_metadata</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">agent_metadata</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">agent_metadata</span></div>
 </div>
+
 
 </pre></div>
 
