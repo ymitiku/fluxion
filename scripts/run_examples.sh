@@ -25,6 +25,10 @@ source activate fluxion-env
 # echo "Running chatbot example"
 # python scripts/examples/chatbot_example.py
 
-echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-echo "Running agent coordination example"
-python scripts/examples/agent_coordination_example.py
+# echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+# echo "Running agent coordination example"
+# python scripts/examples/agent_coordination_example.py
+
+# echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+# echo "Running delegation agent example"
+python scripts/examples/delegation_agent_example.py

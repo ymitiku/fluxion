@@ -121,7 +121,7 @@ class DelegationAgent(LLMChatAgent):
             {
                 "task_description": metadata["task_description"],
                 "agent_name": agent_name,
-                "agent_metadata": metadata["agent_metadata"]
+                "agent_description": metadata["agent_metadata"]["description"],
             }
             for agent_name, metadata in self.delegation_registry.list_delegations()
         ]
@@ -142,8 +142,10 @@ class DelegationAgent(LLMChatAgent):
             "{\n"
             "    \"agent_name\": \"generic_agent\"\n"
             "}"
-            "Strictly adhere to the structure for successful delegation."
-            "Do not include any additional information in your response."
+            "- Strictly adhere to the structure for successful delegation.\n"
+            "- Do not include any additional information in your response.\n"
+            "- Do not assign the task to an agent if the task is not delegated to the agent.\n"
+            "- If the task is not delegated to an agent, the generic agent will handle the task."
 
         )
         initial_messages = messages
