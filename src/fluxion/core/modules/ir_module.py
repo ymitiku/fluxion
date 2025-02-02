@@ -278,13 +278,12 @@ class RetrievalModule(EmbeddingApiModule):
         response = retrieval_module.execute(query="What is the capital of France?", top_k=1)
         print(response)
     """
-    def __init__(self, index: faiss.IndexFlatIP, documents: List[str], endpoint: str, model: str = None, headers: dict = {}, timeout: int = 10, embedding_size: int = 768, batch_size: int = 4):
+    def __init__(self, indexing_module: IndexingModule, endpoint: str, model: str = None, headers: dict = {}, timeout: int = 10, embedding_size: int = 768, batch_size: int = 4):
         """
         Initialize the RetrievalModule.
 
         Args:
-            index (faiss.IndexFlatIP): The FAISS index to use for retrieval.
-            documents (List[str]): The list of documents corresponding to the index.
+            indexing_module (IndexingModule): The indexing module containing the FAISS index.
             endpoint (str): The API endpoint URL.
             model (str, optional): The embedding model name.
             headers (dict, optional): Headers to include in API requests. Defaults to an empty dictionary.
@@ -293,8 +292,7 @@ class RetrievalModule(EmbeddingApiModule):
             batch_size (int, optional): Batch size for encoding queries. Defaults to 4.
         """
         super().__init__(endpoint, model, headers, timeout, embedding_size=embedding_size, batch_size=batch_size, documents_key="query")
-        self.index = index
-        self.documents = documents
+        self.indexing_module = indexing_module
         self.logger = logging.getLogger(__name__)
 
 
@@ -328,9 +326,9 @@ class RetrievalModule(EmbeddingApiModule):
             List[str]: The retrieved documents.
         """
         query_embedding = super().execute(query=query)
-        distances, indices = self.index.search(query_embedding, top_k)
+        distances, indices = self.indexing_module.index.search(query_embedding, top_k)
                 
-        return [self.documents[i] for i in indices[0] if i < len(self.documents)]
+        return [self.indexing_module.documents[i] for i in indices[0] if i < len(self.indexing_module.documents)]
     def execute(self, *args, **kwargs) -> List[str]:
         """
         Execute the retrieval process.
