@@ -89,10 +89,13 @@ Fluxion provides a powerful suite of tools and functionalities to enable the dev
 
 ### **Steps**
 
+#### **GitHub Installation**
+
 1. **Clone the Repository:**
    ```bash
    git clone https://github.com/ymitiku/fluxion.git
    cd fluxion
+   pip install -e .
    ```
 
 2. **Set Up the Environment:**
@@ -109,6 +112,11 @@ Fluxion provides a powerful suite of tools and functionalities to enable the dev
    ```bash
    bash scripts/build_docs.sh
    ```
+
+#### **PyPI Installation**
+```bash
+pip install fluxion-ai-python
+```
 
 ---
 
@@ -141,8 +149,8 @@ Fluxion uses [Ollama](https://ollama.com) to connect to locally hosted LLMs. Her
 Use Fluxion to interact with locally hosted LLMs. For example:
 
 ```python
-from fluxion.core.modules.llm_modules import LLMQueryModule, LLMChatModule
-from fluxion.models.message_models import Message, MessageHistory
+from fluxion_ai.core.modules.llm_modules import LLMQueryModule, LLMChatModule
+from fluxion_ai.models.message_models import Message, MessageHistory
 
 # Initialize the LLMQueryModule
 llm_query = LLMQueryModule(endpoint="http://localhost:11434/api/generate", model="llama3.2")
@@ -163,8 +171,8 @@ print("Chat Response:", response)
 Agents can perform tool calls dynamically:
 
 ```python
-from fluxion.core.agents.llm_agent import LLMChatAgent
-from fluxion.core.modules.llm_modules import LLMChatModule
+from fluxion_ai.core.agents.llm_agent import LLMChatAgent
+from fluxion_ai.core.modules.llm_modules import LLMChatModule
 
 # Define a tool function
 def get_weather(city_name: str) -> dict:
@@ -193,9 +201,9 @@ print("Chat with Tool Call Response:", response)
 Here’s how to integrate it with an `LLMChatAgent`:
 
 ```python
-from fluxion.core.registry.tool_registry import call_agent
-from fluxion.core.agents.llm_agent import LLMChatAgent
-from fluxion.core.modules.llm_modules import LLMChatModule
+from fluxion_ai.core.registry.tool_registry import call_agent
+from fluxion_ai.core.agents.llm_agent import LLMChatAgent
+from fluxion_ai.core.modules.llm_modules import LLMChatModule
 
 # Define a tool function
 def get_weather(city_name: str) -> dict:
@@ -265,8 +273,8 @@ except RuntimeError as e:
 Fluxion supports creating workflows using agent nodes:
 
 ```python
-from fluxion.workflows.agent_node import AgentNode
-from fluxion.workflows.abstract_workflow import AbstractWorkflow
+from fluxion_ai.workflows.agent_node import AgentNode
+from fluxion_ai.workflows.abstract_workflow import AbstractWorkflow
 
 class CustomWorkflow(AbstractWorkflow):
     def define_workflow(self):
