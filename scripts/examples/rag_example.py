@@ -28,7 +28,7 @@ if __name__ == "__main__":
   
     query = "Who is Robert B. Darnell? What is his lab's recent discovery?"
 
-    retrieval_module = RetrievalModule(index=index, documents=documents, endpoint=endpoint, model=model, embedding_size=384)
+    retrieval_module = RetrievalModule(indexing_module=index_module, endpoint=endpoint, model=model, embedding_size=384)
     response = retrieval_module.execute(query=query, top_k=2)
     print("Query:", query)
     print("Retrieval Response:")

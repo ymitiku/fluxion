@@ -22,8 +22,11 @@ class TestRetrievalModule(unittest.TestCase):
         mock_index = faiss.IndexFlatIP(4)
         mock_index.add(np.array([[0.1, 0.2, 0.3, 0.4]]))
         documents = ["Test document"]
+        indexing_module = IndexingModule(endpoint="http://mock-endpoint", model="mock-model", embedding_size=4)
+        indexing_module.index = mock_index
+        indexing_module.documents = documents
         
-        module = RetrievalModule(index=mock_index, documents=documents, endpoint="http://mock-endpoint", model="mock-model", embedding_size=4)
+        module = RetrievalModule(indexing_module=indexing_module, documents=documents, endpoint="http://mock-endpoint", model="mock-model", embedding_size=4)
         module.encode_document = Mock(return_value=np.array([[0.1, 0.2, 0.3, 0.4]]))  # Mock embedding generation
         
         results = module.execute(query="Test query", top_k=1)

@@ -1,3 +1,3 @@
-__version__ = "0.2.0"
+__version__ = "1.1.0-beta"
 __author__ = "Mitiku Yohannes"
 __all__ = ["fluxion"]
