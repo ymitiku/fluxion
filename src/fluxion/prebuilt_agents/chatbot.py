@@ -1,5 +1,5 @@
 from fluxion.core.agents.llm_agent import PersistentLLMChatAgent
-from fluxion.core.modules.llm_modules import LLMChatModule
+from fluxion.core.modules.llm_modules import LLMChatModule, DeepSeekR1ChatModule
 from fluxion.models.message_model import MessageHistory, Message
 
 class ChatbotAgent(PersistentLLMChatAgent):
@@ -55,16 +55,27 @@ class ChatbotAgent(PersistentLLMChatAgent):
         max_history_size: int = 50,
         timeout: int = 120
     ):
-        llm_module = LLMChatModule(endpoint=llm_endpoint, model=llm_model, timeout=timeout)
+        if llm_model.startswith("deepseek-r1"): # Deepseek models require a different module
+            llm_module = DeepSeekR1ChatModule(endpoint=llm_endpoint, model=llm_model, timeout=timeout)
+        else:
+            llm_module = LLMChatModule(endpoint=llm_endpoint, model=llm_model, timeout=timeout)
+
         super().__init__(name=name, llm_module=llm_module, system_instructions=system_instructions, max_state_size=max_history_size)
+
+        # Define color codes for the user and chatbot
+        self.user_color = "\033[94m"  # Blue for user input
+        self.bot_color = "\033[92m"   # Green for chatbot response
+        self.reset_color = "\033[0m"  # Reset to default color
+
     
     def receive_message(self):
         """Receive a message from the user."""
-        return input("You: ")
+        return input(f"{self.user_color}You: {self.reset_color}")
     
     def send_message(self, message: str):
         """Send a message to the user."""
-        print(f"Chatbot: {message}")
+        print(f"{self.bot_color}Chatbot: {message}{self.reset_color}")
+        print(f"{'~'*50}")  # Add a separator for clarity
 
     def pre_process_message(self, message: str):
         """Pre-process the messages before executing the agent."""
@@ -90,6 +101,7 @@ class ChatbotAgent(PersistentLLMChatAgent):
                 break
             except Exception as e:
                 self.send_message("Oops! Unexpected error occurred. Please try again.")
+                print(str(e))
     def get_bot_response(self, message: str):
         """Respond to a message from the user."""
         messages = self.pre_process_message(message)
@@ -98,4 +110,5 @@ class ChatbotAgent(PersistentLLMChatAgent):
 
     def stop_conversation(self):
         """Stop the conversation."""
-        self.send_message("Goodbye!")
+        bot_reply = self.get_bot_response("Nice chatting with you! Goodbye!")
+        self.send_message(bot_reply)
