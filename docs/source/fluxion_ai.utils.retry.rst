@@ -1,7 +1,7 @@
-fluxion.utils.retry module
+fluxion_ai.utils.retry module
 ==========================
 
-.. automodule:: fluxion.utils.retry
+.. automodule:: fluxion_ai.utils.retry
    :members:
    :undoc-members:
    :show-inheritance:

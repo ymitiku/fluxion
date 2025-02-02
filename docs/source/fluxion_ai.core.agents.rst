@@ -1,37 +1,37 @@
-fluxion.core.agents package
+fluxion_ai.core.agents package
 ===========================
 
 Submodules
 ----------
 
-fluxion.core.agents.agent module
+fluxion_ai.core.agents.agent module
 --------------------------------
 
-.. automodule:: fluxion.core.agents.agent
+.. automodule:: fluxion_ai.core.agents.agent
    :members:
    :undoc-members:
    :show-inheritance:
 
-fluxion.core.agents.coordination\_agent module
+fluxion_ai.core.agents.coordination\_agent module
 ----------------------------------------------
 
-.. automodule:: fluxion.core.agents.coordination_agent
+.. automodule:: fluxion_ai.core.agents.coordination_agent
    :members:
    :undoc-members:
    :show-inheritance:
 
-fluxion.core.agents.llm\_agent module
+fluxion_ai.core.agents.llm\_agent module
 -------------------------------------
 
-.. automodule:: fluxion.core.agents.llm_agent
+.. automodule:: fluxion_ai.core.agents.llm_agent
    :members:
    :undoc-members:
    :show-inheritance:
 
-fluxion.core.agents.planning\_agent module
+fluxion_ai.core.agents.planning\_agent module
 ------------------------------------------
 
-.. automodule:: fluxion.core.agents.planning_agent
+.. automodule:: fluxion_ai.core.agents.planning_agent
    :members:
    :undoc-members:
    :show-inheritance:
@@ -39,7 +39,7 @@ fluxion.core.agents.planning\_agent module
 Module contents
 ---------------
 
-.. automodule:: fluxion.core.agents
+.. automodule:: fluxion_ai.core.agents
    :members:
    :undoc-members:
    :show-inheritance:

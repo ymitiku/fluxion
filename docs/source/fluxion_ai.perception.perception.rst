@@ -1,7 +1,7 @@
-fluxion.workflows.agent\_node module
+fluxion_ai.perception.perception module
 ====================================
 
-.. automodule:: fluxion.workflows.agent_node
+.. automodule:: fluxion_ai.perception.perception
    :members:
    :undoc-members:
    :show-inheritance:

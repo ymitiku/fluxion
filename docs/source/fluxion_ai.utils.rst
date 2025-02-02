@@ -1,5 +1,5 @@
-fluxion.perception package
-==========================
+fluxion_ai.utils package
+=====================
 
 Submodules
 ----------
@@ -7,12 +7,13 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   fluxion.perception.perception
+   fluxion_ai.utils.audio_utils
+   fluxion_ai.utils.retry
 
 Module contents
 ---------------
 
-.. automodule:: fluxion.perception
+.. automodule:: fluxion_ai.utils
    :members:
    :undoc-members:
    :show-inheritance:

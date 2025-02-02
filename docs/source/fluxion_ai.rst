@@ -7,12 +7,12 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   fluxion.core
-   fluxion.modules
-   fluxion.perception
-   fluxion.prebuilt_agents
-   fluxion.utils
-   fluxion.workflows
+   fluxion_ai.core
+   fluxion_ai.modules
+   fluxion_ai.perception
+   fluxion_ai.prebuilt_agents
+   fluxion_ai.utils
+   fluxion_ai.workflows
 
 Module contents
 ---------------

@@ -1,13 +1,13 @@
-fluxion.prebuilt\_agents package
+fluxion_ai.prebuilt\_agents package
 ================================
 
 Submodules
 ----------
 
-fluxion.prebuilt\_agents.chatbot module
+fluxion_ai.prebuilt\_agents.chatbot module
 ---------------------------------------
 
-.. automodule:: fluxion.prebuilt_agents.chatbot
+.. automodule:: fluxion_ai.prebuilt_agents.chatbot
    :members:
    :undoc-members:
    :show-inheritance:
@@ -15,7 +15,7 @@ fluxion.prebuilt\_agents.chatbot module
 Module contents
 ---------------
 
-.. automodule:: fluxion.prebuilt_agents
+.. automodule:: fluxion_ai.prebuilt_agents
    :members:
    :undoc-members:
    :show-inheritance:

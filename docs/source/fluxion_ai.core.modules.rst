@@ -1,29 +1,29 @@
-fluxion.core.modules package
+fluxion_ai.core.modules package
 ============================
 
 Submodules
 ----------
 
-fluxion.core.modules.api\_module module
+fluxion_ai.core.modules.api\_module module
 ---------------------------------------
 
-.. automodule:: fluxion.core.modules.api_module
+.. automodule:: fluxion_ai.core.modules.api_module
    :members:
    :undoc-members:
    :show-inheritance:
 
-fluxion.core.modules.ir\_module module
+fluxion_ai.core.modules.ir\_module module
 --------------------------------------
 
-.. automodule:: fluxion.core.modules.ir_module
+.. automodule:: fluxion_ai.core.modules.ir_module
    :members:
    :undoc-members:
    :show-inheritance:
 
-fluxion.core.modules.llm\_modules module
+fluxion_ai.core.modules.llm\_modules module
 ----------------------------------------
 
-.. automodule:: fluxion.core.modules.llm_modules
+.. automodule:: fluxion_ai.core.modules.llm_modules
    :members:
    :undoc-members:
    :show-inheritance:
@@ -31,7 +31,7 @@ fluxion.core.modules.llm\_modules module
 Module contents
 ---------------
 
-.. automodule:: fluxion.core.modules
+.. automodule:: fluxion_ai.core.modules
    :members:
    :undoc-members:
    :show-inheritance:

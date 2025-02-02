@@ -1,13 +1,13 @@
-fluxion.models package
+fluxion_ai.models package
 ======================
 
 Submodules
 ----------
 
-fluxion.models.plan\_model module
+fluxion_ai.models.plan\_model module
 ---------------------------------
 
-.. automodule:: fluxion.models.plan_model
+.. automodule:: fluxion_ai.models.plan_model
    :members:
    :undoc-members:
    :show-inheritance:
@@ -15,7 +15,7 @@ fluxion.models.plan\_model module
 Module contents
 ---------------
 
-.. automodule:: fluxion.models
+.. automodule:: fluxion_ai.models
    :members:
    :undoc-members:
    :show-inheritance:

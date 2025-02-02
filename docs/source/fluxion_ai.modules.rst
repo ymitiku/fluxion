@@ -1,4 +1,4 @@
-fluxion.modules package
+fluxion_ai.modules package
 =======================
 
 Submodules
@@ -8,13 +8,13 @@ Submodules
    :maxdepth: 4
 
 
-   fluxion.modules.contextual_response
-   fluxion.modules.rag_module
+   fluxion_ai.modules.contextual_response
+   fluxion_ai.modules.rag_module
 
 Module contents
 ---------------
 
-.. automodule:: fluxion.modules
+.. automodule:: fluxion_ai.modules
    :members:
    :undoc-members:
    :show-inheritance:

@@ -1,7 +1,7 @@
-fluxion.core.modules.ir\_module module
+fluxion_ai.utils.audio\_utils module
 =================================
 
-.. automodule:: fluxion.core.modules.ir_module
+.. automodule:: fluxion_ai.utils.audio_utils
    :members:
    :undoc-members:
    :show-inheritance:

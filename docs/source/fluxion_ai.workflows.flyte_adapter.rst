@@ -1,7 +1,7 @@
-fluxion.workflows.flyte\_adapter module
+fluxion_ai.workflows.flyte\_adapter module
 =======================================
 
-.. automodule:: fluxion.workflows.flyte_adapter
+.. automodule:: fluxion_ai.workflows.flyte_adapter
    :members:
    :undoc-members:
    :show-inheritance:

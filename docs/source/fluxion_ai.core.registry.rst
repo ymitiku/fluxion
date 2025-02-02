@@ -1,4 +1,4 @@
-fluxion.core.registry package
+fluxion_ai.core.registry package
 =============================
 
 Submodules
@@ -7,13 +7,13 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   fluxion.core.registry.agent_registry
-   fluxion.core.registry.tool_registry
+   fluxion_ai.core.registry.agent_registry
+   fluxion_ai.core.registry.tool_registry
 
 Module contents
 ---------------
 
-.. automodule:: fluxion.core.registry
+.. automodule:: fluxion_ai.core.registry
    :members:
    :undoc-members:
    :show-inheritance:
