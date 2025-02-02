@@ -2,11 +2,11 @@ from pydantic import BaseModel
 from typing import Dict, Any
 import unittest
 from unittest.mock import patch, MagicMock
-from fluxion.core.registry.agent_registry import AgentRegistry
-from fluxion.core.agents.agent import Agent, JsonInputOutputAgent
+from fluxion_ai.core.registry.agent_registry import AgentRegistry
+from fluxion_ai.core.agents.agent import Agent, JsonInputOutputAgent
 from fluxon.structured_parsing.exceptions import FluxonError
-from fluxion.core.registry.tool_registry import call_agent
-from fluxion.models.message_model import Message, MessageHistory, ToolCall
+from fluxion_ai.core.registry.tool_registry import call_agent
+from fluxion_ai.models.message_model import Message, MessageHistory, ToolCall
 
 class MockAgent(Agent):
     def execute(self, messages: MessageHistory) -> Dict[str, Any]: 

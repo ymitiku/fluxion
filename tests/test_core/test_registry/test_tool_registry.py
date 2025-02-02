@@ -1,10 +1,10 @@
 import unittest
 from typing import Dict, Any
-from fluxion.core.registry.tool_registry import ToolRegistry, extract_function_metadata
-from fluxion.core.registry.agent_registry import AgentRegistry
-from fluxion.core.registry.tool_registry import call_agent
-from fluxion.core.agents.agent import Agent
-from fluxion.models.message_model import ToolCall, MessageHistory
+from fluxion_ai.core.registry.tool_registry import ToolRegistry, extract_function_metadata
+from fluxion_ai.core.registry.agent_registry import AgentRegistry
+from fluxion_ai.core.registry.tool_registry import call_agent
+from fluxion_ai.core.agents.agent import Agent
+from fluxion_ai.models.message_model import ToolCall, MessageHistory
 from pydantic import BaseModel
 
 class TestToolRegistry(unittest.TestCase):

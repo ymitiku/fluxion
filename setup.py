@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="fluxion",
+    name="fluxion-ai",
     version="1.1.0-beta",
     author="Mitiku Yohannes",
     author_email="se.mitiku.yohannes@gmail.com",

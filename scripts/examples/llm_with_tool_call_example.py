@@ -1,8 +1,8 @@
 import requests
-from fluxion.core.modules.llm_modules import LLMChatModule
-from fluxion.core.agents.llm_agent import LLMChatAgent
-from fluxion.core.registry.tool_registry import ToolRegistry
-from fluxion.models.message_model import Message, MessageHistory
+from fluxion_ai.core.modules.llm_modules import LLMChatModule
+from fluxion_ai.core.agents.llm_agent import LLMChatAgent
+from fluxion_ai.core.registry.tool_registry import ToolRegistry
+from fluxion_ai.models.message_model import Message, MessageHistory
 
 
 

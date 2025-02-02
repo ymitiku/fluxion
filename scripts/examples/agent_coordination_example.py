@@ -1,6 +1,6 @@
-from fluxion.core.agents.llm_agent import LLMChatAgent, LLMQueryAgent
-from fluxion.models.message_model import Message, MessageHistory
-from fluxion.core.modules.llm_modules import LLMChatModule, LLMQueryModule
+from fluxion_ai.core.agents.llm_agent import LLMChatAgent, LLMQueryAgent
+from fluxion_ai.models.message_model import Message, MessageHistory
+from fluxion_ai.core.modules.llm_modules import LLMChatModule, LLMQueryModule
 
 def evaluate_math_expression(expression: str) -> str:
     """ Evaluate a mathematical expression.
@@ -71,7 +71,7 @@ class SummarizationAgent(LLMQueryAgent):
 
 
 
-from fluxion.core.agents.coordination_agent import CoordinationAgent
+from fluxion_ai.core.agents.coordination_agent import CoordinationAgent
 
 # Initialize the LLM module
 llm_chat_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2")

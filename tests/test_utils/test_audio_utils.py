@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import Mock, patch
-from fluxion.utils.audio_utils import AudioUtils, SpeechToTextError, TextToSpeechError
+from fluxion_ai.utils.audio_utils import AudioUtils, SpeechToTextError, TextToSpeechError
 
 
 class TestAudioUtils(unittest.TestCase):
@@ -9,8 +9,8 @@ class TestAudioUtils(unittest.TestCase):
         self.mock_recognizer = Mock()
         self.audio_utils = AudioUtils(recognizer=self.mock_recognizer, lang="en")
 
-    @patch("fluxion.utils.audio_utils.play_audio")
-    @patch("fluxion.utils.audio_utils.google_text_to_speech")
+    @patch("fluxion_ai.utils.audio_utils.play_audio")
+    @patch("fluxion_ai.utils.audio_utils.google_text_to_speech")
     @patch("tempfile.NamedTemporaryFile")
     @patch("os.unlink")
     def test_text_to_speech_success(self, mock_unlink, mock_tempfile, mock_save_audio, mock_play_audio):
@@ -30,9 +30,9 @@ class TestAudioUtils(unittest.TestCase):
         mock_unlink.assert_called_once_with("mock_tempfile.mp3")
 
 
-    @patch("fluxion.utils.audio_utils.load_audio")
-    @patch("fluxion.utils.audio_utils.play_audio")
-    @patch("fluxion.utils.audio_utils.google_text_to_speech")
+    @patch("fluxion_ai.utils.audio_utils.load_audio")
+    @patch("fluxion_ai.utils.audio_utils.play_audio")
+    @patch("fluxion_ai.utils.audio_utils.google_text_to_speech")
     @patch("tempfile.NamedTemporaryFile")
     def test_text_to_speech_failure(self, mock_tempfile, mock_save_audio, mock_play_audio, mock_load_audio):
         mock_load_audio.side_effect = Exception("Mock TTS error")
@@ -44,7 +44,7 @@ class TestAudioUtils(unittest.TestCase):
         self.assertIn("Text-to-Speech conversion failed", str(cm.exception))
 
 
-    @patch("fluxion.utils.audio_utils.load_audio")
+    @patch("fluxion_ai.utils.audio_utils.load_audio")
     def test_transcribe_audio_success(self, mock_load_audio):
         # Mock audio data
         mock_audio = Mock()

@@ -1,11 +1,11 @@
 from typing import Dict, Any
 import unittest
 from unittest.mock import MagicMock, patch
-from fluxion.workflows.flyte_adapter import FlyteWorkflowAdapter, flyte_task, flyte_dynamic_workflow
-from fluxion.workflows.abstract_workflow import AbstractWorkflow
-from fluxion.workflows.agent_node import AgentNode
-from fluxion.core.agents.agent import Agent
-from fluxion.core.registry.agent_registry import AgentRegistry
+from fluxion_ai.workflows.flyte_adapter import FlyteWorkflowAdapter, flyte_task, flyte_dynamic_workflow
+from fluxion_ai.workflows.abstract_workflow import AbstractWorkflow
+from fluxion_ai.workflows.agent_node import AgentNode
+from fluxion_ai.core.agents.agent import Agent
+from fluxion_ai.core.registry.agent_registry import AgentRegistry
 
 
 class MockAgent(Agent):
@@ -30,8 +30,8 @@ class TestFlyteAdapter(unittest.TestCase):
         self.adapter = FlyteWorkflowAdapter(workflow=self.workflow)
 
 
-    @patch("fluxion.workflows.flyte_adapter.flyte_task")
-    @patch("fluxion.workflows.flyte_adapter.flyte_dynamic_workflow")
+    @patch("fluxion_ai.workflows.flyte_adapter.flyte_task")
+    @patch("fluxion_ai.workflows.flyte_adapter.flyte_dynamic_workflow")
     def test_generate_flyte_workflow(self, mock_dynamic_workflow, mock_task):
         mock_dynamic_workflow.return_value = lambda inputs: {
             "Node1": {"result": "Processed {'key1': 'value1'}"},
