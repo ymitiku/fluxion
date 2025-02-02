@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Dict, Any, Union, Optional
 import requests
+import re
 from .api_module import ApiModule
 
 """
@@ -48,7 +49,7 @@ class LLMApiModule(ApiModule, ABC):
     This class abstracts common patterns for interacting with an LLM via REST API.
 
     """
-    def __init__(self, endpoint: str, model: str = None, headers: Dict[str, Any] = {}, timeout: int = 10, response_key: str = "response", temperature:  Optional[float] = None, seed: Optional[int] = None):
+    def __init__(self, endpoint: str, model: str = None, headers: Dict[str, Any] = {}, timeout: int = 10, response_key: str = "response", temperature:  Optional[float] = None, seed: Optional[int] = None, streaming: bool = False):
         """ Initialize the LLMApiModule.
         
         Args:
@@ -66,6 +67,7 @@ class LLMApiModule(ApiModule, ABC):
         self.response_key = response_key
         self.temperature = temperature
         self.seed = seed
+        self.streaming = streaming
     
     def execute(self, *args, **kwargs) -> Dict[str, Any]:
         """ Execute the LLM module. 
@@ -97,8 +99,9 @@ class LLMApiModule(ApiModule, ABC):
         """
         output = {
             "model": self.model,
-            "stream": False
+            "stream": self.streaming or False
         }
+        
         if self.temperature:
             output["temperature"] = self.temperature
         if self.seed:
@@ -248,3 +251,115 @@ class LLMChatModule(LLMApiModule):
             return response[self.response_key]
         return super().post_process(response, full_response)
 
+
+
+class DeepSeekR1QueryModule(LLMQueryModule):
+    """
+    A class to handle querying the deepseek-r1 model's via REST API. R1 models' output contains extra information for thinking process. 
+    The thinking process is enclosed in a <think> </think> tag.
+
+    DeepSeekR1QueryModule:
+    example-usage::
+        from fluxion.modules.llm_query_module import DeepSeekR1QueryModule
+
+        # Initialize the DeepSeekR1QueryModule
+        llm_module = DeepSeekR1QueryModule(endpoint="http://localhost:11434/api/generate", model="deepseekr1")
+
+        # Query the DeepSeekR1 model
+        response = llm_module.query(prompt="What is the capital of France?")
+        print(response)
+    """
+    def __init__(self, *args, remove_thinking_tag_content: bool = True, **kwargs):
+        """ Initialize the DeepSeekR1QueryModule.
+        
+        Args:
+            args: Variable length argument list.
+            remove_thinking_tag_content (bool): Whether to remove the thinking process from the response. Defaults to True.
+            kwargs: Arbitrary keyword arguments.
+        """
+        super().__init__(*args, **kwargs)
+        self.remove_thinking_tag_content = remove_thinking_tag_content
+
+
+    def post_process(self, response, full_response = False):
+        output = super().post_process(response, full_response)
+        if self.remove_thinking_tag_content and "content" in output:
+            output["content"] = self.remove_thinking(output["content"])
+
+        return output
+    
+    def remove_thinking(self, content: str) -> str:
+        """ Remove the thinking process from the response.
+
+        Args:
+            content (str): The content to process.
+
+        Returns:
+            str: The content with the thinking process removed.
+        """
+        thinking_re = r"<think>.*?</think>"
+        return re.sub(thinking_re, "", content, flags=re.DOTALL | re.MULTILINE).strip()
+    
+
+    
+
+class DeepSeekR1ChatModule(LLMChatModule):
+    """
+    A class to handle chatting with the deepseek-r1 model's via REST API. R1 models' output contains extra information for thinking process. 
+    The thinking process is enclosed in a <think> </think> tag.
+
+    DeepSeekR1ChatModule:
+    example-usage::
+        from fluxion.modules.llm_query_module import DeepSeekR1ChatModule
+
+        # Initialize the DeepSeekR1ChatModule
+        llm_module = DeepSeekR1ChatModule(endpoint="http://localhost:11434/api/chat", model="deepseekr1")
+
+        # Chat with the DeepSeekR1 model
+        response = llm_module.chat(messages= [{
+            "role": "user",
+            "content": "Hello!"
+            },
+            {
+            "role": "assistant",
+            "content": "Hello, how can I help you?"
+            }]
+        )
+
+        print(response)
+    """
+    def __init__(self, *args, remove_thinking_tag_content: bool = True, **kwargs):
+        """ Initialize the DeepSeekR1ChatModule.
+        
+        Args:
+            args: Variable length argument list.
+            remove_thinking_tag_content (bool): Whether to remove the thinking process from the response. Defaults to True.
+            kwargs: Arbitrary keyword arguments.
+        """
+        super().__init__(*args, **kwargs)
+        self.remove_thinking_tag_content = remove_thinking_tag_content
+
+    def post_process(self, response, full_response = False):
+        output = super().post_process(response, full_response)
+        if self.remove_thinking_tag_content and "content" in output:
+            output["content"] = self.remove_thinking(output["content"])
+
+        return output
+    
+    def remove_thinking(self, content: str) -> str:
+        """ Remove the thinking process from the response.
+
+        Args:
+            content (str): The content to process.
+
+        Returns:
+            str: The content with the thinking process removed.
+        """
+        thinking_re = r"<think>.*?</think>"
+        return re.sub(thinking_re, "", content, flags=re.DOTALL | re.MULTILINE).strip()
+    
+    def get_input_params(self, *args, messages, tools = {}, **kwargs):
+        output = super().get_input_params(*args, messages=messages, tools=tools, **kwargs)
+        output.pop("tools") # Currently, tools are not supported for DeepSeekR1 models
+        return output
+    
