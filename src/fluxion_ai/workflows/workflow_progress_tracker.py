@@ -1,5 +1,5 @@
 """
-fluxion.workflows.workflow_progress_tracker
+fluxion_ai.workflows.workflow_progress_tracker
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module provides a class to track the progress of workflow execution. This class is used to monitor the status of each node in the workflow and calculate the overall progress.
 

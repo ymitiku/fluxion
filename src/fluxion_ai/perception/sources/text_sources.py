@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 from typing import Dict, Any, Union, Generator, Iterable
-from fluxion.perception.sources.perception_source import PerceptionSource
+from fluxion_ai.perception.sources.perception_source import PerceptionSource
 
 
 """
-fluxion.perception.sources.text_sources
+fluxion_ai.perception.sources.text_sources
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module defines abstraction to sources that provide text data to the agent. It defines the logic to get text data from different sources, such as
 files, string and string buffer. The text sources module provides the necessary tools for the agent to interact with these sources and acquire

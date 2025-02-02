@@ -2,18 +2,18 @@ from fluxon.parser import parse_json_with_recovery
 import json
 import logging
 from typing import Any, Dict, List, Tuple
-from fluxion.core.agents.llm_agent import LLMQueryAgent, LLMChatAgent
-from fluxion.core.modules.llm_modules import LLMQueryModule, LLMChatModule
-from fluxion.models.plan_model import Plan, PlanStep, StepExecutionResult
-from fluxion.models.message_model import MessageHistory, Message
+from fluxion_ai.core.agents.llm_agent import LLMQueryAgent, LLMChatAgent
+from fluxion_ai.core.modules.llm_modules import LLMQueryModule, LLMChatModule
+from fluxion_ai.models.plan_model import Plan, PlanStep, StepExecutionResult
+from fluxion_ai.models.message_model import MessageHistory, Message
 
 class PlanGenerationAgent(LLMQueryAgent):
     """ An agent that generates a structured plan for a given task using an LLM. 
 
     PlanGenerationAgent:
     example-usage::
-        from fluxion.core.agents.planning_agent import PlanGenerationAgent
-        from fluxion.core.modules.llm_modules import LLMQueryModule
+        from fluxion_ai.core.agents.planning_agent import PlanGenerationAgent
+        from fluxion_ai.core.modules.llm_modules import LLMQueryModule
 
         llm_query_module = LLMQueryModule(endpoint="http://localhost:11434/api/query", model="llama3.2", timeout=120)
         plan_generation_agent = PlanGenerationAgent(name="PlanGenerationAgent", llm_module=llm_query_module)
@@ -84,8 +84,8 @@ class PlanExecutionAgent(LLMChatAgent):
 
     PlanExecutionAgent:
     example-usage::
-        from fluxion.core.agents.planning_agent import PlanExecutionAgent
-        from fluxion.core.modules.llm_modules import LLMQueryModule
+        from fluxion_ai.core.agents.planning_agent import PlanExecutionAgent
+        from fluxion_ai.core.modules.llm_modules import LLMQueryModule
 
         llm_query_module = LLMQueryModule(endpoint="http://localhost:11434/api/query", model="llama3.2", timeout=120)
         plan_execution_agent = PlanExecutionAgent(name="PlanExecutionAgent", llm_module=llm_query_module)
@@ -285,8 +285,8 @@ class PlanningAgent(LLMChatAgent):
 
     PlanningAgent:
     example-usage::
-        from fluxion.core.agents.planning_agent import PlanningAgent
-        from fluxion.core.modules.llm_modules import LLMQueryModule
+        from fluxion_ai.core.agents.planning_agent import PlanningAgent
+        from fluxion_ai.core.modules.llm_modules import LLMQueryModule
 
         llm_query_module = LLMQueryModule(endpoint="http://localhost:11434/api/query", model="llama3.2", timeout=120)
         llm_chat_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2", timeout=120)

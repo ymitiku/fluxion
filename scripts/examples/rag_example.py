@@ -1,6 +1,6 @@
-from fluxion.core.modules.ir_module import IndexingModule, RetrievalModule
-from fluxion.core.modules.llm_modules import LLMChatModule
-from fluxion.modules.rag_module import RagModule
+from fluxion_ai.core.modules.ir_module import IndexingModule, RetrievalModule
+from fluxion_ai.core.modules.llm_modules import LLMChatModule
+from fluxion_ai.modules.rag_module import RagModule
 
 
 if __name__ == "__main__":

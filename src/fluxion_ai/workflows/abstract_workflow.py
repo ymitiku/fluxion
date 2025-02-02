@@ -1,5 +1,5 @@
 """
-fluxion.core.abstract_workflow
+fluxion_ai.core.abstract_workflow
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Defines the AbstractWorkflow class, which serves as the base class for defining and executing workflows.
@@ -10,7 +10,7 @@ with nodes and managing their execution order.
 
 from typing import Dict, List, Any
 from abc import ABC, abstractmethod
-from fluxion.workflows.agent_node import AgentNode
+from fluxion_ai.workflows.agent_node import AgentNode
 from graphviz import Digraph
 
 

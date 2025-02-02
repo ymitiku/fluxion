@@ -1,5 +1,5 @@
 """ 
-fluxion.utils.audio_utils
+fluxion_ai.utils.audio_utils
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 This module provides utility functions for audio processing tasks such as
 speech-to-text (STT) and text-to-speech (TTS) conversion.

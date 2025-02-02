@@ -1,6 +1,6 @@
 import unittest
 from time import sleep
-from fluxion.workflows.workflow_progress_tracker import WorkflowProgressTracker
+from fluxion_ai.workflows.workflow_progress_tracker import WorkflowProgressTracker
 
 class TestWorkflowProgressTracker(unittest.TestCase):
     def setUp(self):

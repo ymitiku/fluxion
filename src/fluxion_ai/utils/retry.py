@@ -1,5 +1,5 @@
 """ 
-fluxion.utils.retry
+fluxion_ai.utils.retry
 ~~~~~~~~~~~~~~~~~~~~
 This module provides a decorator for retrying a function call if it raises an exception.
 

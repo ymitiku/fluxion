@@ -1,10 +1,10 @@
 from typing import Dict, Any
 import unittest
 import os
-from fluxion.workflows.abstract_workflow import AbstractWorkflow
-from fluxion.workflows.agent_node import AgentNode
-from fluxion.core.agents.agent import Agent
-from fluxion.core.registry.agent_registry import AgentRegistry
+from fluxion_ai.workflows.abstract_workflow import AbstractWorkflow
+from fluxion_ai.workflows.agent_node import AgentNode
+from fluxion_ai.core.agents.agent import Agent
+from fluxion_ai.core.registry.agent_registry import AgentRegistry
 
 class MockAgent(Agent):
     def __init__(self, output_key: str, *args, **kwargs):

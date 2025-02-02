@@ -1,5 +1,5 @@
 """
-fluxion.modules.api_module
+fluxion_ai.modules.api_module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Provides an abstract base class for interacting with external APIs.

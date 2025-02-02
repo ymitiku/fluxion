@@ -1,7 +1,7 @@
-from fluxion.workflows.abstract_workflow import AbstractWorkflow
-from fluxion.core.agents.agent import Agent
-from fluxion.workflows.agent_node import AgentNode
-from fluxion.models.message_model import Message, MessageHistory
+from fluxion_ai.workflows.abstract_workflow import AbstractWorkflow
+from fluxion_ai.core.agents.agent import Agent
+from fluxion_ai.workflows.agent_node import AgentNode
+from fluxion_ai.models.message_model import Message, MessageHistory
 import json
 
 

@@ -1,6 +1,6 @@
-from fluxion.core.agents.llm_agent import PersistentLLMChatAgent
-from fluxion.core.modules.llm_modules import LLMChatModule, DeepSeekR1ChatModule
-from fluxion.models.message_model import MessageHistory, Message
+from fluxion_ai.core.agents.llm_agent import PersistentLLMChatAgent
+from fluxion_ai.core.modules.llm_modules import LLMChatModule, DeepSeekR1ChatModule
+from fluxion_ai.models.message_model import MessageHistory, Message
 
 class ChatbotAgent(PersistentLLMChatAgent):
     """ A chatbot agent that uses a persistent LLM module to generate responses.  
@@ -9,7 +9,7 @@ class ChatbotAgent(PersistentLLMChatAgent):
 
     ChatbotAgent:
     example-usage::
-        from fluxion.prebuilt_agents.chatbot import ChatbotAgent
+        from fluxion_ai.prebuilt_agents.chatbot import ChatbotAgent
 
         # Initialize the ChatbotAgent
         chatbot = ChatbotAgent(

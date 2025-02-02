@@ -1,5 +1,5 @@
 """ 
-fluxion.workflows.flyte_adapter
+fluxion_ai.workflows.flyte_adapter
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module provides an adapter to convert an AbstractWorkflow into a Flyte workflow.
 
@@ -13,8 +13,8 @@ Functions:
 """
 
 from flytekit import task, workflow, dynamic
-from fluxion.workflows.abstract_workflow import AbstractWorkflow
-from fluxion.workflows.agent_node import AgentNode
+from fluxion_ai.workflows.abstract_workflow import AbstractWorkflow
+from fluxion_ai.workflows.agent_node import AgentNode
 from typing import Any, Dict
 
 import logging

@@ -1,11 +1,11 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from fluxion.core.agents.agent import Agent
-from fluxion.core.agents.delegation_agent import DelegationAgent
-from fluxion.core.registry.agent_registry import AgentRegistry
-from fluxion.core.registry.agent_delegation_registry import AgentDelegationRegistry
-from fluxion.core.modules.llm_modules import LLMChatModule
-from fluxion.models.message_model import MessageHistory, Message
+from fluxion_ai.core.agents.agent import Agent
+from fluxion_ai.core.agents.delegation_agent import DelegationAgent
+from fluxion_ai.core.registry.agent_registry import AgentRegistry
+from fluxion_ai.core.registry.agent_delegation_registry import AgentDelegationRegistry
+from fluxion_ai.core.modules.llm_modules import LLMChatModule
+from fluxion_ai.models.message_model import MessageHistory, Message
 import json
 
 class TestDelegationAgent(unittest.TestCase):

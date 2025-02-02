@@ -9,8 +9,8 @@ import logging
 import time
 from typing import Dict, Any, Callable, Optional
 from pydantic import ValidationError, BaseModel
-from fluxion.core.registry.agent_registry import AgentRegistry
-from fluxion.models.message_model import ToolCall, MessageHistory, Message
+from fluxion_ai.core.registry.agent_registry import AgentRegistry
+from fluxion_ai.models.message_model import ToolCall, MessageHistory, Message
 
 
 logger = logging.getLogger("ToolRegistry")
@@ -137,7 +137,7 @@ class ToolRegistry:
 
     ToolRegistry:
     Example usage::
-        from fluxion.core.registry.tool_registry import ToolRegistry
+        from fluxion_ai.core.registry.tool_registry import ToolRegistry
         tool_registry = ToolRegistry()
         tool_registry.register_tool(my_tool_function)
         tool_registry.invoke_tool_call(tool_call)

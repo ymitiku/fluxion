@@ -1,5 +1,5 @@
 """ 
-fluxion.perception.perception
+fluxion_ai.perception.perception
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This module provides the base class for perceptions.
 
@@ -9,7 +9,7 @@ Classes:
 """
 from abc import ABC, abstractmethod
 from typing import Dict, Any
-from fluxion.perception.sources.perception_source import PerceptionSource
+from fluxion_ai.perception.sources.perception_source import PerceptionSource
 
 
 class Perception(ABC):

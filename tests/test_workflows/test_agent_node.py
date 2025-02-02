@@ -1,9 +1,9 @@
 from typing import Dict, Any
 import unittest
 from unittest.mock import MagicMock
-from fluxion.workflows.agent_node import AgentNode
-from fluxion.core.agents.agent import Agent
-from fluxion.core.registry.agent_registry import AgentRegistry
+from fluxion_ai.workflows.agent_node import AgentNode
+from fluxion_ai.core.agents.agent import Agent
+from fluxion_ai.core.registry.agent_registry import AgentRegistry
 
 
 class MockAgent(Agent):

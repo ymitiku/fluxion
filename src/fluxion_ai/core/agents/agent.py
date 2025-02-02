@@ -1,5 +1,5 @@
 """
-fluxion.core.agent
+fluxion_ai.core.agent
 ~~~~~~~~~~~~~~~~~~
 
 Defines the `Agent` class, which serves as the base class for agents in the Fluxion framework.
@@ -13,7 +13,7 @@ from typing import Any, Dict, Type
 from pydantic import BaseModel
 import logging
 
-from fluxion.core.registry.agent_registry import AgentRegistry
+from fluxion_ai.core.registry.agent_registry import AgentRegistry
 from fluxon.parser import parse_json_with_recovery
 from fluxon.structured_parsing.fluxon_structured_parser import FluxonStructuredParser
 from fluxon.structured_parsing.exceptions import FluxonError
@@ -30,7 +30,7 @@ class Agent(ABC):
 
     Agent:
     Example usage::
-        from fluxion.core.agent import Agent
+        from fluxion_ai.core.agent import Agent
         class MyAgent(Agent):
             def execute(self, **kwargs):
                 return "Hello, World!"
@@ -104,7 +104,7 @@ class JsonInputOutputAgent(ABC):
 
     JsonInputOutputAgent:
     Example usage::
-        from fluxion.core.agent import JsonInputOutputAgent
+        from fluxion_ai.core.agent import JsonInputOutputAgent
         class MyAgent(JsonInputOutputAgent):
             def execute(self, **kwargs):
                 return self.parse_response("{\"message\": \"Hello, World!\"}")

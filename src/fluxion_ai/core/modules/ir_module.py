@@ -1,6 +1,6 @@
 
 """
-fluxion.modules.ir_module
+fluxion_ai.modules.ir_module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Provides modules for indexing and retrieving information using embeddings.
@@ -11,7 +11,7 @@ of documents using a locally hosted embedding model and FAISS for efficient simi
 
 ir_module:
 example-usage::
-    from fluxion.modules.ir_module import IndexingModule, RetrievalModule
+    from fluxion_ai.modules.ir_module import IndexingModule, RetrievalModule
 
     # Initialize the IndexingModule
     indexing_module = IndexingModule(endpoint="http://localhost:11434/api/index", model="sentence-transformers/paraphrase-MiniLM-L6-v2")
@@ -33,7 +33,7 @@ example-usage::
 import faiss
 from typing import List, Generator, Dict, Any
 import numpy as np
-from fluxion.core.modules.api_module import ApiModule
+from fluxion_ai.core.modules.api_module import ApiModule
 import logging
 
 
@@ -45,7 +45,7 @@ class EmbeddingApiModule(ApiModule):
 
     EmbeddingApiModule:
     example-usage::
-        from fluxion.modules.ir_module import EmbeddingApiModule
+        from fluxion_ai.modules.ir_module import EmbeddingApiModule
 
         # Initialize the EmbeddingApiModule
         embedding_module = EmbeddingApiModule(endpoint="http://localhost:11434/api/encode", model="sentence-transformers/paraphrase-MiniLM-L6-v2")
@@ -217,7 +217,7 @@ class IndexingModule(EmbeddingApiModule):
 
     IndexingModule:
     example-usage::
-        from fluxion.modules.ir_module import IndexingModule
+        from fluxion_ai.modules.ir_module import IndexingModule
 
         # Initialize the IndexingModule
         indexing_module = IndexingModule(endpoint="http://localhost:11434/api/index", model="sentence-transformers/paraphrase-MiniLM-L6-v2")
@@ -269,7 +269,7 @@ class RetrievalModule(EmbeddingApiModule):
 
     RetrievalModule:
     example-usage::
-        from fluxion.modules.ir_module import RetrievalModule
+        from fluxion_ai.modules.ir_module import RetrievalModule
 
         # Initialize the RetrievalModule
         retrieval_module = RetrievalModule(index=index, documents=documents, endpoint="http://localhost:11434/api/retrieve", model="sentence-transformers/paraphrase-MiniLM-L6-v2")

@@ -5,13 +5,13 @@ import re
 from .api_module import ApiModule
 
 """
-fluxion.modules.llm_modules
+fluxion_ai.modules.llm_modules
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 Provides an interface for interacting with a locally or remotely hosted LLM via REST API.
 
 llm_modules:
 Example-Usage::
-    from fluxion.modules.llm_query_module import LLMQueryModule
+    from fluxion_ai.modules.llm_query_module import LLMQueryModule
 
     # Initialize the LLMQueryModule
     llm_module = LLMQueryModule(endpoint="http://localhost:11434/api/generate", model="llama3.2")
@@ -23,7 +23,7 @@ Example-Usage::
 
     ```python
 
-    from fluxion.modules.llm_query_module import LLMChatModule
+    from fluxion_ai.modules.llm_query_module import LLMChatModule
 
     # Initialize the LLMChatModule
     llm_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2")
@@ -151,7 +151,7 @@ class LLMQueryModule(LLMApiModule):
 
     LLMQueryModule:
     example-usage::
-        from fluxion.modules.llm_query_module import LLMQueryModule
+        from fluxion_ai.modules.llm_query_module import LLMQueryModule
 
         # Initialize the LLMQueryModule
         llm_module = LLMQueryModule(endpoint="http://localhost:11434/api/generate", model="llama3.2")
@@ -197,7 +197,7 @@ class LLMChatModule(LLMApiModule):
 
     LLMChatModule:
     example-usage::
-        from fluxion.modules.llm_query_module import LLMChatModule
+        from fluxion_ai.modules.llm_query_module import LLMChatModule
 
         # Initialize the LLMChatModule
         llm_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2")
@@ -260,7 +260,7 @@ class DeepSeekR1QueryModule(LLMQueryModule):
 
     DeepSeekR1QueryModule:
     example-usage::
-        from fluxion.modules.llm_query_module import DeepSeekR1QueryModule
+        from fluxion_ai.modules.llm_query_module import DeepSeekR1QueryModule
 
         # Initialize the DeepSeekR1QueryModule
         llm_module = DeepSeekR1QueryModule(endpoint="http://localhost:11434/api/generate", model="deepseekr1")
@@ -310,7 +310,7 @@ class DeepSeekR1ChatModule(LLMChatModule):
 
     DeepSeekR1ChatModule:
     example-usage::
-        from fluxion.modules.llm_query_module import DeepSeekR1ChatModule
+        from fluxion_ai.modules.llm_query_module import DeepSeekR1ChatModule
 
         # Initialize the DeepSeekR1ChatModule
         llm_module = DeepSeekR1ChatModule(endpoint="http://localhost:11434/api/chat", model="deepseekr1")

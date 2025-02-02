@@ -1,5 +1,5 @@
 """ 
-fluxion.perception.sources.audio_sources
+fluxion_ai.perception.sources.audio_sources
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Audio sources for perception.
 
@@ -22,7 +22,7 @@ Examples:
 
 from abc import abstractmethod
 import numpy as np
-from fluxion.perception.sources.perception_source import PerceptionSource
+from fluxion_ai.perception.sources.perception_source import PerceptionSource
 import sounddevice as sd
 
 class AudioSource(PerceptionSource):

@@ -1,9 +1,9 @@
 from fluxon.parser import parse_json_with_recovery
-from fluxion.core.agents.agent import Agent
-from fluxion.core.agents.llm_agent import LLMChatAgent
-from fluxion.core.registry.agent_registry import AgentRegistry
-from fluxion.core.registry.agent_delegation_registry import AgentDelegationRegistry
-from fluxion.models.message_model import MessageHistory, Message
+from fluxion_ai.core.agents.agent import Agent
+from fluxion_ai.core.agents.llm_agent import LLMChatAgent
+from fluxion_ai.core.registry.agent_registry import AgentRegistry
+from fluxion_ai.core.registry.agent_delegation_registry import AgentDelegationRegistry
+from fluxion_ai.models.message_model import MessageHistory, Message
 from typing import Dict, Any, List
 import json
 
@@ -14,11 +14,11 @@ class DelegationAgent(LLMChatAgent):
 
     DelegationAgent:
     Example usage::
-        from fluxion.core.agents.delegation_agent import DelegationAgent
-        from fluxion.core.agents.llm_agent import LLMChatAgent
-        from fluxion.core.registry.agent_registry import AgentRegistry
-        from fluxion.core.modules.llm_modules import LLMChatModule
-        from fluxion.core.agents.llm_agent import LLMQueryAgent
+        from fluxion_a.core.agents.delegation_agent import DelegationAgent
+        from fluxion_a.core.agents.llm_agent import LLMChatAgent
+        from fluxion_a.core.registry.agent_registry import AgentRegistry
+        from fluxion_a.core.modules.llm_modules import LLMChatModule
+        from fluxion_a.core.agents.llm_agent import LLMQueryAgent
         from pydantic import Field, BaseModel
 
         class DataSummarizerAgent(LLMChatAgent):
@@ -193,8 +193,8 @@ class DelegationAgent(LLMChatAgent):
 
 # Example Usage
 if __name__ == "__main__":
-    from fluxion.core.modules.llm_modules import LLMChatModule
-    from fluxion.core.agents.llm_agent import LLMChatAgent, LLMQueryAgent
+    from fluxion_ai.core.modules.llm_modules import LLMChatModule
+    from fluxion_ai.core.agents.llm_agent import LLMChatAgent, LLMQueryAgent
     from pydantic import Field, BaseModel
 
     class DataSummarizerAgent(LLMChatAgent):

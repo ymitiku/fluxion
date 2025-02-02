@@ -1,5 +1,5 @@
 import unittest
-from fluxion.utils.retry import retry
+from fluxion_ai.utils.retry import retry
 
 class TestRetry(unittest.TestCase):
     def test_successful_execution(self):

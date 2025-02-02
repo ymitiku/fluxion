@@ -1,5 +1,5 @@
 """
-fluxion.core.llm_agent
+fluxion_ai.core.llm_agent
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Defines agents for interacting with Large Language Models (LLMs).
@@ -11,10 +11,10 @@ The module includes:
 
 import json
 from typing import Any, Callable, Dict, List, Optional
-from fluxion.core.agents.agent import Agent
-from fluxion.core.modules.llm_modules import LLMQueryModule, LLMChatModule
-from fluxion.core.registry.tool_registry import ToolRegistry
-from fluxion.models.message_model import Message, MessageHistory, ToolCall
+from fluxion_ai.core.agents.agent import Agent
+from fluxion_ai.core.modules.llm_modules import LLMQueryModule, LLMChatModule
+from fluxion_ai.core.registry.tool_registry import ToolRegistry
+from fluxion_ai.models.message_model import Message, MessageHistory, ToolCall
 
 
 class LLMQueryAgent(Agent):
@@ -23,8 +23,8 @@ class LLMQueryAgent(Agent):
 
     LLMQueryAgent:
     example-usage::
-        from fluxion.core.agents.llm_agent import LLMQueryAgent
-        from fluxion.core.modules.llm_modules import LLMQueryModule
+        from fluxion_ai.core.agents.llm_agent import LLMQueryAgent
+        from fluxion_ai.core.modules.llm_modules import LLMQueryModule
 
         llm_query_module = LLMQueryModule(endpoint="http://localhost:11434/api/query", model="llama3.2", timeout=120)
         llm_query_agent = LLMQueryAgent(name="LLMQueryAgent", llm_module=llm_query_module)
@@ -86,9 +86,9 @@ class LLMChatAgent(Agent):
     LLMChatAgent:
     example-usage::
 
-        from fluxion.core.agents.llm_agent import LLMChatAgent
-        from fluxion.core.modules.llm_modules import LLMChatModule
-        from fluxion.core.registry.tool_registry import ToolRegistry
+        from fluxion_ai.core.agents.llm_agent import LLMChatAgent
+        from fluxion_ai.core.modules.llm_modules import LLMChatModule
+        from fluxion_ai.core.registry.tool_registry import ToolRegistry
 
         llm_chat_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2", timeout=120)
         llm_chat_agent = LLMChatAgent(name="LLMChatAgent", llm_module=llm_chat_module)
@@ -264,9 +264,9 @@ class PersistentLLMChatAgent(LLMChatAgent):
     PersistentLLMChatAgent:
     example-usage::
 
-        from fluxion.core.agents.llm_agent import PersistentLLMChatAgent
-        from fluxion.core.modules.llm_modules import LLMChatModule
-        from fluxion.core.registry.tool_registry import ToolRegistry
+        from fluxion_ai.core.agents.llm_agent import PersistentLLMChatAgent
+        from fluxion_ai.core.modules.llm_modules import LLMChatModule
+        from fluxion_ai.core.registry.tool_registry import ToolRegistry
 
         llm_chat_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2", timeout=120)
         llm_chat_agent = PersistentLLMChatAgent(name="LLMChatAgent", llm_module=llm_chat_module)

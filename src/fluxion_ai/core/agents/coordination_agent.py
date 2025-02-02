@@ -1,10 +1,10 @@
 import json
 from fluxon.parser import parse_json_with_recovery
-from fluxion.core.agents.llm_agent import LLMChatAgent
-from fluxion.core.registry.agent_registry import AgentRegistry
+from fluxion_ai.core.agents.llm_agent import LLMChatAgent
+from fluxion_ai.core.registry.agent_registry import AgentRegistry
 from typing import List, Dict, Any
-from fluxion.core.registry.tool_registry import call_agent
-from fluxion.models.message_model import Message, MessageHistory, ToolCall
+from fluxion_ai.core.registry.tool_registry import call_agent
+from fluxion_ai.models.message_model import Message, MessageHistory, ToolCall
 
 class CoordinationAgent(LLMChatAgent):
     """
@@ -13,9 +13,9 @@ class CoordinationAgent(LLMChatAgent):
 
     CoordinationAgent:
     example-usage::
-        from fluxion.core.agents.coordination_agent import CoordinationAgent
-        from fluxion.core.modules.llm_modules import LLMChatModule
-        from fluxion.core.agents.agent import Agent
+        from fluxion_ai.core.agents.coordination_agent import CoordinationAgent
+        from fluxion_ai.core.modules.llm_modules import LLMChatModule
+        from fluxion_ai.core.agents.agent import Agent
         from pydantic import Field, BaseModel
         
         llm_chat_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2", timeout=120)
@@ -212,8 +212,8 @@ class CoordinationAgent(LLMChatAgent):
 # Example Usage
 if __name__ == "__main__":
     # Mock LLMChatModule for demonstration purposes
-    from fluxion.core.modules.llm_modules import LLMChatModule
-    from fluxion.core.agents.agent import Agent
+    from fluxion_ai.core.modules.llm_modules import LLMChatModule
+    from fluxion_ai.core.agents.agent import Agent
     from pydantic import Field, BaseModel
 
     llm_chat_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2", timeout=120)

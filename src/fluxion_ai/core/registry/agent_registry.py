@@ -6,8 +6,8 @@ class AgentRegistry:
 
     AgentRegistry:
     example-usage::
-        from fluxion.core.registry.agent_registry import AgentRegistry
-        from fluxion.core.agents.agent import Agent
+        from fluxion_ai.core.registry.agent_registry import AgentRegistry
+        from fluxion_ai.core.agents.agent import Agent
 
         class MyAgent(Agent):
             def __init__(self, name: str, description: str):
