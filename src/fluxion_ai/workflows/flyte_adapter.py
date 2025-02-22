@@ -12,12 +12,17 @@ Functions:
 
 """
 
-from flytekit import task, workflow, dynamic
+
 from fluxion_ai.workflows.abstract_workflow import AbstractWorkflow
 from fluxion_ai.workflows.agent_node import AgentNode
 from typing import Any, Dict
 
 import logging
+
+try:
+    from flytekit import task, dynamic
+except ImportError:
+    raise ImportError("Flyte is not installed. Please install Flyte with 'pip install flytekit'.")
 
 class FlyteWorkflowAdapter:
     """initial_inputs

@@ -16,13 +16,10 @@ setup(
         "docstring_parser==0.16",
         "faiss-cpu==1.8.0",
         "flytekit==1.13.15",
-        "openai==0.27.8",
-        "pyttsx3==2.90",
         "Pillow==10.4.0",
         "speechrecognition==3.8.1",
         "gtts",
         "playsound",
-        "PyAudio",
         "numpy==1.26.0",
         "graphviz==0.20.3"
     ],

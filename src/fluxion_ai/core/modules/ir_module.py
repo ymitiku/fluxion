@@ -30,11 +30,17 @@ example-usage::
 
 
 
-import faiss
+
 from typing import List, Generator, Dict, Any
 import numpy as np
 from fluxion_ai.core.modules.api_module import ApiModule
 import logging
+
+try:
+    import faiss
+except ImportError:
+    raise ImportError("FAISS is required for the IR module. Please install it using `pip install faiss-cpu` or `pip install faiss-gpu`")
+
 
 
 class EmbeddingApiModule(ApiModule):
