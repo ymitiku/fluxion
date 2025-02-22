@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="fluxion-ai-python",
-    version="1.1.0-beta",
+    version="1.1.0",
     author="Mitiku Yohannes",
     author_email="se.mitiku.yohannes@gmail.com",
     description="A framework for orchestrating flow-based agentic workflows using LLMs.",
