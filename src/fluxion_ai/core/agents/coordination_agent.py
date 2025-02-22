@@ -4,7 +4,7 @@ from fluxion_ai.core.agents.llm_agent import LLMChatAgent
 from fluxion_ai.core.registry.agent_registry import AgentRegistry
 from typing import List, Dict, Any
 from fluxion_ai.core.registry.tool_registry import call_agent
-from fluxion_ai.models.message_model import Message, MessageHistory, ToolCall
+from fluxion_ai.models.message_model import Message, MessageHistory
 
 class CoordinationAgent(LLMChatAgent):
     """

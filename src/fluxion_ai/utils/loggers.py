@@ -1,10 +1,6 @@
-from enum import Enum
 import json
 from typing import Optional
 from datetime import datetime
-
-
-
 
 class FluxionLogger:
     """ Logger class for logging output """

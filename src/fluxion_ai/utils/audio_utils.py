@@ -20,10 +20,7 @@ Functions:
 
 import tempfile
 import os
-
-from gtts import gTTS
-from playsound import playsound
-import speech_recognition as sr
+from typing import Any
 
 class AudioUtilsError(Exception):
     """Base exception for AudioUtils errors."""
@@ -49,6 +46,11 @@ def google_text_to_speech(text: str, filepath: str, lang: str = "en"):
         filepath (str): Path where the audio file will be saved.
         lang (str): Language code for the TTS (default: "en").
     """
+    try:
+        from gtts import gTTS
+    except ImportError:
+        raise ImportError("The 'gtts' package is required for text-to-speech conversion. "
+                          "Please install it using 'pip install gtts'.")
     tts = gTTS(text=text, lang=lang)
     tts.save(filepath)
 
@@ -60,10 +62,15 @@ def play_audio(filepath: str):
     Args:
         filepath (str): Path to the audio file to be played.
     """
+    try:
+        from playsound import playsound
+    except ImportError:
+        raise ImportError("The 'playsound' package is required for playing audio. "
+                          "Please install it using 'pip install playsound'.")
     playsound(filepath)
 
 
-def load_audio(recognizer: sr.Recognizer, audio_path: str = None):
+def load_audio(recognizer: Any, audio_path: str = None):
     """
     Loads audio data from a file or microphone.
 
@@ -73,6 +80,12 @@ def load_audio(recognizer: sr.Recognizer, audio_path: str = None):
     Returns:
         speech_recognition.AudioData: The loaded audio data.
     """
+    try:
+        import speech_recognition as sr
+    except ImportError:
+        raise ImportError("The 'SpeechRecognition' package is required for audio processing. "
+                          "Please install it using 'pip install SpeechRecognition'.")
+
     if audio_path:
         with sr.AudioFile(audio_path) as source:
             audio = recognizer.record(source)

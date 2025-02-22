@@ -23,7 +23,6 @@ Examples:
 from abc import abstractmethod
 import numpy as np
 from fluxion_ai.perception.sources.perception_source import PerceptionSource
-import sounddevice as sd
 
 class AudioSource(PerceptionSource):
     def __init__(self, **kwargs):
@@ -83,6 +82,10 @@ class AudioFileSource(AudioSource):
     
 class AudioRecordingSource(AudioSource):
     def get_audio(self, **kwargs) -> np.ndarray:
+        try:
+            import sounddevice as sd
+        except ImportError:
+            raise ImportError("Sounddevice is required for AudioRecordingSource (pip install sounddevice)")
         duration = kwargs.pop("duration", 1)
         frequency = kwargs.pop("frequency", 44100)
         channels = kwargs.pop("channels", 1)

@@ -11,7 +11,6 @@ with nodes and managing their execution order.
 from typing import Dict, List, Any
 from abc import ABC, abstractmethod
 from fluxion_ai.workflows.agent_node import AgentNode
-from graphviz import Digraph
 
 
 
@@ -211,6 +210,11 @@ class AbstractWorkflow(ABC):
         Returns:
             str: Path to the generated visualization file.
         """
+        try:
+            from graphviz import Digraph
+        except ImportError:
+            raise ImportError("The 'graphviz' package is required for workflow visualization. "
+                              "Please install it using 'pip install graphviz'.")
         dot = Digraph(name=self.name, format=format)
         dot.attr(rankdir='LR')
 
