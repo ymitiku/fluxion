@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import Mock
-from fluxion.modules.rag_module import RagModule
+from fluxion_ai.modules.rag_module import RagModule
 
 class TestRagModule(unittest.TestCase):
     def test_rag_execution(self):

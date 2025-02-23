@@ -35,3 +35,4 @@ which python
 which pip
 pip install -r requirements.txt --prefer-binary
 pip install -r requirements-dev.txt --prefer-binary
+pip install -r requirements-extra.txt --prefer-binary

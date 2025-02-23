@@ -19,32 +19,32 @@ Indices and tables
    :maxdepth: 4
    :caption: API Reference:
 
-   fluxion.core.registry.agent_registry
-   fluxion.core.registry.tool_registry
-   fluxion.core.registry
-   fluxion.core.agents.agent
-   fluxion.core.agents.coordination_agent
-   fluxion.core.agents.llm_agent
-   fluxion.core.agents.planning_agent
-   fluxion.core.agents
-   fluxion.core.modules.api_module
-   fluxion.core.modules.ir_module
-   fluxion.core.modules.llm_modules
-   fluxion.core.modules
-   fluxion.core
-   fluxion.modules.rag_module
-   fluxion.modules.contextual_response
-   fluxion.modules
-   fluxion.perception.perception
-   fluxion.perception
-   fluxion.prebuilt_agents.chatbot
-   fluxion.prebuilt_agents
-   fluxion.utils
-   fluxion.workflows.abstract_workflow
-   fluxion.workflows.agent_node
-   fluxion.workflows.flyte_adapter
-   fluxion.workflows.workflow_progress_tracker
-   fluxion.workflows
+   fluxion_ai.core.registry.agent_registry
+   fluxion_ai.core.registry.tool_registry
+   fluxion_ai.core.registry
+   fluxion_ai.core.agents.agent
+   fluxion_ai.core.agents.coordination_agent
+   fluxion_ai.core.agents.llm_agent
+   fluxion_ai.core.agents.planning_agent
+   fluxion_ai.core.agents
+   fluxion_ai.core.modules.api_module
+   fluxion_ai.core.modules.ir_module
+   fluxion_ai.core.modules.llm_modules
+   fluxion_ai.core.modules
+   fluxion_ai.core
+   fluxion_ai.modules.rag_module
+   fluxion_ai.modules.contextual_response
+   fluxion_ai.modules
+   fluxion_ai.perception.perception
+   fluxion_ai.perception
+   fluxion_ai.prebuilt_agents.chatbot
+   fluxion_ai.prebuilt_agents
+   fluxion_ai.utils
+   fluxion_ai.workflows.abstract_workflow
+   fluxion_ai.workflows.agent_node
+   fluxion_ai.workflows.flyte_adapter
+   fluxion_ai.workflows.workflow_progress_tracker
+   fluxion_ai.workflows
    fluxion
 
 

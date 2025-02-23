@@ -1,6 +1,6 @@
-from fluxion.core.modules.ir_module import IndexingModule, RetrievalModule
-from fluxion.core.modules.llm_modules import LLMChatModule
-from fluxion.modules.rag_module import RagModule
+from fluxion_ai.core.modules.ir_module import IndexingModule, RetrievalModule
+from fluxion_ai.core.modules.llm_modules import LLMChatModule
+from fluxion_ai.modules.rag_module import RagModule
 
 
 if __name__ == "__main__":
@@ -28,7 +28,7 @@ if __name__ == "__main__":
   
     query = "Who is Robert B. Darnell? What is his lab's recent discovery?"
 
-    retrieval_module = RetrievalModule(index=index, documents=documents, endpoint=endpoint, model=model, embedding_size=384)
+    retrieval_module = RetrievalModule(indexing_module=index_module, endpoint=endpoint, model=model, embedding_size=384)
     response = retrieval_module.execute(query=query, top_k=2)
     print("Query:", query)
     print("Retrieval Response:")

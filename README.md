@@ -3,7 +3,7 @@
 ![CI Workflow](https://github.com/ymitiku/fluxion/actions/workflows/ci.yml/badge.svg)
 
 
-**Fluxion** is a Python library for building and managing flow-based agentic workflows. Designed with modularity, scalability, and extensibility in mind, Fluxion simplifies the integration of locally or remotely hosted language models (LLMs) powered by [Ollama](https://ollama.com). By leveraging its robust architecture, developers can create intelligent systems capable of natural conversation, contextual reasoning, tool invocation, and autonomous decision-making, enabling seamless orchestration of complex, dynamic workflows.
+**Fluxion** is a Python library for building and managing agentic workflows. Designed with modularity, scalability, and extensibility in mind, Fluxion simplifies the integration of locally or remotely hosted language models (LLMs) powered by [Ollama](https://ollama.com). By leveraging its robust architecture, developers can create intelligent systems capable of natural conversation, contextual reasoning, tool invocation, and autonomous decision-making, enabling seamless orchestration of complex, dynamic workflows.
 
 ---
 
@@ -89,10 +89,13 @@ Fluxion provides a powerful suite of tools and functionalities to enable the dev
 
 ### **Steps**
 
+#### **GitHub Installation**
+
 1. **Clone the Repository:**
    ```bash
    git clone https://github.com/ymitiku/fluxion.git
    cd fluxion
+   pip install -e .
    ```
 
 2. **Set Up the Environment:**
@@ -109,6 +112,11 @@ Fluxion provides a powerful suite of tools and functionalities to enable the dev
    ```bash
    bash scripts/build_docs.sh
    ```
+
+#### **PyPI Installation**
+```bash
+pip install fluxion-ai-python
+```
 
 ---
 
@@ -140,20 +148,30 @@ Fluxion uses [Ollama](https://ollama.com) to connect to locally hosted LLMs. Her
 
 Use Fluxion to interact with locally hosted LLMs. For example:
 
+#### **Using generation endpoint:**
 ```python
-from fluxion.core.modules.llm_modules import LLMQueryModule, LLMChatModule
-from fluxion.models.message_models import Message, MessageHistory
+from fluxion_ai.core.modules.llm_modules import LLMQueryModule
 
 # Initialize the LLMQueryModule
 llm_query = LLMQueryModule(endpoint="http://localhost:11434/api/generate", model="llama3.2")
 response = llm_query.execute(prompt="What is the capital of France?")
 print("Query Response:", response)
+# Query Response: The capital of France is Paris.
+```
+
+#### **Using chat endpoint:**
+
+```python
+from fluxion_ai.core.modules.llm_modules import LLMChatModule
 
 # Initialize the LLMChatModule
 llm_chat = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2")
-messages = MessageHistory(messages = [Message(role="user", content="Hello!")])
+messages = [
+  {"role": "user", "content": "Hello!"},
+]
 response = llm_chat.execute(messages=messages)
 print("Chat Response:", response)
+# Chat Response: {'role': 'assistant', 'content': 'How can I assist you today?'}
 ```
 
 ---
@@ -163,8 +181,9 @@ print("Chat Response:", response)
 Agents can perform tool calls dynamically:
 
 ```python
-from fluxion.core.agents.llm_agent import LLMChatAgent
-from fluxion.core.modules.llm_modules import LLMChatModule
+from fluxion_ai.core.agents.llm_agent import LLMChatAgent
+from fluxion_ai.core.modules.llm_modules import LLMChatModule
+from fluxion_ai.models.message_model import Message, MessageHistory
 
 # Define a tool function
 def get_weather(city_name: str) -> dict:
@@ -193,9 +212,9 @@ print("Chat with Tool Call Response:", response)
 Here’s how to integrate it with an `LLMChatAgent`:
 
 ```python
-from fluxion.core.registry.tool_registry import call_agent
-from fluxion.core.agents.llm_agent import LLMChatAgent
-from fluxion.core.modules.llm_modules import LLMChatModule
+from fluxion_ai.core.registry.tool_registry import call_agent
+from fluxion_ai.core.agents.llm_agent import LLMChatAgent
+from fluxion_ai.core.modules.llm_modules import LLMChatModule
 
 # Define a tool function
 def get_weather(city_name: str) -> dict:
@@ -265,18 +284,23 @@ except RuntimeError as e:
 Fluxion supports creating workflows using agent nodes:
 
 ```python
-from fluxion.workflows.agent_node import AgentNode
-from fluxion.workflows.abstract_workflow import AbstractWorkflow
+from fluxion_ai.core.agents.llm_agent import LLMChatAgent
+from fluxion_ai.core.modules.llm_modules import LLMChatModule
+from fluxion_ai.workflows.agent_node import AgentNode
+from fluxion_ai.workflows.abstract_workflow import AbstractWorkflow
+from fluxion_ai.models.message_model import Message, MessageHistory
 
 class CustomWorkflow(AbstractWorkflow):
     def define_workflow(self):
-        node1 = AgentNode(name="Node1", agent=YourCustomAgent1())
-        node2 = AgentNode(name="Node2", agent=YourCustomAgent2(), dependencies=[node1])
+        module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2")
+        node1 = AgentNode(name="Node1", agent=LLMChatAgent("Agent1", llm_module=module))
+        node2 = AgentNode(name="Node2", agent=LLMChatAgent("Agent2", llm_module=module))
         self.add_node(node1)
         self.add_node(node2)
 
 workflow = CustomWorkflow(name="ExampleWorkflow")
-inputs = {"key": "value"}
+workflow.define_workflow()
+inputs = {"messages": MessageHistory(messages=[Message(role="user", content="Hello!")])}
 results = workflow.execute(inputs=inputs)
 print("Workflow Results:", results)
 ```

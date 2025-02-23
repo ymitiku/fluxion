@@ -1,7 +1,7 @@
-from fluxion.models.message_model import Message, MessageHistory
-from fluxion.core.agents.delegation_agent import DelegationAgent
-from fluxion.core.modules.llm_modules import LLMChatModule
-from fluxion.core.agents.agent import Agent
+from fluxion_ai.models.message_model import Message, MessageHistory
+from fluxion_ai.core.agents.delegation_agent import DelegationAgent
+from fluxion_ai.core.modules.llm_modules import LLMChatModule
+from fluxion_ai.core.agents.agent import Agent
 
 # Mock specialized agents
 class GenericAgent(Agent):

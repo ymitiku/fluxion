@@ -1,5 +1,5 @@
-from fluxion.core.modules.llm_modules import LLMQueryModule, LLMChatModule
-from fluxion.core.agents.planning_agent import PlanningAgent
+from fluxion_ai.core.modules.llm_modules import LLMQueryModule, LLMChatModule
+from fluxion_ai.core.agents.planning_agent import PlanningAgent
 
 # Initialize LLM modules (mock or real)
 llm_query_module = LLMQueryModule(endpoint="http://localhost:11434/api/generate", model="llama3.2", timeout=120)

@@ -1,4 +1,4 @@
-from fluxion.prebuilt_agents.chatbot import ChatbotAgent
+from fluxion_ai.prebuilt_agents.chatbot import ChatbotAgent
 
 chatbot = ChatbotAgent(
     name="PersistentChatbot", 

@@ -3,11 +3,11 @@
 import unittest
 from unittest.mock import Mock, patch, MagicMock
 
-from fluxion.core.agents.llm_agent import LLMQueryAgent, LLMChatAgent, PersistentLLMChatAgent
-from fluxion.core.registry.agent_registry import AgentRegistry
-from fluxion.core.modules.llm_modules import LLMQueryModule, LLMChatModule
-from fluxion.core.registry.tool_registry import ToolRegistry
-from fluxion.models.message_model import MessageHistory, Message, ToolCall
+from fluxion_ai.core.agents.llm_agent import LLMQueryAgent, LLMChatAgent, PersistentLLMChatAgent
+from fluxion_ai.core.registry.agent_registry import AgentRegistry
+from fluxion_ai.core.modules.llm_modules import LLMQueryModule, LLMChatModule
+from fluxion_ai.core.registry.tool_registry import ToolRegistry
+from fluxion_ai.models.message_model import MessageHistory, Message, ToolCall
 
 
 
@@ -21,7 +21,7 @@ class TestLLMQueryAgent(unittest.TestCase):
     def tearDown(self):
         AgentRegistry.clear_registry()
 
-    @patch("fluxion.core.modules.api_module.requests.post")
+    @patch("fluxion_ai.core.modules.api_module.requests.post")
     def test_execute_success(self, mock_post):
         # Mock LLMQueryModule response
         mock_post.return_value.json.return_value = {"response": "Paris"}
@@ -44,7 +44,7 @@ class TestLLMQueryAgent(unittest.TestCase):
             timeout=10
         )
 
-    @patch("fluxion.core.modules.api_module.requests.post")
+    @patch("fluxion_ai.core.modules.api_module.requests.post")
     def test_execute_with_system_instructions(self, mock_post):
         # Mock LLMQueryModule response
         mock_post.return_value.json.return_value = {"response": "Paris"}
@@ -72,7 +72,7 @@ class TestLLMQueryAgent(unittest.TestCase):
             timeout=10
         )
 
-    @patch("fluxion.core.modules.api_module.requests.post")
+    @patch("fluxion_ai.core.modules.api_module.requests.post")
     def test_execute_with_seeds_and_temperature(self, mock_post):
         # Mock LLMQueryModule response
         mock_post.return_value.json.return_value = {"response": "Paris"}
