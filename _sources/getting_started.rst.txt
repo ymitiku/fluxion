@@ -72,7 +72,7 @@ Your First Workflow
 Define a custom agent that performs a simple task:
 
 ```python
-from fluxion.core.agents.agent import Agent
+from fluxion_ai.core.agents.agent import Agent
 
 class HelloWorldAgent(Agent):
     def execute(self, name: str) -> dict:
@@ -85,8 +85,8 @@ agent = HelloWorldAgent(name="HelloAgent")
 Create a workflow that uses the agent:
 
 ```python
-from fluxion.workflows.agent_node import AgentNode
-from fluxion.workflows.abstract_workflow import AbstractWorkflow
+from fluxion_ai.workflows.agent_node import AgentNode
+from fluxion_ai.workflows.abstract_workflow import AbstractWorkflow
 
 class HelloWorldWorkflow(AbstractWorkflow):
     def define_workflow(self):
@@ -115,4 +115,4 @@ Next Steps
 
 ---
 
-Congratulations! You've taken the first step toward mastering Fluxion. Let us know how we can improve or help you achieve your goals.
+Congratulations! You've taken the first step toward mastering fluxion_ai. Let us know how we can improve or help you achieve your goals.

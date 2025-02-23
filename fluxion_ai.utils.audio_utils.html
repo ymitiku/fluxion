@@ -1,0 +1,289 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>fluxion_ai.utils.audio_utils module &mdash; Fluxion 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="fluxion_ai.utils.retry module" href="fluxion_ai.utils.retry.html" />
+    <link rel="prev" title="fluxion_ai.utils package" href="fluxion_ai.utils.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Fluxion
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="fluxion_ai.core.registry.agent_registry.html">fluxion_ai.core.registry.agent_registry module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion_ai.core.registry.tool_registry.html">fluxion_ai.core.registry.tool_registry module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion_ai.core.registry.html">fluxion_ai.core.registry package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion_ai.core.agents.agent.html">fluxion_ai.core.agents.agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion_ai.core.agents.coordination_agent.html">fluxion_ai.core.agents.coordination_agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion_ai.core.agents.llm_agent.html">fluxion_ai.core.agents.llm_agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion_ai.core.agents.planning_agent.html">fluxion_ai.core.agents.planning_agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion_ai.core.agents.html">fluxion_ai.core.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion_ai.core.modules.api_module.html">fluxion_ai.core.modules.api_module module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion_ai.core.modules.ir_module.html">fluxion_ai.core.modules.ir_module module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion_ai.core.modules.llm_modules.html">fluxion_ai.core.modules.llm_modules module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion_ai.core.modules.html">fluxion_ai.core.modules package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion_ai.core.html">fluxion_ai.core package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion_ai.modules.rag_module.html">fluxion_ai.modules.rag_module module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion_ai.modules.contextual_response.html">fluxion_ai.modules.contextual_response module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion_ai.modules.html">fluxion_ai.modules package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion_ai.perception.perception.html">fluxion_ai.perception.perception module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion_ai.perception.html">fluxion_ai.perception package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion_ai.prebuilt_agents.html">fluxion_ai.prebuilt_agents package</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="fluxion_ai.utils.html">fluxion_ai.utils package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="fluxion_ai.utils.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">fluxion_ai.utils.audio_utils module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fluxion-ai-utils-audio-utils">fluxion_ai.utils.audio_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fluxion_ai.utils.audio_utils.AudioUtils"><code class="docutils literal notranslate"><span class="pre">AudioUtils</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fluxion_ai.utils.audio_utils.AudioUtilsError"><code class="docutils literal notranslate"><span class="pre">AudioUtilsError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fluxion_ai.utils.audio_utils.SpeechToTextError"><code class="docutils literal notranslate"><span class="pre">SpeechToTextError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fluxion_ai.utils.audio_utils.TextToSpeechError"><code class="docutils literal notranslate"><span class="pre">TextToSpeechError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fluxion_ai.utils.audio_utils.google_text_to_speech"><code class="docutils literal notranslate"><span class="pre">google_text_to_speech()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fluxion_ai.utils.audio_utils.load_audio"><code class="docutils literal notranslate"><span class="pre">load_audio()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fluxion_ai.utils.audio_utils.play_audio"><code class="docutils literal notranslate"><span class="pre">play_audio()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="fluxion_ai.utils.retry.html">fluxion_ai.utils.retry module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="fluxion_ai.utils.html#module-fluxion_ai.utils">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion_ai.workflows.abstract_workflow.html">fluxion_ai.workflows.abstract_workflow module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion_ai.workflows.agent_node.html">fluxion_ai.workflows.agent_node module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion_ai.workflows.flyte_adapter.html">fluxion_ai.workflows.flyte_adapter module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion_ai.workflows.workflow_progress_tracker.html">fluxion_ai.workflows.workflow_progress_tracker module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fluxion_ai.workflows.html">fluxion_ai.workflows package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Getting Started:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Fluxion</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="fluxion_ai.utils.html">fluxion_ai.utils package</a></li>
+      <li class="breadcrumb-item active">fluxion_ai.utils.audio_utils module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/fluxion_ai.utils.audio_utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="fluxion-ai-utils-audio-utils-module">
+<h1>fluxion_ai.utils.audio_utils module<a class="headerlink" href="#fluxion-ai-utils-audio-utils-module" title="Link to this heading"></a></h1>
+<section id="fluxion-ai-utils-audio-utils">
+<span id="module-fluxion_ai.utils.audio_utils"></span><h2>fluxion_ai.utils.audio_utils<a class="headerlink" href="#fluxion-ai-utils-audio-utils" title="Link to this heading"></a></h2>
+<p>This module provides utility functions for audio processing tasks such as
+speech-to-text (STT) and text-to-speech (TTS) conversion.</p>
+<dl class="simple">
+<dt>Classes:</dt><dd><ul class="simple">
+<li><p>AudioUtils: A utility class for handling audio-related tasks.</p></li>
+</ul>
+</dd>
+<dt>Exceptions:</dt><dd><ul class="simple">
+<li><p>AudioUtilsError: Base exception for AudioUtils errors.</p></li>
+<li><p>SpeechToTextError: Exception raised for Speech-to-Text errors.</p></li>
+<li><p>TextToSpeechError: Exception raised for Text-to-Speech errors.</p></li>
+</ul>
+</dd>
+<dt>Functions:</dt><dd><ul class="simple">
+<li><p>google_text_to_speech: Converts text to speech and saves it as an audio file.</p></li>
+<li><p>play_audio: Plays an audio file.</p></li>
+<li><p>load_audio: Loads audio data from a file or microphone.</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="fluxion_ai.utils.audio_utils.AudioUtils">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fluxion_ai.utils.audio_utils.</span></span><span class="sig-name descname"><span class="pre">AudioUtils</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recognizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lang</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fluxion_ai/utils/audio_utils.html#AudioUtils"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion_ai.utils.audio_utils.AudioUtils" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A utility class for handling audio-related tasks such as
+speech-to-text (STT) and text-to-speech (TTS).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fluxion_ai.utils.audio_utils.AudioUtils.text_to_speech">
+<span class="sig-name descname"><span class="pre">text_to_speech</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fluxion_ai/utils/audio_utils.html#AudioUtils.text_to_speech"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion_ai.utils.audio_utils.AudioUtils.text_to_speech" title="Link to this definition"></a></dt>
+<dd><p>Converts text to speech and plays the audio using provided save and play functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – Text to convert to speech.</p></li>
+<li><p><strong>save_fn</strong> (<em>callable</em>) – Function to save TTS output to a file.</p></li>
+<li><p><strong>play_fn</strong> (<em>callable</em>) – Function to play the audio file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#fluxion_ai.utils.audio_utils.TextToSpeechError" title="fluxion_ai.utils.audio_utils.TextToSpeechError"><strong>TextToSpeechError</strong></a> – If text-to-speech conversion fails.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fluxion_ai.utils.audio_utils.AudioUtils.transcribe_audio">
+<span class="sig-name descname"><span class="pre">transcribe_audio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">audio_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/fluxion_ai/utils/audio_utils.html#AudioUtils.transcribe_audio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion_ai.utils.audio_utils.AudioUtils.transcribe_audio" title="Link to this definition"></a></dt>
+<dd><p>Transcribes audio to text using a provided load function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>load_audio_fn</strong> (<em>callable</em>) – Function to load audio, returning an audio object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Transcribed text.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#fluxion_ai.utils.audio_utils.SpeechToTextError" title="fluxion_ai.utils.audio_utils.SpeechToTextError"><strong>SpeechToTextError</strong></a> – If transcription fails.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="fluxion_ai.utils.audio_utils.AudioUtilsError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fluxion_ai.utils.audio_utils.</span></span><span class="sig-name descname"><span class="pre">AudioUtilsError</span></span><a class="reference internal" href="_modules/fluxion_ai/utils/audio_utils.html#AudioUtilsError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion_ai.utils.audio_utils.AudioUtilsError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Base exception for AudioUtils errors.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="fluxion_ai.utils.audio_utils.SpeechToTextError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fluxion_ai.utils.audio_utils.</span></span><span class="sig-name descname"><span class="pre">SpeechToTextError</span></span><a class="reference internal" href="_modules/fluxion_ai/utils/audio_utils.html#SpeechToTextError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion_ai.utils.audio_utils.SpeechToTextError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#fluxion_ai.utils.audio_utils.AudioUtilsError" title="fluxion_ai.utils.audio_utils.AudioUtilsError"><code class="xref py py-class docutils literal notranslate"><span class="pre">AudioUtilsError</span></code></a></p>
+<p>Exception raised for Speech-to-Text errors.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="fluxion_ai.utils.audio_utils.TextToSpeechError">
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fluxion_ai.utils.audio_utils.</span></span><span class="sig-name descname"><span class="pre">TextToSpeechError</span></span><a class="reference internal" href="_modules/fluxion_ai/utils/audio_utils.html#TextToSpeechError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion_ai.utils.audio_utils.TextToSpeechError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#fluxion_ai.utils.audio_utils.AudioUtilsError" title="fluxion_ai.utils.audio_utils.AudioUtilsError"><code class="xref py py-class docutils literal notranslate"><span class="pre">AudioUtilsError</span></code></a></p>
+<p>Exception raised for Text-to-Speech errors.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fluxion_ai.utils.audio_utils.google_text_to_speech">
+<span class="sig-prename descclassname"><span class="pre">fluxion_ai.utils.audio_utils.</span></span><span class="sig-name descname"><span class="pre">google_text_to_speech</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lang</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fluxion_ai/utils/audio_utils.html#google_text_to_speech"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion_ai.utils.audio_utils.google_text_to_speech" title="Link to this definition"></a></dt>
+<dd><p>Converts text to speech and saves it as an audio file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – Text to be converted to speech.</p></li>
+<li><p><strong>filepath</strong> (<em>str</em>) – Path where the audio file will be saved.</p></li>
+<li><p><strong>lang</strong> (<em>str</em>) – Language code for the TTS (default: “en”).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fluxion_ai.utils.audio_utils.load_audio">
+<span class="sig-prename descclassname"><span class="pre">fluxion_ai.utils.audio_utils.</span></span><span class="sig-name descname"><span class="pre">load_audio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recognizer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">audio_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fluxion_ai/utils/audio_utils.html#load_audio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion_ai.utils.audio_utils.load_audio" title="Link to this definition"></a></dt>
+<dd><p>Loads audio data from a file or microphone.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>audio_path</strong> (<em>str</em>) – Path to the audio file. If None, loads audio from the microphone.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The loaded audio data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>speech_recognition.AudioData</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fluxion_ai.utils.audio_utils.play_audio">
+<span class="sig-prename descclassname"><span class="pre">fluxion_ai.utils.audio_utils.</span></span><span class="sig-name descname"><span class="pre">play_audio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fluxion_ai/utils/audio_utils.html#play_audio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion_ai.utils.audio_utils.play_audio" title="Link to this definition"></a></dt>
+<dd><p>Plays an audio file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filepath</strong> (<em>str</em>) – Path to the audio file to be played.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="fluxion_ai.utils.html" class="btn btn-neutral float-left" title="fluxion_ai.utils package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="fluxion_ai.utils.retry.html" class="btn btn-neutral float-right" title="fluxion_ai.utils.retry module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Mitiku Yohannes.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

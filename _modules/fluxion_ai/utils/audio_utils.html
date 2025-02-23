@@ -1,0 +1,310 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>fluxion_ai.utils.audio_utils &mdash; Fluxion 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Fluxion
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.core.registry.agent_registry.html">fluxion_ai.core.registry.agent_registry module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.core.registry.tool_registry.html">fluxion_ai.core.registry.tool_registry module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.core.registry.html">fluxion_ai.core.registry package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.core.agents.agent.html">fluxion_ai.core.agents.agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.core.agents.coordination_agent.html">fluxion_ai.core.agents.coordination_agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.core.agents.llm_agent.html">fluxion_ai.core.agents.llm_agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.core.agents.planning_agent.html">fluxion_ai.core.agents.planning_agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.core.agents.html">fluxion_ai.core.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.core.modules.api_module.html">fluxion_ai.core.modules.api_module module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.core.modules.ir_module.html">fluxion_ai.core.modules.ir_module module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.core.modules.llm_modules.html">fluxion_ai.core.modules.llm_modules module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.core.modules.html">fluxion_ai.core.modules package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.core.html">fluxion_ai.core package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.modules.rag_module.html">fluxion_ai.modules.rag_module module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.modules.contextual_response.html">fluxion_ai.modules.contextual_response module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.modules.html">fluxion_ai.modules package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.perception.perception.html">fluxion_ai.perception.perception module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.perception.html">fluxion_ai.perception package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.prebuilt_agents.html">fluxion_ai.prebuilt_agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.utils.html">fluxion_ai.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.workflows.abstract_workflow.html">fluxion_ai.workflows.abstract_workflow module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.workflows.agent_node.html">fluxion_ai.workflows.agent_node module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.workflows.flyte_adapter.html">fluxion_ai.workflows.flyte_adapter module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.workflows.workflow_progress_tracker.html">fluxion_ai.workflows.workflow_progress_tracker module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../fluxion_ai.workflows.html">fluxion_ai.workflows package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Getting Started:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Fluxion</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">fluxion_ai.utils.audio_utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for fluxion_ai.utils.audio_utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">fluxion_ai.utils.audio_utils</span>
+<span class="sd">~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="sd">This module provides utility functions for audio processing tasks such as</span>
+<span class="sd">speech-to-text (STT) and text-to-speech (TTS) conversion.</span>
+
+<span class="sd">Classes:</span>
+<span class="sd">    - AudioUtils: A utility class for handling audio-related tasks.</span>
+<span class="sd">    </span>
+<span class="sd">Exceptions:</span>
+<span class="sd">    - AudioUtilsError: Base exception for AudioUtils errors.</span>
+<span class="sd">    - SpeechToTextError: Exception raised for Speech-to-Text errors.</span>
+<span class="sd">    - TextToSpeechError: Exception raised for Text-to-Speech errors.</span>
+
+<span class="sd">Functions:</span>
+<span class="sd">    - google_text_to_speech: Converts text to speech and saves it as an audio file.</span>
+<span class="sd">    - play_audio: Plays an audio file.</span>
+<span class="sd">    - load_audio: Loads audio data from a file or microphone.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+
+<div class="viewcode-block" id="AudioUtilsError">
+<a class="viewcode-back" href="../../../fluxion_ai.utils.audio_utils.html#fluxion_ai.utils.audio_utils.AudioUtilsError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AudioUtilsError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base exception for AudioUtils errors.&quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="SpeechToTextError">
+<a class="viewcode-back" href="../../../fluxion_ai.utils.audio_utils.html#fluxion_ai.utils.audio_utils.SpeechToTextError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SpeechToTextError</span><span class="p">(</span><span class="n">AudioUtilsError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised for Speech-to-Text errors.&quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="TextToSpeechError">
+<a class="viewcode-back" href="../../../fluxion_ai.utils.audio_utils.html#fluxion_ai.utils.audio_utils.TextToSpeechError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TextToSpeechError</span><span class="p">(</span><span class="n">AudioUtilsError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised for Text-to-Speech errors.&quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="google_text_to_speech">
+<a class="viewcode-back" href="../../../fluxion_ai.utils.audio_utils.html#fluxion_ai.utils.audio_utils.google_text_to_speech">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">google_text_to_speech</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">lang</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts text to speech and saves it as an audio file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text (str): Text to be converted to speech.</span>
+<span class="sd">        filepath (str): Path where the audio file will be saved.</span>
+<span class="sd">        lang (str): Language code for the TTS (default: &quot;en&quot;).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">gtts</span><span class="w"> </span><span class="kn">import</span> <span class="n">gTTS</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;The &#39;gtts&#39; package is required for text-to-speech conversion. &quot;</span>
+                          <span class="s2">&quot;Please install it using &#39;pip install gtts&#39;.&quot;</span><span class="p">)</span>
+    <span class="n">tts</span> <span class="o">=</span> <span class="n">gTTS</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="n">lang</span><span class="p">)</span>
+    <span class="n">tts</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="play_audio">
+<a class="viewcode-back" href="../../../fluxion_ai.utils.audio_utils.html#fluxion_ai.utils.audio_utils.play_audio">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">play_audio</span><span class="p">(</span><span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plays an audio file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filepath (str): Path to the audio file to be played.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">playsound</span><span class="w"> </span><span class="kn">import</span> <span class="n">playsound</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;The &#39;playsound&#39; package is required for playing audio. &quot;</span>
+                          <span class="s2">&quot;Please install it using &#39;pip install playsound&#39;.&quot;</span><span class="p">)</span>
+    <span class="n">playsound</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="load_audio">
+<a class="viewcode-back" href="../../../fluxion_ai.utils.audio_utils.html#fluxion_ai.utils.audio_utils.load_audio">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_audio</span><span class="p">(</span><span class="n">recognizer</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">audio_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loads audio data from a file or microphone.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        audio_path (str): Path to the audio file. If None, loads audio from the microphone.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        speech_recognition.AudioData: The loaded audio data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">speech_recognition</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sr</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;The &#39;SpeechRecognition&#39; package is required for audio processing. &quot;</span>
+                          <span class="s2">&quot;Please install it using &#39;pip install SpeechRecognition&#39;.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">audio_path</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">sr</span><span class="o">.</span><span class="n">AudioFile</span><span class="p">(</span><span class="n">audio_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">source</span><span class="p">:</span>
+            <span class="n">audio</span> <span class="o">=</span> <span class="n">recognizer</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">sr</span><span class="o">.</span><span class="n">Microphone</span><span class="p">()</span> <span class="k">as</span> <span class="n">source</span><span class="p">:</span>
+            <span class="n">recognizer</span><span class="o">.</span><span class="n">adjust_for_ambient_noise</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">audio</span> <span class="o">=</span> <span class="n">recognizer</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">audio</span></div>
+
+
+
+<div class="viewcode-block" id="AudioUtils">
+<a class="viewcode-back" href="../../../fluxion_ai.utils.audio_utils.html#fluxion_ai.utils.audio_utils.AudioUtils">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AudioUtils</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A utility class for handling audio-related tasks such as</span>
+<span class="sd">    speech-to-text (STT) and text-to-speech (TTS).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recognizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the AudioUtils.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            recognizer: An external speech recognizer instance for dependency injection (default: None).</span>
+<span class="sd">            lang (str): Language code for TTS and STT (default: &quot;en&quot;).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lang</span> <span class="o">=</span> <span class="n">lang</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recognizer</span> <span class="o">=</span> <span class="n">recognizer</span>  <span class="c1"># External recognizer injected for testing</span>
+
+<div class="viewcode-block" id="AudioUtils.transcribe_audio">
+<a class="viewcode-back" href="../../../fluxion_ai.utils.audio_utils.html#fluxion_ai.utils.audio_utils.AudioUtils.transcribe_audio">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">transcribe_audio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">audio_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Transcribes audio to text using a provided load function.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            load_audio_fn (callable): Function to load audio, returning an audio object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Transcribed text.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SpeechToTextError: If transcription fails.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">audio</span> <span class="o">=</span> <span class="n">load_audio</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">recognizer</span><span class="p">,</span> <span class="n">audio_path</span><span class="p">)</span>  <span class="c1"># Function handles loading audio</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">recognizer</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">SpeechToTextError</span><span class="p">(</span><span class="s2">&quot;No recognizer provided for speech transcription.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">recognizer</span><span class="o">.</span><span class="n">recognize_google</span><span class="p">(</span><span class="n">audio</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SpeechToTextError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error during transcription: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AudioUtils.text_to_speech">
+<a class="viewcode-back" href="../../../fluxion_ai.utils.audio_utils.html#fluxion_ai.utils.audio_utils.AudioUtils.text_to_speech">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">text_to_speech</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts text to speech and plays the audio using provided save and play functions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            text (str): Text to convert to speech.</span>
+<span class="sd">            save_fn (callable): Function to save TTS output to a file.</span>
+<span class="sd">            play_fn (callable): Function to play the audio file.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TextToSpeechError: If text-to-speech conversion fails.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.mp3&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">tmp_file</span><span class="p">:</span>
+                <span class="n">google_text_to_speech</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">tmp_file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">play_audio</span><span class="p">(</span><span class="n">tmp_file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">tmp_file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">TextToSpeechError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Text-to-Speech conversion failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Mitiku Yohannes.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

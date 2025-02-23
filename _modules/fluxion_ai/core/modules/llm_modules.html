@@ -1,0 +1,548 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>fluxion_ai.core.modules.llm_modules &mdash; Fluxion 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            Fluxion
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.core.registry.agent_registry.html">fluxion_ai.core.registry.agent_registry module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.core.registry.tool_registry.html">fluxion_ai.core.registry.tool_registry module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.core.registry.html">fluxion_ai.core.registry package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.core.agents.agent.html">fluxion_ai.core.agents.agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.core.agents.coordination_agent.html">fluxion_ai.core.agents.coordination_agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.core.agents.llm_agent.html">fluxion_ai.core.agents.llm_agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.core.agents.planning_agent.html">fluxion_ai.core.agents.planning_agent module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.core.agents.html">fluxion_ai.core.agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.core.modules.api_module.html">fluxion_ai.core.modules.api_module module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.core.modules.ir_module.html">fluxion_ai.core.modules.ir_module module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.core.modules.llm_modules.html">fluxion_ai.core.modules.llm_modules module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.core.modules.html">fluxion_ai.core.modules package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.core.html">fluxion_ai.core package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.modules.rag_module.html">fluxion_ai.modules.rag_module module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.modules.contextual_response.html">fluxion_ai.modules.contextual_response module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.modules.html">fluxion_ai.modules package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.perception.perception.html">fluxion_ai.perception.perception module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.perception.html">fluxion_ai.perception package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.prebuilt_agents.html">fluxion_ai.prebuilt_agents package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.utils.html">fluxion_ai.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.workflows.abstract_workflow.html">fluxion_ai.workflows.abstract_workflow module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.workflows.agent_node.html">fluxion_ai.workflows.agent_node module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.workflows.flyte_adapter.html">fluxion_ai.workflows.flyte_adapter module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.workflows.workflow_progress_tracker.html">fluxion_ai.workflows.workflow_progress_tracker module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../fluxion_ai.workflows.html">fluxion_ai.workflows package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Getting Started:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../getting_started.html">Getting Started</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Fluxion</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">fluxion_ai.core.modules.llm_modules</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for fluxion_ai.core.modules.llm_modules</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.api_module</span><span class="w"> </span><span class="kn">import</span> <span class="n">ApiModule</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">fluxion_ai.modules.llm_modules</span>
+<span class="sd">~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="sd">Provides an interface for interacting with a locally or remotely hosted LLM via REST API.</span>
+
+<span class="sd">llm_modules:</span>
+<span class="sd">Example-Usage::</span>
+<span class="sd">    from fluxion_ai.modules.llm_query_module import LLMQueryModule</span>
+
+<span class="sd">    # Initialize the LLMQueryModule</span>
+<span class="sd">    llm_module = LLMQueryModule(endpoint=&quot;http://localhost:11434/api/generate&quot;, model=&quot;llama3.2&quot;)</span>
+
+<span class="sd">    # Query the LLM</span>
+<span class="sd">    response = llm_module.query(prompt=&quot;What is the capital of France?&quot;)</span>
+<span class="sd">    print(response)</span>
+<span class="sd">    ```</span>
+
+<span class="sd">    ```python</span>
+
+<span class="sd">    from fluxion_ai.modules.llm_query_module import LLMChatModule</span>
+
+<span class="sd">    # Initialize the LLMChatModule</span>
+<span class="sd">    llm_module = LLMChatModule(endpoint=&quot;http://localhost:11434/api/chat&quot;, model=&quot;llama3.2&quot;)</span>
+
+<span class="sd">    # Chat with the LLM</span>
+<span class="sd">    response = llm_module.chat(messages= [{</span>
+<span class="sd">        &quot;role&quot;: &quot;user&quot;,</span>
+<span class="sd">        &quot;content&quot;: &quot;Hello!&quot;</span>
+<span class="sd">        },</span>
+<span class="sd">        {</span>
+<span class="sd">        &quot;role&quot;: &quot;assistant&quot;,</span>
+<span class="sd">        &quot;content&quot;: &quot;Hello, how can I help you?&quot;</span>
+<span class="sd">        }]</span>
+<span class="sd">    )</span>
+
+<span class="sd">    print(response)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="LLMApiModule">
+<a class="viewcode-back" href="../../../../fluxion_ai.core.modules.llm_modules.html#fluxion_ai.core.modules.llm_modules.LLMApiModule">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LLMApiModule</span><span class="p">(</span><span class="n">ApiModule</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides an interface for interacting with a locally hosted LLM via REST API.</span>
+
+<span class="sd">    This class abstracts common patterns for interacting with an LLM via REST API.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endpoint</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">headers</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">response_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;response&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span>  <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">streaming</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Initialize the LLMApiModule.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            endpoint (str): The API endpoint URL.</span>
+<span class="sd">            model (str): The model name to use.</span>
+<span class="sd">            headers (dict, optional): Headers to include in the API requests. Defaults to an empty dictionary.</span>
+<span class="sd">            timeout (int, optional): Timeout for API requests in seconds. Defaults to 10 seconds.</span>
+<span class="sd">            response_key (str, optional): The key to use for the response. Defaults to &quot;response&quot;</span>
+<span class="sd">            temperature (float, optional): The temperature parameter for the LLM. Defaults to None.</span>
+<span class="sd">            seed (int, optional): The seed parameter for the LLM. Defaults to None.</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">response_key</span> <span class="o">=</span> <span class="n">response_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span> <span class="o">=</span> <span class="n">temperature</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">streaming</span> <span class="o">=</span> <span class="n">streaming</span>
+    
+<div class="viewcode-block" id="LLMApiModule.execute">
+<a class="viewcode-back" href="../../../../fluxion_ai.core.modules.llm_modules.html#fluxion_ai.core.modules.llm_modules.LLMApiModule.execute">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Execute the LLM module. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            *args: Variable length argument list.</span>
+<span class="sd">            **kwargs: Arbitrary keyword arguments.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, Any]: The response from the LLM.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_input_params</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">full_response</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;full_response&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">inputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid input: </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> is empty.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">full_response</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="LLMApiModule.get_input_params">
+<a class="viewcode-back" href="../../../../fluxion_ai.core.modules.llm_modules.html#fluxion_ai.core.modules.llm_modules.LLMApiModule.get_input_params">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_input_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Get the input parameters for the LLM module.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            *args: Variable length argument list.</span>
+<span class="sd">            **kwargs: Arbitrary keyword arguments.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, Any]: The input parameters for the LLM module.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+            <span class="s2">&quot;stream&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">streaming</span> <span class="ow">or</span> <span class="kc">False</span>
+        <span class="p">}</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="p">:</span>
+            <span class="n">output</span><span class="p">[</span><span class="s2">&quot;temperature&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">:</span>
+            <span class="n">output</span><span class="p">[</span><span class="s2">&quot;seed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span>
+        <span class="k">return</span> <span class="n">output</span></div>
+
+    
+
+<div class="viewcode-block" id="LLMApiModule.get_response">
+<a class="viewcode-back" href="../../../../fluxion_ai.core.modules.llm_modules.html#fluxion_ai.core.modules.llm_modules.LLMApiModule.get_response">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">full_response</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Send a POST request to the API endpoint and return the response.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (Dict[str, str]): The data to send in the POST request.</span>
+<span class="sd">            full_response (bool): Whether to return the full response or a processed subset.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, Any]: The parsed JSON response from the API.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_process</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">full_response</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RequestException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;API request failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span></div>
+
+        
+<div class="viewcode-block" id="LLMApiModule.post_process">
+<a class="viewcode-back" href="../../../../fluxion_ai.core.modules.llm_modules.html#fluxion_ai.core.modules.llm_modules.LLMApiModule.post_process">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">full_response</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Post-process the API response.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            response (Dict[str, Any]): The raw response from the API.</span>
+<span class="sd">            full_response (bool): Whether to return the full response or a processed subset.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, Any]: The processed response data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">full_response</span> <span class="ow">and</span> <span class="s2">&quot;error&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">response_key</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">response</span></div>
+</div>
+
+
+
+
+
+<div class="viewcode-block" id="LLMQueryModule">
+<a class="viewcode-back" href="../../../../fluxion_ai.core.modules.llm_modules.html#fluxion_ai.core.modules.llm_modules.LLMQueryModule">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LLMQueryModule</span><span class="p">(</span><span class="n">LLMApiModule</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class to handle querying an LLM via REST API. </span>
+
+<span class="sd">    This class abstracts common patterns for querying an LLM via REST API.</span>
+
+<span class="sd">    LLMQueryModule:</span>
+<span class="sd">    example-usage::</span>
+<span class="sd">        from fluxion_ai.modules.llm_query_module import LLMQueryModule</span>
+
+<span class="sd">        # Initialize the LLMQueryModule</span>
+<span class="sd">        llm_module = LLMQueryModule(endpoint=&quot;http://localhost:11434/api/generate&quot;, model=&quot;llama3.2&quot;)</span>
+
+<span class="sd">        # Query the LLM</span>
+<span class="sd">        response = llm_module.query(prompt=&quot;What is the capital of France?&quot;)</span>
+<span class="sd">        print(response)</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="LLMQueryModule.get_input_params">
+<a class="viewcode-back" href="../../../../fluxion_ai.core.modules.llm_modules.html#fluxion_ai.core.modules.llm_modules.LLMQueryModule.get_input_params">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_input_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the input parameters for the LLM query.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            prompt (str): The prompt for the LLM.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, str]: The input parameters for the LLM query.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_input_params</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;prompt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prompt</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+    
+<div class="viewcode-block" id="LLMQueryModule.post_process">
+<a class="viewcode-back" href="../../../../fluxion_ai.core.modules.llm_modules.html#fluxion_ai.core.modules.llm_modules.LLMQueryModule.post_process">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">full_response</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">response</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;No response received.&quot;</span><span class="p">}</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">response</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">response</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;No response received.&quot;</span><span class="p">}</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">,</span>
+                <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;assistant&quot;</span>
+            <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">post_process</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">full_response</span><span class="p">)</span></div>
+</div>
+
+        
+
+<div class="viewcode-block" id="LLMChatModule">
+<a class="viewcode-back" href="../../../../fluxion_ai.core.modules.llm_modules.html#fluxion_ai.core.modules.llm_modules.LLMChatModule">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LLMChatModule</span><span class="p">(</span><span class="n">LLMApiModule</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class to handle chatting with an LLM via REST API.</span>
+
+<span class="sd">    LLMChatModule:</span>
+<span class="sd">    example-usage::</span>
+<span class="sd">        from fluxion_ai.modules.llm_query_module import LLMChatModule</span>
+
+<span class="sd">        # Initialize the LLMChatModule</span>
+<span class="sd">        llm_module = LLMChatModule(endpoint=&quot;http://localhost:11434/api/chat&quot;, model=&quot;llama3.2&quot;)</span>
+
+<span class="sd">        # Chat with the LLM</span>
+<span class="sd">        response = llm_module.chat(messages= [{</span>
+<span class="sd">            &quot;role&quot;: &quot;user&quot;,</span>
+<span class="sd">            &quot;content&quot;: &quot;Hello!&quot;</span>
+<span class="sd">            },</span>
+<span class="sd">            {</span>
+<span class="sd">            &quot;role&quot;: &quot;assistant&quot;,</span>
+<span class="sd">            &quot;content&quot;: &quot;Hello, how can I help you?&quot;</span>
+<span class="sd">            }]</span>
+<span class="sd">        )</span>
+
+<span class="sd">        print(response)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">response_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;message&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Initialize the LLMChatModule.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            endpoint (str): The API endpoint URL.</span>
+<span class="sd">            model (str): The model name to use.</span>
+<span class="sd">            headers (dict, optional): Headers to include in the API requests. Defaults to an empty dictionary.</span>
+<span class="sd">            timeout (int, optional): Timeout for API requests in seconds. Defaults to 10 seconds.</span>
+<span class="sd">            response_key (str, optional): The key to use for the response. Defaults to &quot;message&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">response_key</span><span class="o">=</span><span class="n">response_key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LLMChatModule.get_input_params">
+<a class="viewcode-back" href="../../../../fluxion_ai.core.modules.llm_modules.html#fluxion_ai.core.modules.llm_modules.LLMChatModule.get_input_params">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_input_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">tools</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the input parameters for the LLM chat.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            messages (List[str]): The messages to chat with the LLM.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, str]: The input parameters for the LLM chat.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_input_params</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">messages</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;tools&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tools</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+    
+<div class="viewcode-block" id="LLMChatModule.post_process">
+<a class="viewcode-back" href="../../../../fluxion_ai.core.modules.llm_modules.html#fluxion_ai.core.modules.llm_modules.LLMChatModule.post_process">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">full_response</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">response</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;No response received.&quot;</span><span class="p">}</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">response</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span> <span class="ow">and</span> <span class="s2">&quot;error&quot;</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">response</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">response</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">response_key</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">response_key</span><span class="p">]</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">post_process</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">full_response</span><span class="p">)</span></div>
+</div>
+
+
+
+
+<div class="viewcode-block" id="DeepSeekR1QueryModule">
+<a class="viewcode-back" href="../../../../fluxion_ai.core.modules.llm_modules.html#fluxion_ai.core.modules.llm_modules.DeepSeekR1QueryModule">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DeepSeekR1QueryModule</span><span class="p">(</span><span class="n">LLMQueryModule</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class to handle querying the deepseek-r1 model&#39;s via REST API. R1 models&#39; output contains extra information for thinking process. </span>
+<span class="sd">    The thinking process is enclosed in a &lt;think&gt; &lt;/think&gt; tag.</span>
+
+<span class="sd">    DeepSeekR1QueryModule:</span>
+<span class="sd">    example-usage::</span>
+<span class="sd">        from fluxion_ai.modules.llm_query_module import DeepSeekR1QueryModule</span>
+
+<span class="sd">        # Initialize the DeepSeekR1QueryModule</span>
+<span class="sd">        llm_module = DeepSeekR1QueryModule(endpoint=&quot;http://localhost:11434/api/generate&quot;, model=&quot;deepseekr1&quot;)</span>
+
+<span class="sd">        # Query the DeepSeekR1 model</span>
+<span class="sd">        response = llm_module.query(prompt=&quot;What is the capital of France?&quot;)</span>
+<span class="sd">        print(response)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">remove_thinking_tag_content</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Initialize the DeepSeekR1QueryModule.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            args: Variable length argument list.</span>
+<span class="sd">            remove_thinking_tag_content (bool): Whether to remove the thinking process from the response. Defaults to True.</span>
+<span class="sd">            kwargs: Arbitrary keyword arguments.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_thinking_tag_content</span> <span class="o">=</span> <span class="n">remove_thinking_tag_content</span>
+
+
+<div class="viewcode-block" id="DeepSeekR1QueryModule.post_process">
+<a class="viewcode-back" href="../../../../fluxion_ai.core.modules.llm_modules.html#fluxion_ai.core.modules.llm_modules.DeepSeekR1QueryModule.post_process">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">full_response</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">post_process</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">full_response</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_thinking_tag_content</span> <span class="ow">and</span> <span class="s2">&quot;content&quot;</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
+            <span class="n">output</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_thinking</span><span class="p">(</span><span class="n">output</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">output</span></div>
+
+    
+<div class="viewcode-block" id="DeepSeekR1QueryModule.remove_thinking">
+<a class="viewcode-back" href="../../../../fluxion_ai.core.modules.llm_modules.html#fluxion_ai.core.modules.llm_modules.DeepSeekR1QueryModule.remove_thinking">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_thinking</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Remove the thinking process from the response.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            content (str): The content to process.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The content with the thinking process removed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">thinking_re</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;&lt;think&gt;.*?&lt;/think&gt;&quot;</span>
+        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">thinking_re</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div>
+</div>
+
+    
+
+    
+
+<div class="viewcode-block" id="DeepSeekR1ChatModule">
+<a class="viewcode-back" href="../../../../fluxion_ai.core.modules.llm_modules.html#fluxion_ai.core.modules.llm_modules.DeepSeekR1ChatModule">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DeepSeekR1ChatModule</span><span class="p">(</span><span class="n">LLMChatModule</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class to handle chatting with the deepseek-r1 model&#39;s via REST API. R1 models&#39; output contains extra information for thinking process. </span>
+<span class="sd">    The thinking process is enclosed in a &lt;think&gt; &lt;/think&gt; tag.</span>
+
+<span class="sd">    DeepSeekR1ChatModule:</span>
+<span class="sd">    example-usage::</span>
+<span class="sd">        from fluxion_ai.modules.llm_query_module import DeepSeekR1ChatModule</span>
+
+<span class="sd">        # Initialize the DeepSeekR1ChatModule</span>
+<span class="sd">        llm_module = DeepSeekR1ChatModule(endpoint=&quot;http://localhost:11434/api/chat&quot;, model=&quot;deepseekr1&quot;)</span>
+
+<span class="sd">        # Chat with the DeepSeekR1 model</span>
+<span class="sd">        response = llm_module.chat(messages= [{</span>
+<span class="sd">            &quot;role&quot;: &quot;user&quot;,</span>
+<span class="sd">            &quot;content&quot;: &quot;Hello!&quot;</span>
+<span class="sd">            },</span>
+<span class="sd">            {</span>
+<span class="sd">            &quot;role&quot;: &quot;assistant&quot;,</span>
+<span class="sd">            &quot;content&quot;: &quot;Hello, how can I help you?&quot;</span>
+<span class="sd">            }]</span>
+<span class="sd">        )</span>
+
+<span class="sd">        print(response)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">remove_thinking_tag_content</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Initialize the DeepSeekR1ChatModule.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            args: Variable length argument list.</span>
+<span class="sd">            remove_thinking_tag_content (bool): Whether to remove the thinking process from the response. Defaults to True.</span>
+<span class="sd">            kwargs: Arbitrary keyword arguments.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_thinking_tag_content</span> <span class="o">=</span> <span class="n">remove_thinking_tag_content</span>
+
+<div class="viewcode-block" id="DeepSeekR1ChatModule.post_process">
+<a class="viewcode-back" href="../../../../fluxion_ai.core.modules.llm_modules.html#fluxion_ai.core.modules.llm_modules.DeepSeekR1ChatModule.post_process">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">full_response</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">post_process</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">full_response</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_thinking_tag_content</span> <span class="ow">and</span> <span class="s2">&quot;content&quot;</span> <span class="ow">in</span> <span class="n">output</span><span class="p">:</span>
+            <span class="n">output</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_thinking</span><span class="p">(</span><span class="n">output</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">output</span></div>
+
+    
+<div class="viewcode-block" id="DeepSeekR1ChatModule.remove_thinking">
+<a class="viewcode-back" href="../../../../fluxion_ai.core.modules.llm_modules.html#fluxion_ai.core.modules.llm_modules.DeepSeekR1ChatModule.remove_thinking">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_thinking</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Remove the thinking process from the response.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            content (str): The content to process.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The content with the thinking process removed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">thinking_re</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;&lt;think&gt;.*?&lt;/think&gt;&quot;</span>
+        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">thinking_re</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div>
+
+    
+<div class="viewcode-block" id="DeepSeekR1ChatModule.get_input_params">
+<a class="viewcode-back" href="../../../../fluxion_ai.core.modules.llm_modules.html#fluxion_ai.core.modules.llm_modules.DeepSeekR1ChatModule.get_input_params">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_input_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">messages</span><span class="p">,</span> <span class="n">tools</span> <span class="o">=</span> <span class="p">{},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_input_params</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">messages</span><span class="o">=</span><span class="n">messages</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="n">tools</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;tools&quot;</span><span class="p">)</span> <span class="c1"># Currently, tools are not supported for DeepSeekR1 models</span>
+        <span class="k">return</span> <span class="n">output</span></div>
+</div>
+
+    
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Mitiku Yohannes.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
