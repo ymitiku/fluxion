@@ -6,13 +6,23 @@ from unittest.mock import Mock, patch, MagicMock
 from fluxion_ai.core.agents.llm_agent import LLMQueryAgent, LLMChatAgent, PersistentLLMChatAgent
 from fluxion_ai.core.registry.agent_registry import AgentRegistry
 from fluxion_ai.core.modules.llm_modules import LLMQueryModule, LLMChatModule
-from fluxion_ai.core.registry.tool_registry import ToolRegistry
+from fluxion_ai.core.registry.tool_registry import tool 
 from fluxion_ai.models.message_model import MessageHistory, Message, ToolCall
 
 
+@tool
+def example_tool(param1: str) -> str:
+    """ Example tool function for testing the ToolRegistry.
+    
+    Args:
+        param1 (str): The input parameter.
 
-def example_tool(param1: str):
+    Returns:
+        str: The processed parameter.
+    """
     return f"Processed {param1}"
+
+ex_tool = example_tool
 
 class TestLLMQueryAgent(unittest.TestCase):
     def setUp(self):
@@ -129,8 +139,7 @@ class TestLLMChatAgent(unittest.TestCase):
         AgentRegistry.clear_registry()
 
     def test_register_and_invoke_tool(self):
-
-        self.agent.tool_registry.register_tool(example_tool)
+        self.agent.tool_registry.register_tool(ex_tool)
         tool_call = ToolCall.from_llm_format({
             "function": {
                 "name": "test_llm_agent.example_tool",
@@ -144,10 +153,10 @@ class TestLLMChatAgent(unittest.TestCase):
     def test_tool_registry_with_duplicate_tool_name(self):
 
 
-        self.agent.tool_registry.register_tool(example_tool)
+        self.agent.tool_registry.register_tool(ex_tool)
 
         with self.assertRaises(ValueError):
-            self.agent.tool_registry.register_tool(example_tool)  # Registering the same tool should raise an error
+            self.agent.tool_registry.register_tool(ex_tool)  # Registering the same tool should raise an error
 
     def test_execute_with_single_tool_call(self):
         self.mock_llm_module.execute.return_value = {
@@ -158,7 +167,7 @@ class TestLLMChatAgent(unittest.TestCase):
             ]
         }
 
-        self.agent.tool_registry.register_tool(example_tool)
+        self.agent.tool_registry.register_tool(ex_tool)
 
         messages = MessageHistory(messages=[Message(role="user", content="What is the result?")])
         result = self.agent.execute(messages)
@@ -177,7 +186,7 @@ class TestLLMChatAgent(unittest.TestCase):
             {"role": "assistant", "content": "Final response."}
         ]
 
-        self.agent.tool_registry.register_tool(example_tool)
+        self.agent.tool_registry.register_tool(ex_tool)
 
         messages = MessageHistory(messages=[Message(role="user", content="What is the result?")])
         result = self.agent.execute(messages)
@@ -206,7 +215,7 @@ class TestLLMChatAgent(unittest.TestCase):
 
         
 
-        self.agent.tool_registry.register_tool(example_tool)
+        self.agent.tool_registry.register_tool(ex_tool)
 
         messages = MessageHistory(messages=[Message(role="user", content="What is the result?")])
         result = self.agent.execute(messages)
@@ -258,7 +267,7 @@ class TestPersistentLLMChatAgent(unittest.TestCase):
             ]
         }
 
-        self.agent.tool_registry.register_tool(example_tool)
+        self.agent.tool_registry.register_tool(ex_tool)
 
         messages = MessageHistory(messages=[Message(role="user", content="What is the result?")])
         result = self.agent.execute(messages)

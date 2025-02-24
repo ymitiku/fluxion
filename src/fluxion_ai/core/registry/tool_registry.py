@@ -1,14 +1,17 @@
 import docstring_parser
+from functools import wraps
 import inspect
 import logging
-from typing import List, Dict, Any, Callable, Optional, Union
-from typing import Dict, Any
+from pydantic import BaseModel, Field
+from pydoc import locate
+from typing import List, Dict, Any, Callable, Optional, Union, Literal
 
 import logging
 import time
 from typing import Dict, Any, Callable, Optional
 from fluxion_ai.core.registry.agent_registry import AgentRegistry
 from fluxion_ai.models.message_model import ToolCall, MessageHistory, Message
+
 
 
 logger = logging.getLogger("ToolRegistry")
@@ -127,6 +130,84 @@ def extract_function_metadata(func):
     return metadata
 
 
+class ToolProperty(BaseModel):
+    description: str
+    type: str
+
+    def to_dict(self):
+        return {
+            "description": self.description,
+            "type": self.type
+        }
+
+class ToolParameters(BaseModel):
+    type: Literal["object"] = "object"
+    properties: Dict[str, ToolProperty] = Field(..., description="The properties of the tool")
+    required: List[str] = Field(..., description="The required parameters of the tool")
+
+    def to_dict(self):
+        return {
+            "type": self.type,
+            "properties": {key: value.to_dict() for key, value in self.properties.items()},
+            "required": self.required
+        }
+
+class Tool:
+    def __init__(self, name: str, description: str, parameters: ToolParameters, func_reference: Callable[..., Any]):
+        self.name = name
+        self.description = description
+        self.parameters = parameters
+        self.func_reference = func_reference
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "description": self.description,
+            "parameters": self.parameters.to_dict()
+        }
+    
+    def validate_args(self, args: Dict[str, Any]):
+        for key in self.parameters.required:
+            if key not in args:
+                raise ValueError(f"Missing required argument: {key}")
+        for key, value in args.items():
+            if key not in self.parameters.properties:
+                raise ValueError(f"Unexpected argument: {key}")
+            property_type = locate(self.parameters.properties[key].type)
+
+            if not isinstance(value, property_type):
+                # raise TypeError(f"Expected {property_type} for argument {key}, got {type(value)}")
+                raise TypeError(f"Argument '{key}' must be of type {property_type.__name__}.")
+        return True
+    
+    def invoke(self, args: Dict[str, Any]):
+        self.validate_args(args)
+        return self.func_reference(**args)
+    
+
+
+
+def tool(func: Callable[..., Any]) -> Tool:
+    """ Decorator for creating a Tool object from a function
+
+    Args:
+        func (Callable[..., Any]): The function to create a tool from
+    
+    Returns:
+        Tool: The tool object created from the function    
+    """
+
+    
+
+    metadata = extract_function_metadata(func)
+
+    return Tool(
+        name=metadata["name"],
+        description=metadata["description"],
+        parameters=ToolParameters(**metadata["parameters"]),
+        func_reference=func
+    )
+
 
 
 class ToolRegistry:
@@ -141,20 +222,19 @@ class ToolRegistry:
         tool_registry.invoke_tool_call(tool_call)
     """
     def __init__(self):
-        self._registry: Dict[str, Callable] = {}
+        self._registry: Dict[str, Tool] = {}
 
-    def register_tool(self, func: Callable):
+    def register_tool(self, tool: Tool):
         """
         Register a tool function.
 
         Args:
-            func (Callable): The tool function to register.
+            tool (Tool): The tool object to register.
         """
-        metadata = extract_function_metadata(func)
-        tool_name = metadata["name"]
+        tool_name = tool.name
         if tool_name in self._registry:
             raise ValueError(f"Tool '{tool_name}' is already registered.")
-        self._registry[tool_name] = {"func": func, "metadata": metadata}
+        self._registry[tool_name] = tool
 
     def get_tool(self, name: str) -> Dict[str, Any]:
         """
@@ -168,9 +248,10 @@ class ToolRegistry:
         """
         if name not in self._registry:
             raise ValueError(f"Tool '{name}' is not registered.")
+        tool = self._registry[name]
         return {
             "type": "function",
-            "function": self._registry[name]["metadata"],
+            "function": tool.to_dict()
         }
 
     def list_tools(self) -> Dict[str, Any]:
@@ -180,7 +261,7 @@ class ToolRegistry:
         Returns:
             Dict[str, Any]: A dictionary of tool metadata.
         """
-        return {name: tool["metadata"] for name, tool in self._registry.items()}
+        return {name: tool.to_dict() for name, tool in self._registry.items()}
 
     def invoke_tool_call(self, tool_call:ToolCall) -> Any:
         """
@@ -195,35 +276,14 @@ class ToolRegistry:
         func_name = tool_call.name
         arguments = tool_call.arguments
 
-        metadata = self.get_tool(func_name)["function"]
-
-        self.validate_arguments(metadata, arguments)
-
         tool = self._registry.get(func_name)
         if not tool:
             raise ValueError(f"Tool '{func_name}' is not registered.")
-
-        func = tool["func"]
-        return func(**arguments)
+        
+        return tool.invoke(arguments)
     
     def clear_registry(self):
         """
         Clear the tool registry.
         """
         self._registry.clear()
-
-    def validate_arguments(cls, metadata, arguments):
-        properties = metadata["parameters"]["properties"]
-        required = metadata["parameters"]["required"]
-        for arg in required:
-            if arg not in arguments:
-                raise ValueError(f"Missing required argument: {arg}")
-            expected_type = properties[arg]["type"]
-            if expected_type in ["float", "int"] and type(arguments[arg]) == str: # Gracefully handle string to number conversion
-                expected_type_map = {"float": float, "int": int}
-                try:
-                    arguments[arg] = expected_type_map[expected_type](arguments[arg])
-                except ValueError:
-                    raise TypeError(f"Argument '{arg}' must be of type {expected_type}.")
-            if expected_type != "unknown" and not isinstance(arguments[arg], eval(expected_type)):
-                raise TypeError(f"Argument '{arg}' must be of type {expected_type}.")
