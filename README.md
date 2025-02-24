@@ -184,8 +184,10 @@ Agents can perform tool calls dynamically:
 from fluxion_ai.core.agents.llm_agent import LLMChatAgent
 from fluxion_ai.core.modules.llm_modules import LLMChatModule
 from fluxion_ai.models.message_model import Message, MessageHistory
+from fluxion_ai.core.registry.tool_registry import tool
 
 # Define a tool function
+@tool
 def get_weather(city_name: str) -> dict:
     return {"temperature": 20, "description": "sunny"}
 
@@ -215,8 +217,11 @@ Here’s how to integrate it with an `LLMChatAgent`:
 from fluxion_ai.core.registry.tool_registry import call_agent
 from fluxion_ai.core.agents.llm_agent import LLMChatAgent
 from fluxion_ai.core.modules.llm_modules import LLMChatModule
+from fluxion_ai.core.registry.tool_registry import tool
+
 
 # Define a tool function
+@tool
 def get_weather(city_name: str) -> dict:
     return {"temperature": 20, "description": "sunny"}
 
@@ -227,8 +232,6 @@ llm_module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="ll
 llm_agent = LLMChatAgent(name="WeatherAgent", llm_module=llm_module)
 llm_agent.register_tool(get_weather)
 
-# Register call_agent for dynamic agent invocation
-llm_agent.register_tool(call_agent)
 ```
 
 ---

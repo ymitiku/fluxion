@@ -1,7 +1,7 @@
 import requests
 from fluxion_ai.core.modules.llm_modules import LLMChatModule
 from fluxion_ai.core.agents.llm_agent import LLMChatAgent
-from fluxion_ai.core.registry.tool_registry import ToolRegistry
+from fluxion_ai.core.registry.tool_registry import tool
 from fluxion_ai.models.message_model import Message, MessageHistory
 
 
@@ -9,6 +9,8 @@ from fluxion_ai.models.message_model import Message, MessageHistory
 api_key = "5d6ec24598b18640b52f5351029d9dde" # Enter your API key here
 base_url = "http://api.openweathermap.org/data/2.5/weather?"
 
+
+@tool
 def get_current_whether(city_name: str) -> str:
     """ Get the current weather in a city.
 
@@ -52,16 +54,5 @@ if __name__ == "__main__":
         Message(role="user", content="What is the weather in Paris?")
     ])
     result = llm_agent.execute(messages)
-    print("Query: ", messages[-1].content)
+    print("Query: ", messages[0].content)
     print("Response:", result[-1].content)
-    """
-    [
-        {'role': 'system', 'content': 'Provide accurate answers.'}, 
-        {'role': 'system', 'content': 'Provide accurate answers.'}, 
-        {'role': 'user', 'content': 'What is the weather in Paris?'}, 
-        {'role': 'assistant', 'content': '', 'tool_calls': [{'function': {'name': 'get_current_whether', 'arguments': {'city_name': 'Paris'}}}]}, 
-        {'role': 'tool', 'content': "{'temperature': 6.850000000000023, 'description': 'overcast clouds', 'humidity': 91}"}, 
-        {'role': 'assistant', 'content': 'The current weather in Paris is overcast with a temperature of 6.85°C (40.37°F) and high humidity at 91%.'}
-    ]
-
-    """
