@@ -121,12 +121,10 @@ class AbstractWorkflow(ABC):
             visit(node_name)
 
         for node in self.nodes.values():
-            for input_key, source in node.inputs.items():
-                node_name, output_name = source.split(".")
+            for input_key, node_name in node.inputs.items():
+
                 if node_name not in self.nodes:
                     raise ValueError(f"Input '{input_key}' references non-existent node '{node_name}'.")
-                if output_name not in self.nodes[node_name].outputs:
-                    raise ValueError(f"Input '{input_key}' references non-existent output '{output_name}' in node '{node_name}'.")
     
     def _validate_inputs_and_outputs(self):
         """
@@ -135,19 +133,13 @@ class AbstractWorkflow(ABC):
         Raises:
             ValueError: If inputs reference non-existent outputs or there are missing inputs.
         """
-        available_outputs = set(self.initial_inputs.keys())
 
         for node in self.nodes.values():
             # Check if inputs are resolved
-            for input_key, source in node.inputs.items():
-                node_name, output_name = source.split(".")
+            for input_key, node_name in node.inputs.items():
                 if node_name not in self.nodes and node_name != "workflow_input":
                     raise ValueError(f"Input '{input_key}' references non-existent node '{node_name}'.")
-                if node_name != "workflow_input" and output_name not in self.nodes[node_name].outputs:
-                    raise ValueError(f"Input '{input_key}' references non-existent output '{output_name}' in node '{node_name}'.")
             
-            # Add this node's outputs to available outputs
-            available_outputs.update(f"{node.name}.{output}" for output in node.outputs)
 
 
 
