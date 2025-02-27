@@ -296,8 +296,11 @@ from fluxion_ai.models.message_model import Message, MessageHistory
 class CustomWorkflow(AbstractWorkflow):
     def define_workflow(self):
         module = LLMChatModule(endpoint="http://localhost:11434/api/chat", model="llama3.2")
-        node1 = AgentNode(name="Node1", agent=LLMChatAgent("Agent1", llm_module=module))
-        node2 = AgentNode(name="Node2", agent=LLMChatAgent("Agent2", llm_module=module))
+        agent1 = LLMChatAgent("Agent1", llm_module=module)
+        agent2 = LLMChatAgent("Agent2", llm_module=module)
+        node1 = AgentNode(name="Node1", agent=agent1)
+        node2 = AgentNode(name="Node2", agent=agent2, dependencies=[node1], inputs={"messages": "Node1"})
+        
         self.add_node(node1)
         self.add_node(node2)
 
