@@ -64,7 +64,22 @@
 <li class="toctree-l1"><a class="reference internal" href="fluxion_ai.perception.html">fluxion_ai.perception package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fluxion_ai.prebuilt_agents.html">fluxion_ai.prebuilt_agents package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fluxion_ai.utils.html">fluxion_ai.utils package</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">fluxion_ai.workflows.abstract_workflow module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">fluxion_ai.workflows.abstract_workflow module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#fluxion-ai-core-abstract-workflow">fluxion_ai.core.abstract_workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow"><code class="docutils literal notranslate"><span class="pre">AbstractWorkflow</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.add_node"><code class="docutils literal notranslate"><span class="pre">AbstractWorkflow.add_node()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.define_workflow"><code class="docutils literal notranslate"><span class="pre">AbstractWorkflow.define_workflow()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.determine_execution_order"><code class="docutils literal notranslate"><span class="pre">AbstractWorkflow.determine_execution_order()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.execute"><code class="docutils literal notranslate"><span class="pre">AbstractWorkflow.execute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.get_node_by_name"><code class="docutils literal notranslate"><span class="pre">AbstractWorkflow.get_node_by_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.get_node_dependencies"><code class="docutils literal notranslate"><span class="pre">AbstractWorkflow.get_node_dependencies()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.get_node_parents"><code class="docutils literal notranslate"><span class="pre">AbstractWorkflow.get_node_parents()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.nodes"><code class="docutils literal notranslate"><span class="pre">AbstractWorkflow.nodes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.visualize"><code class="docutils literal notranslate"><span class="pre">AbstractWorkflow.visualize()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="fluxion_ai.workflows.agent_node.html">fluxion_ai.workflows.agent_node module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fluxion_ai.workflows.flyte_adapter.html">fluxion_ai.workflows.flyte_adapter module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fluxion_ai.workflows.workflow_progress_tracker.html">fluxion_ai.workflows.workflow_progress_tracker module</a></li>
@@ -101,6 +116,146 @@
              
   <section id="fluxion-ai-workflows-abstract-workflow-module">
 <h1>fluxion_ai.workflows.abstract_workflow module<a class="headerlink" href="#fluxion-ai-workflows-abstract-workflow-module" title="Link to this heading"></a></h1>
+<section id="fluxion-ai-core-abstract-workflow">
+<span id="module-fluxion_ai.workflows.abstract_workflow"></span><h2>fluxion_ai.core.abstract_workflow<a class="headerlink" href="#fluxion-ai-core-abstract-workflow" title="Link to this heading"></a></h2>
+<p>Defines the AbstractWorkflow class, which serves as the base class for defining and executing workflows.</p>
+<p>This module is part of the Fluxion framework and provides core functionality for constructing workflows
+with nodes and managing their execution order.</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="fluxion_ai.workflows.abstract_workflow.AbstractWorkflow">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fluxion_ai.workflows.abstract_workflow.</span></span><span class="sig-name descname"><span class="pre">AbstractWorkflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workflow_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fluxion_ai/workflows/abstract_workflow.html#AbstractWorkflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Abstract base class for workflows.</p>
+<p>Defines the structure for adding nodes, validating dependencies,
+determining execution order, and executing the workflow.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.add_node">
+<span class="sig-name descname"><span class="pre">add_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fluxion_ai/workflows/abstract_workflow.html#AbstractWorkflow.add_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.add_node" title="Link to this definition"></a></dt>
+<dd><p>Add a node to the workflow.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node</strong> (<em>Node</em>) – The node to add.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.define_workflow">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">define_workflow</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fluxion_ai/workflows/abstract_workflow.html#AbstractWorkflow.define_workflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.define_workflow" title="Link to this definition"></a></dt>
+<dd><p>Define the workflow by adding nodes and dependencies.
+Must be implemented in subclasses.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.determine_execution_order">
+<span class="sig-name descname"><span class="pre">determine_execution_order</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/fluxion_ai/workflows/abstract_workflow.html#AbstractWorkflow.determine_execution_order"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.determine_execution_order" title="Link to this definition"></a></dt>
+<dd><p>Determine the execution order of nodes based on dependencies.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of node names in the order they should be executed.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/fluxion_ai/workflows/abstract_workflow.html#AbstractWorkflow.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.execute" title="Link to this definition"></a></dt>
+<dd><p>Execute the workflow.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>, </em><em>optional</em>) – Inputs for the workflow.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Results of the workflow execution.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.get_node_by_name">
+<span class="sig-name descname"><span class="pre">get_node_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fluxion_ai/workflows/abstract_workflow.html#AbstractWorkflow.get_node_by_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.get_node_by_name" title="Link to this definition"></a></dt>
+<dd><p>Get a node by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The name of the node to retrieve.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The node with the given name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Node</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.get_node_dependencies">
+<span class="sig-name descname"><span class="pre">get_node_dependencies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Node</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/fluxion_ai/workflows/abstract_workflow.html#AbstractWorkflow.get_node_dependencies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.get_node_dependencies" title="Link to this definition"></a></dt>
+<dd><p>Get the dependencies of a node by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node_name</strong> (<em>str</em>) – The name of the node.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary of dependencies for the node.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, Node]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.get_node_parents">
+<span class="sig-name descname"><span class="pre">get_node_parents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/fluxion_ai/workflows/abstract_workflow.html#AbstractWorkflow.get_node_parents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.get_node_parents" title="Link to this definition"></a></dt>
+<dd><p>Get the parent nodes of a node by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node_name</strong> (<em>str</em>) – The name of the node.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of parent node names for the node.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.nodes">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nodes</span></span><a class="headerlink" href="#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.nodes" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.visualize">
+<span class="sig-name descname"><span class="pre">visualize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'workflow_graph'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'png'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fluxion_ai/workflows/abstract_workflow.html#AbstractWorkflow.visualize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.visualize" title="Link to this definition"></a></dt>
+<dd><p>Visualizes the workflow as a directed graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_path</strong> (<em>str</em>) – The output path for the generated graph (without extension).</p></li>
+<li><p><strong>format</strong> (<em>str</em>) – The format of the output file (e.g., ‘png’, ‘pdf’).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Path to the generated visualization file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 

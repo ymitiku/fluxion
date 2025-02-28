@@ -107,23 +107,29 @@
  | <a href="#G"><strong>G</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
+ | <a href="#V"><strong>V</strong></a>
  | <a href="#W"><strong>W</strong></a>
  
 </div>
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="fluxion_ai.core.registry.agent_registry.html#fluxion_ai.core.registry.agent_registry.AgentRegistry">AgentRegistry (class in fluxion_ai.core.registry.agent_registry)</a>
+      <li><a href="fluxion_ai.workflows.abstract_workflow.html#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow">AbstractWorkflow (class in fluxion_ai.workflows.abstract_workflow)</a>
 </li>
-      <li><a href="fluxion_ai.core.modules.api_module.html#fluxion_ai.core.modules.api_module.ApiModule">ApiModule (class in fluxion_ai.core.modules.api_module)</a>, <a href="fluxion_ai.core.modules.html#fluxion_ai.core.modules.api_module.ApiModule">[1]</a>
+      <li><a href="fluxion_ai.workflows.abstract_workflow.html#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.add_node">add_node() (fluxion_ai.workflows.abstract_workflow.AbstractWorkflow method)</a>
+</li>
+      <li><a href="fluxion_ai.core.registry.agent_registry.html#fluxion_ai.core.registry.agent_registry.AgentRegistry">AgentRegistry (class in fluxion_ai.core.registry.agent_registry)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="fluxion_ai.core.modules.api_module.html#fluxion_ai.core.modules.api_module.ApiModule">ApiModule (class in fluxion_ai.core.modules.api_module)</a>, <a href="fluxion_ai.core.modules.html#fluxion_ai.core.modules.api_module.ApiModule">[1]</a>
+</li>
       <li><a href="fluxion_ai.utils.audio_utils.html#fluxion_ai.utils.audio_utils.AudioUtils">AudioUtils (class in fluxion_ai.utils.audio_utils)</a>
 </li>
       <li><a href="fluxion_ai.utils.audio_utils.html#fluxion_ai.utils.audio_utils.AudioUtilsError">AudioUtilsError</a>
@@ -144,9 +150,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="fluxion_ai.core.modules.html#fluxion_ai.core.modules.llm_modules.DeepSeekR1ChatModule">DeepSeekR1ChatModule (class in fluxion_ai.core.modules.llm_modules)</a>, <a href="fluxion_ai.core.modules.llm_modules.html#fluxion_ai.core.modules.llm_modules.DeepSeekR1ChatModule">[1]</a>
 </li>
+      <li><a href="fluxion_ai.core.modules.html#fluxion_ai.core.modules.llm_modules.DeepSeekR1QueryModule">DeepSeekR1QueryModule (class in fluxion_ai.core.modules.llm_modules)</a>, <a href="fluxion_ai.core.modules.llm_modules.html#fluxion_ai.core.modules.llm_modules.DeepSeekR1QueryModule">[1]</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="fluxion_ai.core.modules.html#fluxion_ai.core.modules.llm_modules.DeepSeekR1QueryModule">DeepSeekR1QueryModule (class in fluxion_ai.core.modules.llm_modules)</a>, <a href="fluxion_ai.core.modules.llm_modules.html#fluxion_ai.core.modules.llm_modules.DeepSeekR1QueryModule">[1]</a>
+      <li><a href="fluxion_ai.workflows.abstract_workflow.html#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.define_workflow">define_workflow() (fluxion_ai.workflows.abstract_workflow.AbstractWorkflow method)</a>
+</li>
+      <li><a href="fluxion_ai.workflows.abstract_workflow.html#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.determine_execution_order">determine_execution_order() (fluxion_ai.workflows.abstract_workflow.AbstractWorkflow method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -158,6 +168,8 @@
 
       <ul>
         <li><a href="fluxion_ai.core.modules.html#fluxion_ai.core.modules.llm_modules.LLMApiModule.execute">(fluxion_ai.core.modules.llm_modules.LLMApiModule method)</a>, <a href="fluxion_ai.core.modules.llm_modules.html#fluxion_ai.core.modules.llm_modules.LLMApiModule.execute">[1]</a>
+</li>
+        <li><a href="fluxion_ai.workflows.abstract_workflow.html#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.execute">(fluxion_ai.workflows.abstract_workflow.AbstractWorkflow method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -281,6 +293,13 @@
 </li>
       </ul></li>
       <li>
+    fluxion_ai.workflows.abstract_workflow
+
+      <ul>
+        <li><a href="fluxion_ai.workflows.abstract_workflow.html#module-fluxion_ai.workflows.abstract_workflow">module</a>
+</li>
+      </ul></li>
+      <li>
     fluxion_ai.workflows.workflow_progress_tracker
 
       <ul>
@@ -307,8 +326,14 @@
         <li><a href="fluxion_ai.core.modules.html#fluxion_ai.core.modules.llm_modules.LLMQueryModule.get_input_params">(fluxion_ai.core.modules.llm_modules.LLMQueryModule method)</a>, <a href="fluxion_ai.core.modules.llm_modules.html#fluxion_ai.core.modules.llm_modules.LLMQueryModule.get_input_params">[1]</a>
 </li>
       </ul></li>
+      <li><a href="fluxion_ai.workflows.abstract_workflow.html#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.get_node_by_name">get_node_by_name() (fluxion_ai.workflows.abstract_workflow.AbstractWorkflow method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="fluxion_ai.workflows.abstract_workflow.html#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.get_node_dependencies">get_node_dependencies() (fluxion_ai.workflows.abstract_workflow.AbstractWorkflow method)</a>
+</li>
+      <li><a href="fluxion_ai.workflows.abstract_workflow.html#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.get_node_parents">get_node_parents() (fluxion_ai.workflows.abstract_workflow.AbstractWorkflow method)</a>
+</li>
       <li><a href="fluxion_ai.workflows.workflow_progress_tracker.html#fluxion_ai.workflows.workflow_progress_tracker.WorkflowProgressTracker.get_progress">get_progress() (fluxion_ai.workflows.workflow_progress_tracker.WorkflowProgressTracker method)</a>
 </li>
       <li><a href="fluxion_ai.core.modules.api_module.html#fluxion_ai.core.modules.api_module.ApiModule.get_response">get_response() (fluxion_ai.core.modules.api_module.ApiModule method)</a>, <a href="fluxion_ai.core.modules.html#fluxion_ai.core.modules.api_module.ApiModule.get_response">[1]</a>
@@ -385,9 +410,19 @@
 </li>
         <li><a href="fluxion_ai.workflows.html#module-fluxion_ai.workflows">fluxion_ai.workflows</a>
 </li>
+        <li><a href="fluxion_ai.workflows.abstract_workflow.html#module-fluxion_ai.workflows.abstract_workflow">fluxion_ai.workflows.abstract_workflow</a>
+</li>
         <li><a href="fluxion_ai.workflows.workflow_progress_tracker.html#module-fluxion_ai.workflows.workflow_progress_tracker">fluxion_ai.workflows.workflow_progress_tracker</a>
 </li>
       </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="fluxion_ai.workflows.abstract_workflow.html#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.nodes">nodes (fluxion_ai.workflows.abstract_workflow.AbstractWorkflow property)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -475,6 +510,14 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="fluxion_ai.core.registry.agent_registry.html#fluxion_ai.core.registry.agent_registry.AgentRegistry.unregister_agent">unregister_agent() (fluxion_ai.core.registry.agent_registry.AgentRegistry class method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="fluxion_ai.workflows.abstract_workflow.html#fluxion_ai.workflows.abstract_workflow.AbstractWorkflow.visualize">visualize() (fluxion_ai.workflows.abstract_workflow.AbstractWorkflow method)</a>
 </li>
   </ul></td>
 </tr></table>
