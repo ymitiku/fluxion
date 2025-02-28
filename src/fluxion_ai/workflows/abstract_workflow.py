@@ -16,7 +16,6 @@ import uuid
 from fluxion_ai.workflows.node import Node
 
 
-
 class AbstractWorkflow(ABC):
     """
     Abstract base class for workflows.
@@ -174,9 +173,6 @@ class AbstractWorkflow(ABC):
             for input_key, node_name in node.inputs.items():
                 if node_name not in self.nodes and node_name != "workflow_input":
                     raise ValueError(f"Input '{input_key}' references non-existent node '{node_name}'.")
-            
-
-
 
     def determine_execution_order(self) -> List[str]:
         """
@@ -225,7 +221,6 @@ class AbstractWorkflow(ABC):
 
         return results
 
-
     def visualize(self, output_path: str = "workflow_graph", format: str = "png"):
         """
         Visualizes the workflow as a directed graph.
@@ -258,7 +253,6 @@ class AbstractWorkflow(ABC):
         output_file = dot.render(filename=output_path, cleanup=True)
         print(f"Workflow visualization saved to: {output_file}")
         return output_file
-    
 
     def __del__(self):
         """

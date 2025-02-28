@@ -26,7 +26,6 @@ from fluxion_ai.core.agents.agent import Agent
 from fluxion_ai.workflows.node import Node
 
 
-
 class AgentNode(Node):
     """
     Represents a node in the workflow graph with explicit input and output definitions.

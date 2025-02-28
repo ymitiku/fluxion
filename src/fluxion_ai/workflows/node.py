@@ -1,5 +1,4 @@
 from abc import abstractmethod, ABC
-
 from typing import Any, Dict, List
 
 class Node(ABC):
@@ -13,7 +12,6 @@ class Node(ABC):
         """
         self.name = name
         self.inputs = inputs or {}
-
 
     def get_parents(self, nodes_list: Dict[str, "Node"]) -> List["Node"]:
         """
@@ -29,8 +27,7 @@ class Node(ABC):
             source_node = nodes_list[source]
             parents.append(source_node)
         return parents
-      
-    
+
     def get_dependencies(self, nodes_list: Dict[str, "Node"]) -> Dict[str, "Node"]:
         """
         Get the list of dependencies for this node based on the input mappings.
@@ -44,7 +41,6 @@ class Node(ABC):
             dependencies[node.name] = node
             dependencies.update(node.get_dependencies(nodes_list))
         return dependencies
-    
 
     def _resolve_inputs(self, results: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -78,6 +74,3 @@ class Node(ABC):
             Dict[str, Any]: The result of executing the node.
         """
         pass
-    
-
-    
