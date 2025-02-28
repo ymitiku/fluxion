@@ -72,10 +72,36 @@ class AbstractWorkflow(ABC):
         """
         if node.name in self.nodes:
             raise ValueError(f"Node '{node.name}' already exists in the workflow.")
-        for dependency in node.dependencies:
+        for _, dependency in node.get_dependencies(self.nodes).items():
             if dependency.name not in self.nodes:
                 raise ValueError(f"Dependency '{dependency.name}' for node '{node.name}' does not exist.")
         self.nodes[node.name] = node
+
+    def get_node_dependencies(self, node_name: str) -> Dict[str, AgentNode]:
+        """
+        Get the dependencies of a node by name.
+
+        Args:
+            node_name (str): The name of the node.
+
+        Returns:
+            List[str]: List of dependency names for the node.
+        """
+        node = self.get_node_by_name(node_name)
+        return node.get_dependencies(self.nodes)
+    
+    def get_node_parents(self, node_name: str) -> List[str]:
+        """
+        Get the parent nodes of a node by name.
+
+        Args:
+            node_name (str): The name of the node.
+
+        Returns:
+            List[str]: List of parent node names for the node.
+        """
+        node = self.get_node_by_name(node_name)
+        return node.get_parents(self.nodes)
 
     def _validate_dependencies(self):
         """
@@ -104,7 +130,7 @@ class AbstractWorkflow(ABC):
 
             if not node:
                 raise ValueError(f"Node '{node_name}' does not exist in the workflow.")
-            for dependency in node.dependencies:
+            for dependency in node.get_parents(self.nodes):
                 if dependency.name not in node_names:
                     raise ValueError(
                         f"Dependency '{dependency.name}' for node '{node_name}' does not exist. "
@@ -160,7 +186,7 @@ class AbstractWorkflow(ABC):
             if node_name in visited:
                 return
             visited.add(node_name)
-            for dependency in self.nodes[node_name].dependencies:
+            for dependency in self.nodes[node_name].get_parents(self.nodes):
                 dfs(dependency.name)
             order.append(node_name)
 
@@ -216,7 +242,7 @@ class AbstractWorkflow(ABC):
 
         # Add edges to represent dependencies
         for node in self.nodes.values():
-            for dependency in node.dependencies:
+            for dependency in node.get_parents(self.nodes):
                 dot.edge(dependency.name, node.name)
 
         # Render the graph

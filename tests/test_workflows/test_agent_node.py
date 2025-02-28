@@ -4,75 +4,77 @@ from unittest.mock import MagicMock
 from fluxion_ai.workflows.agent_node import AgentNode
 from fluxion_ai.core.agents.agent import Agent
 from fluxion_ai.core.registry.agent_registry import AgentRegistry
+from fluxion_ai.models.message_model import Message, MessageHistory
 
 
 class MockAgent(Agent):
-    def __init__(self, output_key: str,  *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.output_key = output_key
 
-    def execute(self, first_input: str, second_input:str = None) -> Dict[str, Any]:
-        result = {"first_input": first_input}
-        if second_input:
-            result["second_input"] = second_input
-        return {self.output_key: f"Processed {result}"}
-
+    def execute(self, messages: MessageHistory) -> MessageHistory:
+        messages = messages.copy()
+        messages.append(Message(role="assistant", content=f"Processed by {self.name}"))
+        return messages
 
 class TestAgentNode(unittest.TestCase):
     def setUp(self):
         AgentRegistry.clear_registry()
-        self.mock_agent = MockAgent(output_key="result", name="MockAgent")
-        self.node = AgentNode(name="TestNode", agent=self.mock_agent, inputs={"first_input": "DependencyNode.output1"}, outputs=["result"])
+        self.mock_agent = MockAgent(name="MockAgent")
+        self.node = AgentNode(name="TestNode", agent=self.mock_agent, inputs={"messages": "DependencyNode"})
 
     def test_execute_node_with_valid_inputs(self):
         """Test executing a node with valid inputs and no dependencies."""
-        inputs = {"DependencyNode": {"output1": "value1"}}
+        inputs = {"DependencyNode": MessageHistory(messages=[Message(role="user", content="Output from Node1")])}
         results = self.node.execute(inputs={}, results=inputs)
-        self.assertEqual(results, {"result": "Processed {'first_input': 'value1'}"})
+        self.assertEqual(results[-1].content, "Processed by MockAgent")
+        self.assertEqual(results[-2].content, "Output from Node1")
 
     def test_execute_with_dependency_results(self):
         """Test executing a node with inputs resolved from dependencies."""
         dependency_node = AgentNode(
             name="DependencyNode", 
             agent=self.mock_agent, 
-            outputs=["result"]
         )
-        dependency_results = {"DependencyNode": {"output1": "dependency_value"}}
+        dependency_results = {"DependencyNode": MessageHistory(messages=[Message(role="assistant", content="dependency_value")])}
         inputs = {}
 
-        self.node.dependencies.append(dependency_node)
         results = self.node.execute(inputs=inputs, results=dependency_results)
-        self.assertEqual(results, {"result": "Processed {'first_input': 'dependency_value'}"})
+        self.assertEqual(results[-1].content, "Processed by MockAgent")
+        self.assertEqual(results[-2].content, "dependency_value")
+
 
     def test_execute_with_missing_dependency(self):
         """Test behavior when a required dependency result is missing."""
         dependency_node = AgentNode(
             name="MissingDependency",
             agent=self.mock_agent,
-            outputs=["output1"]
         )
-        self.node.dependencies.append(dependency_node)
-
+        
         inputs = {}
+        self.node.inputs = {"messages": "MissingDependency"}
         with self.assertRaises(KeyError):
             self.node.execute(inputs=inputs, results={})
 
     def test_execute_with_filtered_arguments(self):
         """Test that only supported arguments are passed to the agent."""
         class CustomAgent(Agent):
-            def execute(self, supported_key: str):
-                return {"result": f"Processed {supported_key}"}
+            def execute(self, messages: MessageHistory, supported_key: str) -> Message:
+                messages = messages.copy()
+                messages.append(Message(role="assistant", content=f"Processed by {self.name} with {supported_key}"))
+                return messages
+
 
         custom_agent = CustomAgent(name="CustomAgent")
         node = AgentNode(
             name="CustomNode", 
             agent=custom_agent, 
-            inputs={"supported_key": "DependencyNode.output1"}, outputs=["result"]
+            inputs={"messages": "DependencyNode"}
         )
-        dependency_results = {"DependencyNode": {"output1": "filtered_value"}}
+        dependency_results = {"DependencyNode": MessageHistory(messages=[Message(role="assistant", content="filtered_value")])}
 
-        results = node.execute(inputs={}, results=dependency_results)
-        self.assertEqual(results, {"result": "Processed filtered_value"})
+        results = node.execute(inputs={"supported_key": "Supported key"}, results=dependency_results)
+        self.assertEqual(results[-1], Message(role="assistant", content="Processed by CustomAgent with Supported key"))
+        self.assertEqual(results[-2], Message(role="assistant", content="filtered_value"))
 
     def test_execute_without_inputs_or_dependencies(self):
         """Test executing a node without inputs or dependencies."""
@@ -86,7 +88,7 @@ class TestAgentNode(unittest.TestCase):
 
     def test_missing_inputs_handling(self):
         """Test behavior when required inputs are missing."""
-        self.node.inputs = {"first_input": "DependencyNode.output1"}
+        self.node.inputs = {"first_input": "DependencyNode", "second_input": "MissingDependency"}
         with self.assertRaises(KeyError):
             self.node.execute(inputs={}, results={})
 
@@ -101,21 +103,20 @@ class TestAgentNode(unittest.TestCase):
         node = AgentNode(
             name="ConflictNode",
             agent=self.mock_agent,
-            inputs={"first_input": "DependencyNode.output1"},
-            outputs=["result"]
+            inputs={"messages": "DependencyNode"},
         )
         dependency_node = AgentNode(
             name="DependencyNode",
             agent=self.mock_agent,
-            outputs=["output1"]
         )
-        dependency_results = {"DependencyNode": {"output1": "dependency_value"}}
-        inputs = {"first_input": "input_value"}
+        dependency_results = {"DependencyNode": MessageHistory(messages=[Message(role="assistant", content="dependency_value")])}
+        inputs = {"messages": MessageHistory(messages=[Message(role="user", content="Conflict value")])}
 
-        node.dependencies.append(dependency_node)
-        node.inputs = {"first_input": "DependencyNode.output1"}
+        node.inputs = {"messages": "DependencyNode"}
         results = node.execute(inputs=inputs, results=dependency_results)
-        self.assertEqual(results, {"result": "Processed {'first_input': 'dependency_value'}"})
+     
+        self.assertEqual(results[-1].content, "Processed by MockAgent")
+        self.assertEqual(results[-2].content, "dependency_value")
 
 
 if __name__ == "__main__":
