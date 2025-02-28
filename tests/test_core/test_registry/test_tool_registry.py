@@ -1,17 +1,15 @@
 import unittest
-from typing import Dict, Any
 from fluxion_ai.core.registry.tool_registry import ToolRegistry, extract_function_metadata
 from fluxion_ai.core.registry.agent_registry import AgentRegistry
-from fluxion_ai.core.registry.tool_registry import call_agent
+from fluxion_ai.core.registry.tool_registry import call_agent, tool
 from fluxion_ai.core.agents.agent import Agent
 from fluxion_ai.models.message_model import ToolCall, MessageHistory
-from pydantic import BaseModel
 
 class TestToolRegistry(unittest.TestCase):
     def setUp(self):
         self.tool_registry = ToolRegistry()
         
-
+        @tool
         def example_tool(param1: int, param2: str = "default"):
             """
             Example tool function.
@@ -23,13 +21,13 @@ class TestToolRegistry(unittest.TestCase):
             return f"Received {param1} and {param2}"
 
         self.example_tool = example_tool
-        self.tool_registry.register_tool(example_tool)
+        self.tool_registry.register_tool(self.example_tool)
 
     def tearDown(self):
         self.tool_registry.clear_registry()
 
     def test_metadata_extraction(self):
-        metadata = extract_function_metadata(self.example_tool)
+        metadata = extract_function_metadata(self.example_tool.func_reference)
         expected_metadata = {
             "name": "test_tool_registry.example_tool",
             "description": "Example tool function.",
