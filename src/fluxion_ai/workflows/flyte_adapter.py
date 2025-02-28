@@ -65,7 +65,7 @@ class FlyteWorkflowAdapter:
 
 # Task to execute a single AgentNode
 @task
-def flyte_task(upstream_results: Dict[str, Any], node_inputs: Dict[str, Any], node_name: str, workflow: AbstractWorkflow) -> Dict[str, Any]:
+def flyte_task(upstream_results: Dict[str, Any], node_inputs: Dict[str, Any], node_name: str, workflow: AbstractWorkflow) -> Any:
     """
     Executes a single AgentNode as a Flyte task.
 
