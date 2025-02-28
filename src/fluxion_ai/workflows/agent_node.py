@@ -19,13 +19,14 @@ The AgentNode class is a fundamental component of the Fluxion framework and enab
 
 """
 
-from typing import Dict, Any, List
-from fluxion_ai.core.agents.agent import Agent
-import inspect
+from typing import Dict, Any
 from copy import deepcopy
+import inspect
+from fluxion_ai.core.agents.agent import Agent
+from fluxion_ai.workflows.node import Node
 
 
-class AgentNode:
+class AgentNode(Node):
     """
     Represents a node in the workflow graph with explicit input and output definitions.
 
@@ -52,57 +53,6 @@ class AgentNode:
         self.agent = agent
         self.inputs = inputs or {}
 
-
-    def get_parents(self, nodes_list: Dict[str, "AgentNode"]) -> List["AgentNode"]:
-        """
-        Get the list of parent nodes for this node based on the input mappings.
-
-        Returns:
-            List[str]: List of parent nodes for this node.
-        """
-        parents = []
-        for source in self.inputs.values():
-            if source not in nodes_list:
-                raise ValueError(f"Parent '{source}' for node '{self.name}' does not exist in the workflow.")
-            source_node = nodes_list[source]
-            parents.append(source_node)
-        return parents
-      
-    
-    def get_dependencies(self, nodes_list: Dict[str, "AgentNode"]) -> Dict[str, "AgentNode"]:
-        """
-        Get the list of dependencies for this node based on the input mappings.
-
-        Returns:
-            List[str]: List of dependencies for this node.
-        """
-        dependencies = {}
-        
-        for node in self.get_parents(nodes_list):
-            dependencies[node.name] = node
-            dependencies.update(node.get_dependencies(nodes_list))
-        return dependencies
-
-
-    def _resolve_inputs(self, results: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Resolve the inputs for this node based on its input mappings.
-
-        Args:
-            results (Dict[str, Any]): A dictionary containing the outputs of executed nodes.
-
-        Returns:
-            Dict[str, Any]: Resolved inputs for the agent.
-        """
-        resolved = {}
-        for key, source in self.inputs.items():
-            
-            try:
-                resolved[key] = results[source]
-            except KeyError:
-                raise KeyError(f"Input '{key}' from source '{source}' cannot be resolved. Check dependencies and outputs.")
-        return resolved
-
     def execute(self, results: Dict[str, Any], inputs: Dict[str, Any] = None) -> Dict[str, Any]:
         """
         Execute the agent of this node by collecting the required arguments
@@ -114,6 +64,23 @@ class AgentNode:
 
         Returns:
             Dict[str, Any]: The result of executing the agent.
+        """
+        execute_inputs = self.get_agent_execute_inputs(results, inputs)
+        # Call the agent's `execute` method with filtered arguments
+        agent_result = self.agent.execute(**execute_inputs)
+
+        return agent_result
+    
+    def get_agent_execute_inputs(self, results: Dict[str, Any], inputs: Dict[str, Any] = None) -> Dict[str, Any]:
+        """
+        Get the inputs to pass to the agent's `execute` method based on the results and inputs of the workflow.
+
+        Args:
+            results (Dict[str, Any]): A dictionary containing the outputs of executed nodes.
+            inputs (Dict[str, Any]): A dictionary containing the inputs for the workflow.
+
+        Returns:
+            Dict[str, Any]: The filtered inputs to pass to the agent's `execute` method.
         """
         inputs = inputs or {}
         resolved_inputs = self._resolve_inputs(results)
@@ -134,10 +101,8 @@ class AgentNode:
         for required_param in required_params:
             if required_param not in filtered_inputs:
                 raise KeyError(f"Required parameter '{required_param}' is missing from the agent inputs.")
-        # Call the agent's `execute` method with filtered arguments
-        agent_result = self.agent.execute(**filtered_inputs)
-
-        return agent_result
+            
+        return filtered_inputs
 
     def __repr__(self):
         dependencies = [source for source in self.inputs.values()]

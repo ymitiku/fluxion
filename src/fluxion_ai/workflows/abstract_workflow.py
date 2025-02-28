@@ -10,8 +10,10 @@ with nodes and managing their execution order.
 
 from typing import Dict, List, Any
 from abc import ABC, abstractmethod
-from fluxion_ai.workflows.agent_node import AgentNode
-
+import os
+import tempfile
+import uuid
+from fluxion_ai.workflows.node import Node
 
 
 class AbstractWorkflow(ABC):
@@ -22,7 +24,7 @@ class AbstractWorkflow(ABC):
     determining execution order, and executing the workflow.
     """
 
-    def __init__(self, name: str):
+    def __init__(self, name: str, workflow_dir: str = None):
         """
         Initialize the workflow.
 
@@ -30,8 +32,14 @@ class AbstractWorkflow(ABC):
             name (str): The name of the workflow.
         """
         self.name = name
-        self._nodes: Dict[str, AgentNode] = {}
+        self._nodes: Dict[str, Node] = {}
         self.initial_inputs = {}
+        if workflow_dir:
+            self.workflow_dir = workflow_dir
+        else:
+            # Create a temporary directory for the workflow
+            self.workflow_dir = os.path.join(tempfile.gettempdir(), f"fluxion_workflow_{uuid.uuid4()}")
+            os.makedirs(self.workflow_dir, exist_ok=True)
 
     @property
     def nodes(self):
@@ -57,7 +65,7 @@ class AbstractWorkflow(ABC):
             name (str): The name of the node to retrieve.
 
         Returns:
-            AgentNode: The node with the given name.
+            Node: The node with the given name.
         """
         if name not in self.nodes:
             raise ValueError(f"Node '{name}' does not exist in the workflow.")
@@ -68,7 +76,7 @@ class AbstractWorkflow(ABC):
         Add a node to the workflow.
 
         Args:
-            node (AgentNode): The node to add.
+            node (Node): The node to add.
         """
         if node.name in self.nodes:
             raise ValueError(f"Node '{node.name}' already exists in the workflow.")
@@ -77,7 +85,7 @@ class AbstractWorkflow(ABC):
                 raise ValueError(f"Dependency '{dependency.name}' for node '{node.name}' does not exist.")
         self.nodes[node.name] = node
 
-    def get_node_dependencies(self, node_name: str) -> Dict[str, AgentNode]:
+    def get_node_dependencies(self, node_name: str) -> Dict[str, Node]:
         """
         Get the dependencies of a node by name.
 
@@ -85,7 +93,7 @@ class AbstractWorkflow(ABC):
             node_name (str): The name of the node.
 
         Returns:
-            List[str]: List of dependency names for the node.
+            Dict[str, Node]: Dictionary of dependencies for the node.
         """
         node = self.get_node_by_name(node_name)
         return node.get_dependencies(self.nodes)
@@ -103,7 +111,7 @@ class AbstractWorkflow(ABC):
         node = self.get_node_by_name(node_name)
         return node.get_parents(self.nodes)
 
-    def _validate_dependencies(self):
+    def _validate_dependencies(self) -> None:
         """
         Validate the dependencies for all nodes in the workflow.
 
@@ -136,8 +144,8 @@ class AbstractWorkflow(ABC):
                         f"Dependency '{dependency.name}' for node '{node_name}' does not exist. "
                         f"Available nodes: {node_names}"
                     )
-                if not isinstance(dependency, AgentNode):
-                    raise ValueError(f"Dependency '{dependency}' is not a valid AgentNode.")
+                if not isinstance(dependency, Node):
+                    raise ValueError(f"Dependency '{dependency}' is not a valid Node.")
 
                 visit(dependency.name)
 
@@ -165,9 +173,6 @@ class AbstractWorkflow(ABC):
             for input_key, node_name in node.inputs.items():
                 if node_name not in self.nodes and node_name != "workflow_input":
                     raise ValueError(f"Input '{input_key}' references non-existent node '{node_name}'.")
-            
-
-
 
     def determine_execution_order(self) -> List[str]:
         """
@@ -216,7 +221,6 @@ class AbstractWorkflow(ABC):
 
         return results
 
-
     def visualize(self, output_path: str = "workflow_graph", format: str = "png"):
         """
         Visualizes the workflow as a directed graph.
@@ -249,3 +253,12 @@ class AbstractWorkflow(ABC):
         output_file = dot.render(filename=output_path, cleanup=True)
         print(f"Workflow visualization saved to: {output_file}")
         return output_file
+
+    def __del__(self):
+        """
+        Clean up the temporary workflow directory.
+        """
+        print("Deleting the workflow directory...")
+        if os.path.exists(self.workflow_dir):
+            os.rmdir(self.workflow_dir)
+        print(f"Deleted temporary workflow directory: {self.workflow_dir}")

@@ -299,7 +299,7 @@ class CustomWorkflow(AbstractWorkflow):
         agent1 = LLMChatAgent("Agent1", llm_module=module)
         agent2 = LLMChatAgent("Agent2", llm_module=module)
         node1 = AgentNode(name="Node1", agent=agent1)
-        node2 = AgentNode(name="Node2", agent=agent2, dependencies=[node1], inputs={"messages": "Node1"})
+        node2 = AgentNode(name="Node2", agent=agent2, inputs={"messages": "Node1"})
         
         self.add_node(node1)
         self.add_node(node2)
